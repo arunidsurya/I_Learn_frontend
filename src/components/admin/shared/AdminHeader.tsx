@@ -14,7 +14,7 @@ const AdminHeader: React.FC = () => {
 
   const handleLogout = () => {
     axios
-      .get("http://localhost:5000/api/v1/admin_logout", {
+      .get("http://localhost:5000/api/v1/admin/logout", {
         withCredentials: true,
       })
       .then((response) => {

@@ -10,6 +10,7 @@ const UserLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [error, setError] = useState("");
   const Navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const UserLogin: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
     axios
       .post(
         "http://localhost:5000/api/v1/user/login",
@@ -40,13 +42,18 @@ const UserLogin: React.FC = () => {
         }
       )
       .then((response) => {
-        if (response.data.success) {
-          console.log(response.data);
-          localStorage.setItem("user", JSON.stringify(response.data));
-          localStorage.setItem("accessToken", response.data.accessToken);
+        // console.log(response.data);
+        if (response.data.data.success) {
+          localStorage.setItem("user", JSON.stringify(response.data.data));
+          localStorage.setItem("accessToken", response.data.data.token);
           Navigate("/");
           window.location.reload();
+        } else {
+          setError(response.data.data.message);
         }
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -64,6 +71,7 @@ const UserLogin: React.FC = () => {
           </div>
 
           {/* <!-- Right column container --> */}
+
           <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
             <form onSubmit={handleLogin}>
               {/* <!--Sign in section--> */}
@@ -99,7 +107,7 @@ const UserLogin: React.FC = () => {
                   Or
                 </p>
               </div>
-
+              {error && <p className="text-red-500">{error}</p>}
               {/* <!-- Email input --> */}
               {/* <TEInput
                 type="email"

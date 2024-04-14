@@ -15,31 +15,27 @@ const Header: React.FC = () => {
   useEffect(() => {
     // Check if user data exists in localStorage
     const storedUserData = localStorage.getItem("user");
-    const accessToken = localStorage.getItem("accessToken");
-    const CookieToken = Cookies.get("access_token");
-    if (accessToken === CookieToken) {
-      console.log("token is genue");
-    }
-
     if (storedUserData) {
       const parsedUserData = JSON.parse(storedUserData);
       setUserData(parsedUserData);
       setName(parsedUserData.user.name);
+    }
 
-      // Check if necessary data for login exists
-      if (accessToken === CookieToken) {
-        setIsLoggedIn(true); // User is logged in
-      } else {
-        setIsLoggedIn(false); // User is not logged in
-      }
+    const accessToken = localStorage.getItem("accessToken");
+    const CookieToken = Cookies.get("access_token");
+    if (accessToken === CookieToken) {
+      setIsLoggedIn(true);
+      console.log("match");
     } else {
       setIsLoggedIn(false); // User is not logged in
     }
   }, []);
 
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const CookieToken = Cookies.get("access_token");
     // Update isLoggedIn state when userData changes
-    if (userData && userData.user && userData.user.email && userData.success) {
+    if (accessToken === CookieToken) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
@@ -85,7 +81,7 @@ const Header: React.FC = () => {
           <Link to={"/policy"} className="hover:text-gray-500">
             Policy
           </Link>
-          <Link to={"/faq"} className="hover:text-gray-500">
+          <Link to={"/"} className="hover:text-gray-500">
             FAQ
           </Link>
 

@@ -30,19 +30,23 @@ const AdminLogin: React.FC = () => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:5000/api/v1/admin_login",
+        "http://localhost:5000/api/v1/admin/login",
         { email, password },
         {
           withCredentials: true,
         }
       )
       .then((response) => {
+        // console.log(response.data);
         if (response.data.success) {
-          console.log(response.data);
+          // console.log(response.data);
           localStorage.setItem("admin", JSON.stringify(response.data));
-          localStorage.setItem("admin_accessToken", response.data.accessToken);
+          localStorage.setItem("admin_accessToken", response.data.token);
           Navigate("/admin");
         }
+      })
+      .catch((error: any) => {
+        console.error(error);
       });
   };
 
