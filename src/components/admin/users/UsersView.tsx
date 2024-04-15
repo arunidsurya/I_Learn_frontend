@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface UserData {
   _id: string;
@@ -17,13 +18,15 @@ interface UserData {
 const UsersView: React.FC = () => {
   const [usersData, setUsersData] = useState<UserData[]>([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/v1/admin/getUsers", {
+      .get("http://localhost:5000/api/v1/admin/getUsers", {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         if (response.data.success) {
           setUsersData(response.data.users); // Assuming the users array is nested under a key named 'users'
         }
@@ -33,11 +36,33 @@ const UsersView: React.FC = () => {
       });
   }, []);
 
+  const handleBlock = (method: string, _id: string) => {
+    axios
+      .post(
+        `http://localhost:5000/api/v1/admin/${method}`,
+        { _id },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.success) {
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  };
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
       <div className="flex justify-between items-center mb-3">
         <strong className="text-gray-700 font-medium">Users</strong>
-        <button className="bg-blue-500 text-white px-3 py-1 rounded-md">
+        <button
+          className="bg-blue-500 text-white px-3 py-1 rounded-md"
+          onClick={() => navigate("/admin/addUser")}
+        >
           Add User
         </button>
       </div>
@@ -110,10 +135,26 @@ const UsersView: React.FC = () => {
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <button className="w-20 h-8 rounded-md bg-red-500 text-white mr-2">
-                  Block
-                </button>
-                <button className="w-20 h-8 rounded-md bg-blue-500 text-white">
+                {user.isBlocked ? (
+                  <button
+                    className="w-20 h-8 rounded-md bg-green-500 text-white mr-2"
+                    onClick={() => handleBlock("unBlockUser", user._id)}
+                  >
+                    unBlock
+                  </button>
+                ) : (
+                  <button
+                    className="w-20 h-8 rounded-md bg-red-500 text-white mr-2"
+                    onClick={() => handleBlock("blockUser", user._id)}
+                  >
+                    Block
+                  </button>
+                )}
+
+                <button
+                  className="w-20 h-8 rounded-md bg-blue-500 text-white"
+                  onClick={() => navigate("/admin/editUser", { state: user })}
+                >
                   Edit
                 </button>
               </td>

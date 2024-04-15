@@ -5,7 +5,6 @@ import UserHome from "./components/user/userHome/UserHome";
 import UserCourses from "./components/user/userCourses/UserCourses";
 import UserLayout from "./components/user/shared/UserLayout";
 import AdminLayout from "./components/admin/shared/AdminLayout";
-import AdminDashBoard from "./components/admin/dashboard/AdminDashBoard";
 import UserLogin from "./components/user/userLogin/UserLogin";
 import UserRegister from "./components/user/userRegister/Register";
 import UserActivation from "./components/user/userActivation/UserActivation";
@@ -19,8 +18,11 @@ import MyAccount from "./components/user/userAccount/MyAccount";
 import ChangePassword from "./components/user/userAccount/ChangePassword";
 import EnrolledCourses from "./components/user/userAccount/EnrolledCourses";
 import UserAuthRoute from "./components/user/utils/UserAuthRoute";
+import AdminDashBoard from "./components/admin/dashboard/AdminDashBoard";
 import AddUser from "./components/admin/users/AddUser";
-import EditUser from "./components/admin/users/Edit";
+import EditUser from "./components/admin/users/EditUser";
+// import AddUser from "./components/admin/users/AddUser";
+// import EditUser from "./components/admin/users/Edit";
 
 const App: React.FC = () => {
   return (
