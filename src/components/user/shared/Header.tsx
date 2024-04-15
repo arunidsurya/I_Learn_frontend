@@ -25,7 +25,7 @@ const Header: React.FC = () => {
     const CookieToken = Cookies.get("access_token");
     if (accessToken === CookieToken) {
       setIsLoggedIn(true);
-      console.log("match");
+      // console.log("match");
     } else {
       setIsLoggedIn(false); // User is not logged in
     }

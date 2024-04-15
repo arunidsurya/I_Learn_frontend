@@ -14,6 +14,13 @@ import Policy from "./components/user/policy/Policy";
 import ProtectiveRoute from "./components/admin/utils/protectiveRoute";
 import AdminLogin from "./components/admin/login/AdminLogin";
 import ConfirmEmail from "./components/user/userActivation/ConfimEmail";
+import UserAccountLayout from "./components/user/shared/UserAccountLayout";
+import MyAccount from "./components/user/userAccount/MyAccount";
+import ChangePassword from "./components/user/userAccount/ChangePassword";
+import EnrolledCourses from "./components/user/userAccount/EnrolledCourses";
+import UserAuthRoute from "./components/user/utils/UserAuthRoute";
+import AddUser from "./components/admin/users/AddUser";
+import EditUser from "./components/admin/users/Edit";
 
 const App: React.FC = () => {
   return (
@@ -29,6 +36,18 @@ const App: React.FC = () => {
             <Route path="about/" element={<AboutPage />} />
             <Route path="policy/" element={<Policy />} />
             <Route path="account_verify/" element={<ConfirmEmail />} />
+            <Route
+              path="manage_account/"
+              element={
+                <UserAuthRoute>
+                  <UserAccountLayout />{" "}
+                </UserAuthRoute>
+              }
+            >
+              <Route index element={<MyAccount />} />
+              <Route path="change_password/" element={<ChangePassword />} />
+              <Route path="enrolled_courses/" element={<EnrolledCourses />} />
+            </Route>
           </Route>
 
           <Route path="admin/" element={<AdminLayout />}>
@@ -45,6 +64,22 @@ const App: React.FC = () => {
               element={
                 <ProtectiveRoute>
                   <UsersView />
+                </ProtectiveRoute>
+              }
+            />
+            <Route
+              path="addUser/"
+              element={
+                <ProtectiveRoute>
+                  <AddUser />
+                </ProtectiveRoute>
+              }
+            />
+            <Route
+              path="editUser/"
+              element={
+                <ProtectiveRoute>
+                  <EditUser />
                 </ProtectiveRoute>
               }
             />
