@@ -3,11 +3,11 @@ import { FcBullish } from "react-icons/fc";
 import {
   DASHBOARD_SIDEBAR_BOTTOM_LINKS,
   DASHBOARD_SIDEBAR_LINKS,
-} from "../lib/navigation";
+} from "../lib/sidebarContent";
 import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import { HiOutlineLogout } from "react-icons/hi";
-import { MdAdminPanelSettings } from "react-icons/md";
+import { GiTeacher } from "react-icons/gi";
 
 interface SidebarItem {
   key: string;
@@ -19,18 +19,18 @@ interface SidebarItem {
 const linkClasses =
   "flex items-center gap-2 font-light px-3 py-2 hover:bg-neutral-700 hover:no-underline active:bg-neutral-600 rounded-sm text-base";
 
-const Sidebar: React.FC = () => {
+const InstSidebar: React.FC = () => {
   return (
-    <div className="flex flex-col bg-neutral-900 w-60 p-3 text-white">
+    <div className="flex flex-col bg-blue-950 w-60 p-3 text-white">
       <div className="flex items-center gap-2 px-1 py-3 text-xl">
         <FcBullish />
-        <span className="text-neutral-100">E-Learning</span>
+        <span className="text-neutral-100 text-2xl font-bold">E-Learning</span>
       </div>
 
       <div className="flex gap-2 items-center mt-5 ml-2">
-        <MdAdminPanelSettings size={30} />
+        <GiTeacher />
         <span>
-          <h1 className="text-xl font-bold">Admin</h1>
+          <h1 className="text-xl font-bold">Instructor</h1>
         </span>
       </div>
 
@@ -54,7 +54,7 @@ const Sidebar: React.FC = () => {
   );
 };
 
-export default Sidebar;
+export default InstSidebar;
 
 function SidebarLink({ item }: { item: SidebarItem }) {
   const { pathname } = useLocation();

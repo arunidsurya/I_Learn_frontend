@@ -21,8 +21,13 @@ import UserAuthRoute from "./components/user/utils/UserAuthRoute";
 import AdminDashBoard from "./components/admin/dashboard/AdminDashBoard";
 import AddUser from "./components/admin/users/AddUser";
 import EditUser from "./components/admin/users/EditUser";
-// import AddUser from "./components/admin/users/AddUser";
-// import EditUser from "./components/admin/users/Edit";
+import InstLayout from "./components/instructor/shared/InstLayout";
+import InstDashBoard from "./components/instructor/dashboard/InstDashBoard";
+import InstLogin from "./components/instructor/login/InstLogin";
+import InstRegister from "./components/instructor/login/InstRegister";
+import InstAuthRoute from "./components/instructor/utils/InstAuthRoute";
+import MembersView from "./components/admin/mannageTeam/MembersView";
+import EditMember from "./components/admin/mannageTeam/EditMember";
 
 const App: React.FC = () => {
   return (
@@ -85,11 +90,24 @@ const App: React.FC = () => {
                 </ProtectiveRoute>
               }
             />
+            <Route path="manage_members/" element={<MembersView />} />
+            <Route path="edit_member/" element={<EditMember />} />
           </Route>
 
-          <Route path="instructor/" element="" />
+          <Route path="instructor/" element={<InstLayout />}>
+            <Route
+              index
+              element={
+                <InstAuthRoute>
+                  <InstDashBoard />
+                </InstAuthRoute>
+              }
+            />
+          </Route>
 
           <Route path="admin_login/" element={<AdminLogin />} />
+          <Route path="inst_login/" element={<InstLogin />} />
+          <Route path="tutor_register/" element={<InstRegister />} />
         </Routes>
       </Router>
     </>

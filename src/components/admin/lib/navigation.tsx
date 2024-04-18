@@ -48,7 +48,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
   {
     key: "manageTeam",
     label: "Manage Team",
-    path: "/admin/categories",
+    path: "/admin/manage_members",
     icon: <AiOutlineUsergroupAdd />,
   },
   {

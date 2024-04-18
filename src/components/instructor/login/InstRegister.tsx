@@ -1,117 +1,85 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
-import Modal from "../shared/Modal";
-import { useDispatch } from "react-redux";
-import { SaveUser } from "../../../app/features/loginSlice";
+import axios from "axios";
 
-const UserLogin: React.FC = () => {
+const InstRegister: React.FC = () => {
+  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [institute, setInstitute] = useState<string>("");
+  const [qualifiaction, setQualification] = useState<string>("");
+  const [experience, setExperience] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [error, setError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const Navigate = useNavigate();
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    // Check if user data exists in localStorage
-    const storedUserData = localStorage.getItem("user");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
+    const tutorAuth = localStorage.getItem("tutor_accessToken");
 
-      // Check if necessary data for login exists
-      if (
-        parsedUserData.user &&
-        parsedUserData.user.email &&
-        parsedUserData.success
-      ) {
-        Navigate("/");
-      }
+    if (tutorAuth) {
+      Navigate("/instructor");
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+    setPasswordError("");
+
     axios
       .post(
-        "http://localhost:5000/api/v1/user/login",
-        { email, password },
+        "http://localhost:5000/api/v1/tutor/registration",
+        { name, email, gender, password, institute, qualifiaction, experience },
         {
           withCredentials: true,
         }
       )
-      .then((response) => {
-        // console.log(response.data);
-        if (response.data.data.success) {
-          const userDetails = response.data.data.user;
-          dispatch(SaveUser(userDetails));
-          localStorage.setItem("user", JSON.stringify(response.data.data));
-          localStorage.setItem("accessToken", response.data.data.token);
-          Navigate("/");
-          // window.location.reload();
+      .then((res) => {
+        // console.log(res.data);
+        if (res.data.success) {
+          // console.log(res.data);
+          setError("");
+          Navigate("/inst_login/");
         } else {
-          setError(response.data.data.message);
+          setError(res.data.message);
         }
-      })
-      .catch((error) => {
-        console.log(error);
       });
   };
 
   return (
     <section>
-      <div className="h-full">
+      <div className="h-full mt-10">
         {/* <!-- Left column container with background--> */}
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
           <div className="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
             <img
-              src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+              src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw1.webp"
               className="w-full"
               alt="Sample image"
             />
           </div>
 
           {/* <!-- Right column container --> */}
-
           <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleSignUp}>
               {/* <!--Sign in section--> */}
               <div className="flex flex-row items-center gap-4 justify-center lg:justify-start">
-                <p className="mb-0 mr-4 text-lg">Sign in with</p>
-
-                {/* <!-- Facebook button--> */}
-                <TERipple rippleColor="light">
-                  <a href="">
-                    <FaFacebook size={35} />
-                  </a>
-                </TERipple>
-
-                {/* <!-- Twitter button --> */}
-                <a href="">
-                  <FaTwitter size={35} />
-                </a>
-                {/* <!-- Linkedin button --> */}
-
-                <TERipple rippleColor="light">
-                  <FaLinkedin size={35} />
-                </TERipple>
-                <TERipple rippleColor="light">
-                  <a href="">
-                    <FcGoogle size={35} />
-                  </a>
-                </TERipple>
+                <p className="mb-0 mr-4 ml-52 text-3xl font-bold text-center">
+                  Instructor Registration
+                </p>
               </div>
 
               {/* <!-- Separator between social media sign in and email/password sign in --> */}
               <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
-                <p className="mx-4 mb-0 text-center font-semibold dark:text-white">
-                  Or
-                </p>
+                <p className="mx-4 mb-0 text-center font-semibold dark:text-white"></p>
               </div>
               {error && <p className="text-red-500">{error}</p>}
               {/* <!-- Email input --> */}
@@ -122,6 +90,13 @@ const UserLogin: React.FC = () => {
                 className="mb-6"
               ></TEInput> */}
               <div className="flex flex-col gap-2">
+                <label htmlFor="email">Name</label>
+                <input
+                  type="name"
+                  placeholder="Enter Your Name... "
+                  className="w-full border border-gray-300 rounded h-10 "
+                  onChange={(e) => setName(e.target.value)}
+                />
                 <label htmlFor="email">Email</label>
                 <input
                   type="email"
@@ -129,6 +104,42 @@ const UserLogin: React.FC = () => {
                   className="w-full border border-gray-300 rounded h-10 "
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                <label htmlFor="gender">Gender</label>
+                <select
+                  id="gender"
+                  className="w-full border border-gray-300 rounded h-10"
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+
+                <label htmlFor="institute">Institute</label>
+                <input
+                  type="text"
+                  placeholder="Enter Instutute... "
+                  className="w-full border border-gray-300 rounded h-10 "
+                  onChange={(e) => setInstitute(e.target.value)}
+                />
+
+                <label htmlFor="institute">Qualifiacation</label>
+                <input
+                  type="text"
+                  placeholder="Enter Qualification... "
+                  className="w-full border border-gray-300 rounded h-10 "
+                  onChange={(e) => setQualification(e.target.value)}
+                />
+
+                <label htmlFor="experience">Experience</label>
+                <input
+                  type="text"
+                  placeholder="Enter experience in years... "
+                  className="w-full border border-gray-300 rounded h-10 "
+                  onChange={(e) => setExperience(e.target.value)}
+                />
+
                 <label htmlFor="password">Password</label>
                 <input
                   type="password"
@@ -136,7 +147,16 @@ const UserLogin: React.FC = () => {
                   className="w-full border border-gray-300 rounded h-10 "
                   onChange={(e) => setPassword(e.target.value)}
                 />
-
+                <label htmlFor="password">Re-Password</label>
+                <input
+                  type="password"
+                  placeholder="Enter password... "
+                  className="w-full border border-gray-300 rounded h-10 "
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                {passwordError && (
+                  <p className="text-red-500">{passwordError}</p>
+                )}
                 <div className="mb-6 flex items-center justify-between">
                   {/* <!-- Remember me checkbox --> */}
                   <div className="mb-0.125rem block min-h-1.5rem pl-1.5rem">
@@ -150,12 +170,9 @@ const UserLogin: React.FC = () => {
                       className="inline-block pl-0.15rem hover:cursor-pointer"
                       htmlFor="exampleCheck2"
                     >
-                      Remember me
+                      Terms & conitions
                     </label>
                   </div>
-
-                  {/* <!--Forgot password link--> */}
-                  <a onClick={() => setShowModal(true)}>Forgot password?</a>
                 </div>
               </div>
               {/* <!--Password input--> */}
@@ -179,12 +196,12 @@ const UserLogin: React.FC = () => {
 
                 {/* <!-- Register link --> */}
                 <p className="mb-0 mt-2 pt-1 text-sm font-semibold">
-                  Don't have an account?{" "}
+                  Have an account?{" "}
                   <Link
-                    to={"/register"}
+                    to={"/inst_login"}
                     className="text-red-500 transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
                   >
-                    Register
+                    Login
                   </Link>
                 </p>
               </div>
@@ -192,9 +209,8 @@ const UserLogin: React.FC = () => {
           </div>
         </div>
       </div>
-      {showModal && <Modal onClose={() => setShowModal(false)} />}
     </section>
   );
 };
 
-export default UserLogin;
+export default InstRegister;

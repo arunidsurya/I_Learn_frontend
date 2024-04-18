@@ -4,43 +4,69 @@ import classNames from "classnames";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
+import { resetUser } from "../../../app/features/loginSlice";
 
 const Header: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>(null);
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.login.user);
+  console.log(user);
+
+  console.log(user?.name);
 
   useEffect(() => {
     // Check if user data exists in localStorage
     const storedUserData = localStorage.getItem("user");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setUserData(parsedUserData);
-      setName(parsedUserData.user.name);
-    }
-
     const accessToken = localStorage.getItem("accessToken");
     const CookieToken = Cookies.get("access_token");
-    if (accessToken === CookieToken) {
+
+    if (storedUserData && accessToken === CookieToken) {
       setIsLoggedIn(true);
-      // console.log("match");
     } else {
       setIsLoggedIn(false); // User is not logged in
     }
   }, []);
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const CookieToken = Cookies.get("access_token");
-    // Update isLoggedIn state when userData changes
-    if (accessToken === CookieToken) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [userData]);
+  // useEffect(() => {
+  //   // Check if user data exists in localStorage
+  //   const storedUserData = localStorage.getItem("user");
+  //   const user = useSelector((state: RootState) => state.login.user);
+  //   console.log(user);
+
+  //   if (storedUserData) {
+  //     const parsedUserData = JSON.parse(storedUserData);
+  //     setUserData(parsedUserData);
+  //     setName(parsedUserData.user.name);
+  //   }
+
+  //   const accessToken = localStorage.getItem("accessToken");
+  //   const CookieToken = Cookies.get("access_token");
+  //   if (accessToken === CookieToken) {
+  //     setIsLoggedIn(true);
+  //     // console.log("match");
+  //   } else {
+  //     setIsLoggedIn(false); // User is not logged in
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   const accessToken = localStorage.getItem("accessToken");
+  //   const CookieToken = Cookies.get("access_token");
+  //   // Update isLoggedIn state when userData changes
+  //   if (accessToken === CookieToken) {
+  //     setIsLoggedIn(true);
+  //   } else {
+  //     setIsLoggedIn(false);
+  //   }
+  // }, [userData]);
 
   const handleLogout = () => {
     axios
@@ -51,10 +77,12 @@ const Header: React.FC = () => {
         console.log(response.data);
         if (response.data.success) {
           console.log(response.data);
+          dispatch(resetUser());
           localStorage.removeItem("user");
           localStorage.removeItem("accessToken");
           setIsLoggedIn(false);
           setUserData(null);
+          navigate("/");
         }
       })
       .catch((error) => {
@@ -115,7 +143,7 @@ const Header: React.FC = () => {
                     <Menu.Item>
                       {({ active }) => (
                         <div
-                          onClick={() => navigate("/profile")}
+                          onClick={() => navigate("/manage_account")}
                           className={classNames(
                             active && "bg-gray-100",
                             "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2 flex gap-2 items-center border-b border-neutral-700 my-2"
@@ -129,7 +157,7 @@ const Header: React.FC = () => {
                             }}
                           ></div>
 
-                          <span>{name}</span>
+                          <span>{user?.name}</span>
                         </div>
                       )}
                     </Menu.Item>
