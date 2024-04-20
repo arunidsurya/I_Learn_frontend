@@ -192,7 +192,6 @@ const Header: React.FC = () => {
               </Transition>
             </Menu>
           ) : (
-            // If user is not logged in, render the login/register links
             <div className="flex gap-4">
               <Link to={"/login"}>Login</Link>
             </div>

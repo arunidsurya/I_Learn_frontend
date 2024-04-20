@@ -7,8 +7,9 @@ import { TERipple } from "tw-elements-react";
 import Modal from "../shared/Modal";
 import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../app/features/loginSlice";
+import Oauth from "./Oauth";
 
-const UserLogin: React.FC = () => {
+const UserLogin: React.FC<UserLoginProps> = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -53,7 +54,7 @@ const UserLogin: React.FC = () => {
           localStorage.setItem("user", JSON.stringify(response.data.data));
           localStorage.setItem("accessToken", response.data.data.token);
           Navigate("/");
-          // window.location.reload();
+          window.location.reload();
         } else {
           setError(response.data.data.message);
         }
@@ -175,6 +176,7 @@ const UserLogin: React.FC = () => {
                   >
                     Login
                   </button>
+                  <Oauth />
                 </TERipple>
 
                 {/* <!-- Register link --> */}
