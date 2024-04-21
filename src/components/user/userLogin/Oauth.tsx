@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../app/features/loginSlice";
 
-const Oauth: React.FC = () => {
-  const [name, setName] = useState<string | null>("");
-  const [email, setEmail] = useState<string | null>("");
-  const [avatar, setAvatar] = useState<string | null>("");
+interface OauthProps {
+  setError: React.Dispatch<React.SetStateAction<string>>;
+}
 
+const Oauth: React.FC<OauthProps> = ({ setError }) => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -23,33 +23,52 @@ const Oauth: React.FC = () => {
 
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
-      setName(resultsFromGoogle.user.displayName);
-      setEmail(resultsFromGoogle.user.email);
-      setAvatar(resultsFromGoogle.user.photoURL);
-      axios
-        .post(
-          "http://localhost:5000/api/v1/user/google_signin",
-          { name, email, avatar },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((response) => {
-          console.log(response.data);
-          if (response.data.data.success) {
-            // console.log(response.data.data.user);
+      // console.log("Gname :", resultsFromGoogle.user.displayName);
+      // console.log("Gemail :", resultsFromGoogle.user.email);
+      // console.log("Gphoto :", resultsFromGoogle.user.photoURL);
 
-            const userDetails = response.data.data.user;
-            dispatch(SaveUser(userDetails));
-            localStorage.setItem("user", JSON.stringify(response.data.data));
-            localStorage.setItem("accessToken", response.data.data.token);
-            Navigate("/");
-            window.location.reload();
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (
+        resultsFromGoogle.user.displayName &&
+        resultsFromGoogle.user.email &&
+        resultsFromGoogle.user.photoURL
+      ) {
+        axios
+          .post(
+            "http://localhost:5000/api/v1/user/google_signin",
+            {
+              name: resultsFromGoogle.user.displayName,
+              email: resultsFromGoogle.user.email,
+              avatar: resultsFromGoogle.user.photoURL,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            // console.log(response.data);
+            if (response.data.data.success) {
+              // console.log(response.data.data.user);s
+
+              const userDetails = response.data.data.user;
+              // console.log(userDetails);
+              dispatch(SaveUser(userDetails));
+              localStorage.setItem("user", JSON.stringify(response.data.data));
+              localStorage.setItem(
+                "accessToken",
+                response.data.data.access_token
+              );
+              Navigate("/");
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            setError("internal sever errror,please try again");
+          });
+      } else {
+        console.log("error");
+        setError("internal sever errror,please try again");
+      }
     } catch (error) {
       console.error(error);
     }

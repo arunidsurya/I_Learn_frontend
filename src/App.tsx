@@ -14,9 +14,9 @@ const UserHomeLazy = React.lazy(
 const UserLoginLazy = React.lazy(
   () => import("./components/user/userLogin/UserLogin")
 );
-const UserRegisterLazy = React.lazy(
-  () => import("./components/user/userRegister/Register")
-);
+// const UserRegisterLazy = React.lazy(
+//   () => import("./components/user/userRegister/Register")
+// );
 const UserCoursesLazy = React.lazy(
   () => import("./components/user/userCourses/UserCourses")
 );
@@ -79,6 +79,8 @@ import UserAuthRoute from "./components/user/utils/UserAuthRoute";
 import AdminLayout from "./components/admin/shared/AdminLayout";
 import ProtectiveRoute from "./components/admin/utils/protectiveRoute";
 import InstLayout from "./components/instructor/shared/InstLayout";
+import UserRegister from "./components/user/userRegister/Register";
+import UserLogin from "./components/user/userLogin/UserLogin";
 
 const App: React.FC = () => {
   return (
@@ -100,22 +102,7 @@ const App: React.FC = () => {
               </Suspense>
             }
           />
-          <Route
-            path="login/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <UserLoginLazy />
-              </Suspense>
-            }
-          />
-          <Route
-            path="register/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <UserRegisterLazy />
-              </Suspense>
-            }
-          />
+
           <Route
             path="courses/"
             element={
@@ -301,6 +288,8 @@ const App: React.FC = () => {
             </Suspense>
           }
         />
+        <Route path="user_register/" element={<UserRegister />} />
+        <Route path="login/" element={<UserLogin />} />
       </Routes>
     </Router>
   );

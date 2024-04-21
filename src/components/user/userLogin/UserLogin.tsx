@@ -8,8 +8,9 @@ import Modal from "../shared/Modal";
 import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../app/features/loginSlice";
 import Oauth from "./Oauth";
+import Cookies from "js-cookie";
 
-const UserLogin: React.FC<UserLoginProps> = () => {
+const UserLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -20,18 +21,12 @@ const UserLogin: React.FC<UserLoginProps> = () => {
 
   useEffect(() => {
     // Check if user data exists in localStorage
-    const storedUserData = localStorage.getItem("user");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
+    // const storedUserData = localStorage.getItem("user");
+    // const accessToken = localStorage.getItem("accessToken");
+    const CookieToken = Cookies.get("access_token");
 
-      // Check if necessary data for login exists
-      if (
-        parsedUserData.user &&
-        parsedUserData.user.email &&
-        parsedUserData.success
-      ) {
-        Navigate("/");
-      }
+    if (CookieToken) {
+      Navigate("/");
     }
   }, []);
 
@@ -47,7 +42,7 @@ const UserLogin: React.FC<UserLoginProps> = () => {
         }
       )
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
         if (response.data.data.success) {
           const userDetails = response.data.data.user;
           dispatch(SaveUser(userDetails));
@@ -176,21 +171,21 @@ const UserLogin: React.FC<UserLoginProps> = () => {
                   >
                     Login
                   </button>
-                  <Oauth />
+                  <Oauth setError={setError} />
                 </TERipple>
-
-                {/* <!-- Register link --> */}
-                <p className="mb-0 mt-2 pt-1 text-sm font-semibold">
-                  Don't have an account?{" "}
-                  <Link
-                    to={"/register"}
-                    className="text-red-500 transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
-                  >
-                    Register
-                  </Link>
-                </p>
               </div>
             </form>
+
+            {/* <!-- Register link --> */}
+            <p className="mb-0 mt-2 pt-1 text-sm font-semibold">
+              Don't have an account?
+              <Link to={"/user_register"}>
+                for registeration{" "}
+                <span className="text-red-500 transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">
+                  click here
+                </span>
+              </Link>
+            </p>
           </div>
         </div>
       </div>

@@ -8,65 +8,56 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { resetUser } from "../../../app/features/loginSlice";
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  gender: string;
+  password: string;
+  isVerified: boolean;
+  isBlocked: boolean;
+  courses: any[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  avatar?: {
+    url: string;
+    public_id: string;
+  };
+}
+
 const Header: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userData, setUserData] = useState<any>(null);
-  // const [name, setName] = useState("");
+  const [savedUser, setSavedUser] = useState<User | null | undefined>();
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.login.user);
-  console.log(user);
 
-  console.log(user?.name);
+  // console.log(user?.name);
 
   useEffect(() => {
     // Check if user data exists in localStorage
-    const storedUserData = localStorage.getItem("user");
-    const accessToken = localStorage.getItem("accessToken");
+    // const storedUserData = localStorage.getItem("user");
+    // const accessToken = localStorage.getItem("accessToken");
     const CookieToken = Cookies.get("access_token");
 
-    if (storedUserData && accessToken === CookieToken) {
+    if (CookieToken) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false); // User is not logged in
     }
+    const storedUserData = localStorage.getItem("user");
+    // console.log("user", storedUserData);
+    if (storedUserData) {
+      const parseData = JSON.parse(storedUserData);
+      const currentUser: User = parseData.user;
+      console.log(currentUser);
+      setSavedUser(currentUser);
+    }
   }, []);
-
-  // useEffect(() => {
-  //   // Check if user data exists in localStorage
-  //   const storedUserData = localStorage.getItem("user");
-  //   const user = useSelector((state: RootState) => state.login.user);
-  //   console.log(user);
-
-  //   if (storedUserData) {
-  //     const parsedUserData = JSON.parse(storedUserData);
-  //     setUserData(parsedUserData);
-  //     setName(parsedUserData.user.name);
-  //   }
-
-  //   const accessToken = localStorage.getItem("accessToken");
-  //   const CookieToken = Cookies.get("access_token");
-  //   if (accessToken === CookieToken) {
-  //     setIsLoggedIn(true);
-  //     // console.log("match");
-  //   } else {
-  //     setIsLoggedIn(false); // User is not logged in
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   const accessToken = localStorage.getItem("accessToken");
-  //   const CookieToken = Cookies.get("access_token");
-  //   // Update isLoggedIn state when userData changes
-  //   if (accessToken === CookieToken) {
-  //     setIsLoggedIn(true);
-  //   } else {
-  //     setIsLoggedIn(false);
-  //   }
-  // }, [userData]);
 
   const handleLogout = () => {
     axios
@@ -74,19 +65,19 @@ const Header: React.FC = () => {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         if (response.data.success) {
-          console.log(response.data);
+          // console.log(response.data);
           dispatch(resetUser());
           localStorage.removeItem("user");
           localStorage.removeItem("accessToken");
           setIsLoggedIn(false);
-          setUserData(null);
           navigate("/");
         }
       })
       .catch((error) => {
         console.error("Error during logout:", error);
+        navigate("/");
       });
   };
 
@@ -121,8 +112,9 @@ const Header: React.FC = () => {
                   <div
                     className="h-8 w-8 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center"
                     style={{
-                      backgroundImage:
-                        'url("https://sources.unsplash.com/80x80?face")',
+                      backgroundImage: savedUser?.avatar
+                        ? `url(${savedUser.avatar.url})`
+                        : 'url("https://sources.unsplash.com/80x80?face")',
                     }}
                   >
                     <span className="sr-only">Arun Surendran</span>

@@ -34,7 +34,7 @@ const EditMember: React.FC = () => {
     e.preventDefault();
 
     axios
-      .post(
+      .put(
         "http://localhost:5000/api/v1/admin/editTutor",
         { _id, name, email, institute, qualifiaction, experience },
         {

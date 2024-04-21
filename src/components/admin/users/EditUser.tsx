@@ -30,7 +30,7 @@ const EditUser: React.FC = () => {
     e.preventDefault();
 
     axios
-      .post(
+      .put(
         "http://localhost:5000/api/v1/admin/editUser",
         { _id, name, email, gender },
         {
