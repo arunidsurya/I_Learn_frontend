@@ -7,10 +7,14 @@ import {
   HiOutlineChatAlt,
   HiOutlineSearch,
 } from "react-icons/hi";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../../app/store";
 
 const InstHeader: React.FC = () => {
   const navigate = useNavigate();
+
+  const tutor = useSelector((state: RootState) => state.login.tutor);
 
   const handleLogout = () => {
     axios
@@ -148,7 +152,7 @@ const InstHeader: React.FC = () => {
                         "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2"
                       )}
                     >
-                      Your Profile
+                      Hi, {tutor?.name}
                     </div>
                   )}
                 </Menu.Item>

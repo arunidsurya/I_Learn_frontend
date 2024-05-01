@@ -7,7 +7,7 @@ interface InstAuthRouteProps {
 
 const InstAuthRoute: React.FC<InstAuthRouteProps> = ({ children }) => {
   const tutorAuth = localStorage.getItem("tutor_accessToken");
-  console.log(tutorAuth);
+  // console.log(tutorAuth);
 
   if (!tutorAuth) {
     return <Navigate to={"/inst_login"} />;

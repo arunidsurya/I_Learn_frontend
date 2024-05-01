@@ -3,12 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import loginImage from "../../../assets/InstLogin.jpg";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { saveTutor } from "../../../app/features/loginSlice";
 
 const InstLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const Navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const tutorAuth = localStorage.getItem("tutor_accessToken");
@@ -32,8 +36,10 @@ const InstLogin: React.FC = () => {
       .then((response) => {
         // console.log(response.data);
         if (response.data.data.success) {
+          // console.log(response.data.data.tutor);
           localStorage.setItem("tutor", JSON.stringify(response.data.data));
           localStorage.setItem("tutor_accessToken", response.data.data.token);
+          dispatch(saveTutor(response.data.data.tutor));
           Navigate("/instructor");
         } else {
           // console.log(response.data.data.message);

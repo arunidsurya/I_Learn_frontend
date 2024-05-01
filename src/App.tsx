@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import { NextUIProvider } from "@nextui-org/react";
 import {
   Route,
   BrowserRouter as Router,
@@ -6,6 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import "./App.css";
+import { ToastContainer } from "react-toastify";
 
 // Lazy-loaded imports for page components
 const UserHomeLazy = React.lazy(
@@ -72,7 +74,25 @@ const InstLoginLazy = React.lazy(
 const InstRegisterLazy = React.lazy(
   () => import("./components/instructor/login/InstRegister")
 );
+const AddCourseLazy = React.lazy(
+  () => import("./components/instructor/course/addCourse/AddCourse")
+);
+const CategoriesViewLazy = React.lazy(
+  () => import("./components/admin/categories/CategoriesView")
+);
+const EditCategoriesLazy = React.lazy(
+  () => import("./components/admin/categories/EditCategory")
+);
+const AddCategoriesLazy = React.lazy(
+  () => import("./components/admin/categories/AddCategory")
+);
+const AllCoursesLazy = React.lazy(
+  () => import("./components/instructor/course/Courses")
+);
 
+const EditCourseLazy = React.lazy(
+  () => import("./components/instructor/course/editCourse/EditCourse")
+);
 // Import UserLayout, UserAuthRoute, AdminLayout, ProtectiveRoute
 import UserLayout from "./components/user/shared/UserLayout";
 import UserAuthRoute from "./components/user/utils/UserAuthRoute";
@@ -81,75 +101,18 @@ import ProtectiveRoute from "./components/admin/utils/protectiveRoute";
 import InstLayout from "./components/instructor/shared/InstLayout";
 import UserRegister from "./components/user/userRegister/Register";
 import UserLogin from "./components/user/userLogin/UserLogin";
+import InstAuthRoute from "./components/instructor/utils/InstAuthRoute";
 
 const App: React.FC = () => {
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <UserLayout />
-            </Suspense>
-          }
-        >
+      <NextUIProvider>
+        <Routes>
           <Route
-            index
+            path="/"
             element={
               <Suspense fallback={<div>Loading...</div>}>
-                <UserHomeLazy />
-              </Suspense>
-            }
-          />
-
-          <Route
-            path="courses/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <UserCoursesLazy />
-              </Suspense>
-            }
-          />
-          <Route
-            path="activation/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <UserActivationLazy />
-              </Suspense>
-            }
-          />
-          <Route
-            path="about/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <AboutPageLazy />
-              </Suspense>
-            }
-          />
-          <Route
-            path="policy/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <PolicyLazy />
-              </Suspense>
-            }
-          />
-          <Route
-            path="account_verify/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <ConfirmEmailLazy />
-              </Suspense>
-            }
-          />
-          <Route
-            path="manage_account/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <UserAuthRoute>
-                  <UserAccountLayoutLazy />
-                </UserAuthRoute>
+                <UserLayout />
               </Suspense>
             }
           >
@@ -157,140 +120,250 @@ const App: React.FC = () => {
               index
               element={
                 <Suspense fallback={<div>Loading...</div>}>
-                  <MyAccountLazy />
+                  <UserHomeLazy />
+                </Suspense>
+              }
+            />
+
+            <Route
+              path="courses/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserCoursesLazy />
                 </Suspense>
               }
             />
             <Route
-              path="change_password/"
+              path="activation/"
               element={
                 <Suspense fallback={<div>Loading...</div>}>
-                  <ChangePasswordLazy />
+                  <UserActivationLazy />
                 </Suspense>
               }
             />
             <Route
-              path="enrolled_courses/"
+              path="about/"
               element={
                 <Suspense fallback={<div>Loading...</div>}>
-                  <EnrolledCoursesLazy />
+                  <AboutPageLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="policy/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <PolicyLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="account_verify/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ConfirmEmailLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="manage_account/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserAuthRoute>
+                    <UserAccountLayoutLazy />
+                  </UserAuthRoute>
+                </Suspense>
+              }
+            >
+              <Route
+                index
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MyAccountLazy />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="change_password/"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ChangePasswordLazy />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="enrolled_courses/"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <EnrolledCoursesLazy />
+                  </Suspense>
+                }
+              />
+            </Route>
+          </Route>
+
+          <Route
+            path="admin/"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdminLayout />
+              </Suspense>
+            }
+          >
+            <Route
+              index
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProtectiveRoute>
+                    <AdminDashBoardLazy />
+                  </ProtectiveRoute>
+                </Suspense>
+              }
+            />
+            <Route
+              path="users/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProtectiveRoute>
+                    <UsersViewLazy />
+                  </ProtectiveRoute>
+                </Suspense>
+              }
+            />
+            <Route
+              path="addUser/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProtectiveRoute>
+                    <AddUserLazy />
+                  </ProtectiveRoute>
+                </Suspense>
+              }
+            />
+            <Route
+              path="editUser/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProtectiveRoute>
+                    <EditUserLazy />
+                  </ProtectiveRoute>
+                </Suspense>
+              }
+            />
+            <Route
+              path="manage_members/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MembersViewLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="edit_member/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <EditMemberLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="categories/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <CategoriesViewLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="edit_category/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <EditCategoriesLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="add_category/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <AddCategoriesLazy />
                 </Suspense>
               }
             />
           </Route>
-        </Route>
 
-        <Route
-          path="admin/"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <AdminLayout />
-            </Suspense>
-          }
-        >
           <Route
-            index
+            path="instructor/"
             element={
               <Suspense fallback={<div>Loading...</div>}>
-                <ProtectiveRoute>
-                  <AdminDashBoardLazy />
-                </ProtectiveRoute>
+                <InstAuthRoute>
+                  <InstLayout />
+                </InstAuthRoute>
               </Suspense>
             }
-          />
-          <Route
-            path="users/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <ProtectiveRoute>
-                  <UsersViewLazy />
-                </ProtectiveRoute>
-              </Suspense>
-            }
-          />
-          <Route
-            path="addUser/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <ProtectiveRoute>
-                  <AddUserLazy />
-                </ProtectiveRoute>
-              </Suspense>
-            }
-          />
-          <Route
-            path="editUser/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <ProtectiveRoute>
-                  <EditUserLazy />
-                </ProtectiveRoute>
-              </Suspense>
-            }
-          />
-          <Route
-            path="manage_members/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <MembersViewLazy />
-              </Suspense>
-            }
-          />
-          <Route
-            path="edit_member/"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <EditMemberLazy />
-              </Suspense>
-            }
-          />
-        </Route>
+          >
+            <Route
+              index
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <InstDashBoardLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="create_course/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <AddCourseLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="live_courses/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <AllCoursesLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="edit_course/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <EditCourseLazy />
+                </Suspense>
+              }
+            />
+          </Route>
 
-        <Route
-          path="instructor/"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <InstLayout />
-            </Suspense>
-          }
-        >
           <Route
-            index
+            path="admin_login/"
             element={
               <Suspense fallback={<div>Loading...</div>}>
-                <InstDashBoardLazy />
+                <AdminLoginLazy />
               </Suspense>
             }
           />
-        </Route>
-
-        <Route
-          path="admin_login/"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <AdminLoginLazy />
-            </Suspense>
-          }
-        />
-        <Route
-          path="inst_login/"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <InstLoginLazy />
-            </Suspense>
-          }
-        />
-        <Route
-          path="tutor_register/"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <InstRegisterLazy />
-            </Suspense>
-          }
-        />
-        <Route path="user_register/" element={<UserRegister />} />
-        <Route path="login/" element={<UserLogin />} />
-      </Routes>
+          <Route
+            path="inst_login/"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <InstLoginLazy />
+              </Suspense>
+            }
+          />
+          <Route
+            path="tutor_register/"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <InstRegisterLazy />
+              </Suspense>
+            }
+          />
+          <Route path="user_register/" element={<UserRegister />} />
+          <Route path="login/" element={<UserLogin />} />
+        </Routes>
+      </NextUIProvider>
     </Router>
   );
 };

@@ -1,38 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { TERipple } from "tw-elements-react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { TERipple } from "tw-elements-react";
 
-const EditUser: React.FC = () => {
+const EditCategory: React.FC = () => {
   const [_id, set_Id] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [gender, setGender] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [message, setMessage] = useState("");
   const Navigate = useNavigate();
 
   const location = useLocation();
 
   // Retrieve user data from location state
-  const userData = location.state;
+  const categoryData = location.state;
 
   // Set initial state of input fields with user data
   useEffect(() => {
-    if (userData) {
-      setName(userData.name || "");
-      setEmail(userData.email || "");
-      setGender(userData.gender || "");
-      set_Id(userData._id || "");
+    if (categoryData) {
+      setName(categoryData.name || "");
+      setDescription(categoryData.description || "");
+      set_Id(categoryData._id || "");
+      setError("");
+      setMessage("");
     }
-  }, [userData]);
+  }, [categoryData]);
 
-  const handleEditUser = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdate = (e: any) => {
     e.preventDefault();
-
     axios
       .put(
-        "http://localhost:5000/api/v1/admin/editUser",
-        { _id, name, email, gender },
+        "http://localhost:5000/api/v1/admin/edit_category",
+        { _id, name, description },
         {
           withCredentials: true,
         }
@@ -41,19 +41,37 @@ const EditUser: React.FC = () => {
         console.log(res.data);
         if (res.data.success) {
           setError("");
-          Navigate("/admin/users");
+          setMessage(res.data.message);
         } else {
-          setError(res.data.user.message);
+          setError(res.data.message);
         }
+      })
+      .catch((error: any) => {
+        console.log(error);
       });
   };
 
   return (
     <section className="h-full  flex justify-center items-center">
       <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
-        <h1 className="text-2xl font-bold mb-10 text-center">EDIT USER</h1>
-        <form onSubmit={handleEditUser}>
-          {error && <p className="text-red-500">{error}</p>}
+        <h1 className="text-2xl font-bold mb-10 text-center">Add CATEGORY</h1>
+        <form onSubmit={handleUpdate}>
+          {error && (
+            <div className="w-full bg-blue-100 border border-gray-500 mb-4 flex items-center justify-center rounded-md">
+              <p className="text-red-500 font-bold text-lg">{error}</p>
+            </div>
+          )}
+
+          {message && (
+            <div className="w-full bg-blue-100 border border-gray-500 mb-4 flex items-center justify-center rounded-md">
+              <p className="font-bold text-lg mb-3">
+                {message} click here to{" "}
+                <Link to={"/admin/categories"} className="text-green-500">
+                  view categories
+                </Link>
+              </p>
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             <label htmlFor="name">Name</label>
@@ -64,35 +82,26 @@ const EditUser: React.FC = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              placeholder="Enter email..."
-              className="w-full border border-gray-300 rounded h-10"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+            <label htmlFor="email" className="mt-4">
+              Description
+            </label>
+            <textarea
+              rows={8}
+              cols={20}
+              placeholder="Enter Description..."
+              className="w-full border border-gray-300 rounded"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
-            <label htmlFor="gender">Gender</label>
-            <select
-              id="gender"
-              className="w-full border border-gray-300 rounded h-10"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-            >
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
           </div>
 
-          <div className="text-center lg:text-left">
+          <div className="text-center lg:text-left mt-10">
             <TERipple rippleColor="light">
               <button
                 type="submit"
                 className="inline-block rounded bg-blue-500 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
               >
-                submit
+                update
               </button>
             </TERipple>
           </div>
@@ -102,4 +111,4 @@ const EditUser: React.FC = () => {
   );
 };
 
-export default EditUser;
+export default EditCategory;
