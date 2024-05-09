@@ -37,29 +37,38 @@ const Header: React.FC = () => {
   const user = useSelector((state: RootState) => state.login.user);
 
   // console.log(user?.name);
+  // const accessToken = localStorage.getItem("accessToken");
+  // const CookieToken = Cookies.get("access_token");
+  // console.log(accessToken)
+  // console.log(CookieToken);
+  // console.log(accessToken===CookieToken);
 
   useEffect(() => {
-    // Check if user data exists in localStorage
-    // const storedUserData = localStorage.getItem("user");
-    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     const CookieToken = Cookies.get("access_token");
+    
 
-    if (CookieToken) {
-      setIsLoggedIn(true);
+    if (!accessToken || !CookieToken) {
+            setIsLoggedIn(false); // User is not logged in
+            localStorage.removeItem("accessToken");
+            Cookies.remove("access_token");
+
     } else {
-      setIsLoggedIn(false); // User is not logged in
+      setIsLoggedIn(true);
     }
     const storedUserData = localStorage.getItem("user");
     // console.log("user", storedUserData);
     if (storedUserData) {
       const parseData = JSON.parse(storedUserData);
       const currentUser: User = parseData.user;
-      console.log(currentUser);
+      // console.log(currentUser);
       setSavedUser(currentUser);
     }
   }, []);
 
   const handleLogout = () => {
+    console.log("logout");
+
     axios
       .get("http://localhost:5000/api/v1/user/logout", {
         withCredentials: true,

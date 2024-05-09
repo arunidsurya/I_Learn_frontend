@@ -4,6 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../../../app/features/loginSlice";
+import {Toaster} from 'react-hot-toast'
 
 const UserLayout: React.FC = () => {
   // const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const UserLayout: React.FC = () => {
       <Header />
       <div className="flex-grow">{<Outlet />}</div>
       <Footer />
+      <Toaster />
     </div>
   );
 };

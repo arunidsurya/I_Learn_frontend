@@ -3,7 +3,7 @@ import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
-import axios from "axios";
+import { signup } from "../../services/Api/userApi";
 
 const UserRegister: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -15,7 +15,7 @@ const UserRegister: React.FC = () => {
   const [error, setError] = useState<string>("");
   const Navigate = useNavigate();
 
-  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match");
@@ -23,24 +23,15 @@ const UserRegister: React.FC = () => {
     }
     setPasswordError("");
 
-    axios
-      .post(
-        "http://localhost:5000/api/v1/user/registration",
-        { name, email, gender, password },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.data.user.success) {
-          // console.log(res.data);
+    const res = await signup(name, email, gender, password);
+
+        if (res?.data.user.success) {
           const activationToken = res.data.user.activationToken;
           setError("");
           Navigate("/activation", { state: activationToken });
         } else {
-          setError(res.data.user.message);
+          setError(res?.data.user.message);
         }
-      });
   };
 
   return (
@@ -177,7 +168,7 @@ const UserRegister: React.FC = () => {
                     type="submit"
                     className="inline-block rounded bg-blue-500 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                   >
-                    Login
+                    SUBMIT
                   </button>
                 </TERipple>
 

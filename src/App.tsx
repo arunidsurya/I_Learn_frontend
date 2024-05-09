@@ -22,6 +22,9 @@ const UserLoginLazy = React.lazy(
 const UserCoursesLazy = React.lazy(
   () => import("./components/user/userCourses/UserCourses")
 );
+const UserCourseDetailsLazy = React.lazy(
+  () => import("./components/user/userCourses/couseDetails/CourseDetailsPage")
+);
 const UserActivationLazy = React.lazy(
   () => import("./components/user/userActivation/UserActivation")
 );
@@ -44,6 +47,10 @@ const ChangePasswordLazy = React.lazy(
 const EnrolledCoursesLazy = React.lazy(
   () => import("./components/user/userAccount/EnrolledCourses")
 );
+const UserCourseAccessLazy = React.lazy(
+  () => import("./components/user/userCourses/courseAcess/CourseAccess")
+);
+
 const AdminDashBoardLazy = React.lazy(
   () => import("./components/admin/dashboard/AdminDashBoard")
 );
@@ -86,13 +93,17 @@ const EditCategoriesLazy = React.lazy(
 const AddCategoriesLazy = React.lazy(
   () => import("./components/admin/categories/AddCategory")
 );
+
+const CoursesViewLaZY = React.lazy(
+  () => import("./components/admin/courses/ViewCourses")
+);
 const AllCoursesLazy = React.lazy(
   () => import("./components/instructor/course/Courses")
 );
-
 const EditCourseLazy = React.lazy(
   () => import("./components/instructor/course/editCourse/EditCourse")
 );
+
 // Import UserLayout, UserAuthRoute, AdminLayout, ProtectiveRoute
 import UserLayout from "./components/user/shared/UserLayout";
 import UserAuthRoute from "./components/user/utils/UserAuthRoute";
@@ -124,12 +135,27 @@ const App: React.FC = () => {
                 </Suspense>
               }
             />
-
             <Route
               path="courses/"
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <UserCoursesLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="course_details/:_id"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserCourseDetailsLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="course-access/:_id"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserCourseAccessLazy />
                 </Suspense>
               }
             />
@@ -287,6 +313,14 @@ const App: React.FC = () => {
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <AddCategoriesLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="courses/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <CoursesViewLaZY />
                 </Suspense>
               }
             />

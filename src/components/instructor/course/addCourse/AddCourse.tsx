@@ -34,7 +34,7 @@ const AddCourse: React.FC = () => {
       videoUrl: "",
       title: "",
       description: "",
-      videoSection: "Untitled Section",
+      videoSection: "Untitled Chapter",
       links: [
         {
           title: "",

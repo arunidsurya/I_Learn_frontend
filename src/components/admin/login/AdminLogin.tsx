@@ -3,29 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import loginImage from "../../../assets/login.jpg";
 import axios from "axios";
+import { Cookies } from "react-cookie";
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const Navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user data exists in localStorage
-    const storedUserData = localStorage.getItem("admin");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
+   const cookies = new Cookies();
 
-      // Check if necessary data for login exists
-      if (
-        parsedUserData.admin &&
-        parsedUserData.admin.email &&
-        parsedUserData.success
-      ) {
-        Navigate("/admin");
-      }
+  useEffect(() => {
+    const tutorAuth = cookies.get("admin_AccessToken");
+    const localStorageToken = localStorage.getItem("admin_accessToken");
+
+    if (tutorAuth && localStorageToken && tutorAuth===localStorageToken) {
+      Navigate("/instructor");
     }
   }, []);
-
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios

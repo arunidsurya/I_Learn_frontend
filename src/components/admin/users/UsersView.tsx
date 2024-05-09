@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { IoCloseOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 interface UserData {
@@ -17,24 +18,29 @@ interface UserData {
 
 const UsersView: React.FC = () => {
   const [usersData, setUsersData] = useState<UserData[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [selectedMethod, setSelectedMethod] = useState("");
+  const [open, setOpen] = useState(false);
+  const [mesage, setMesage] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    setMesage("");
     axios
       .get("http://localhost:5000/api/v1/admin/getUsers", {
         withCredentials: true,
       })
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
         if (response.data.success) {
-          setUsersData(response.data.users); // Assuming the users array is nested under a key named 'users'
+          setUsersData(response.data.users);
         }
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
       });
-  }, []);
+  }, [mesage]);
 
   const handleBlock = (method: string, _id: string) => {
     axios
@@ -48,13 +54,23 @@ const UsersView: React.FC = () => {
       .then((response) => {
         console.log(response.data);
         if (response.data.success) {
-          window.location.reload();
+          setMesage("User status changed");
         }
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
       });
   };
+
+  const handleConfirmAction = () => {
+    if (selectedUserId && selectedMethod) {
+      handleBlock(selectedMethod, selectedUserId);
+    }
+    setOpen(false);
+    setSelectedMethod("");
+    setSelectedUserId("");
+  };
+
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
       <div className="flex justify-between items-center mb-3">
@@ -138,14 +154,22 @@ const UsersView: React.FC = () => {
                 {user.isBlocked ? (
                   <button
                     className="w-20 h-8 rounded-md bg-green-500 text-white mr-2"
-                    onClick={() => handleBlock("unBlockUser", user._id)}
+                    onClick={() => {
+                      setSelectedMethod("unBlockUser");
+                      setSelectedUserId(user._id);
+                      setOpen(true);
+                    }}
                   >
                     unBlock
                   </button>
                 ) : (
                   <button
                     className="w-20 h-8 rounded-md bg-red-500 text-white mr-2"
-                    onClick={() => handleBlock("blockUser", user._id)}
+                    onClick={() => {
+                      setSelectedMethod("blockUser");
+                      setSelectedUserId(user._id);
+                      setOpen(true);
+                    }}
                   >
                     Block
                   </button>
@@ -162,6 +186,42 @@ const UsersView: React.FC = () => {
           ))}
         </tbody>
       </table>
+      {open && (
+        <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center">
+          <div className="bg-black bg-opacity-50 absolute top-0 left-0 w-full h-full"></div>
+          <div className="w-96 bg-white rounded-xl shadow-lg p-4 relative">
+            <div className="absolute top-0 right-0">
+              <IoCloseOutline
+                size={24}
+                className="text-black cursor-pointer"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <h1 className="text-xl font-bold mb-2">Are you sure?</h1>
+              <p className="mb-4">Please confirm to proceed with the action.</p>
+              <div className="flex space-x-4">
+                <button
+                  onClick={handleConfirmAction}
+                  className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-green-600"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedMethod("");
+                    setSelectedUserId("");
+                    setOpen(false);
+                  }}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-red-600"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

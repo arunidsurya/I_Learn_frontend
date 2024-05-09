@@ -1,16 +1,36 @@
 import { Menu, Popover, Transition } from "@headlessui/react";
 import axios from "axios";
 import classNames from "classnames";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
   HiOutlineBell,
   HiOutlineChatAlt,
   HiOutlineSearch,
 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import { Cookies } from "react-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
+import { resetAdmin } from "../../../app/features/loginSlice";
 
 const AdminHeader: React.FC = () => {
   const navigate = useNavigate();
+  const cookies = new Cookies();
+  const dispatch = useDispatch();
+
+  const admin = useSelector((state: RootState) => state.login.admin);
+
+  const localStorageToken = localStorage.getItem("admin_accessToken");
+  const cookieToken = cookies.get("admin_AccessToken");
+
+  useEffect(() => {
+    if (localStorageToken !== cookieToken) {
+      localStorage.removeItem("admin_AccessToken");
+      cookies.remove("admin_AccessToken");
+
+      navigate("/admin_login");
+    }
+  }, []);
 
   const handleLogout = () => {
     axios
@@ -20,7 +40,8 @@ const AdminHeader: React.FC = () => {
       .then((response) => {
         console.log(response.data);
         if (response.data.success) {
-          console.log(response.data);
+          // console.log(response.data);
+          dispatch(resetAdmin());
           localStorage.removeItem("admin");
           localStorage.removeItem("admin_accessToken");
           navigate("/admin_login");
@@ -148,7 +169,7 @@ const AdminHeader: React.FC = () => {
                         "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2"
                       )}
                     >
-                      Your Profile
+                      Hi {admin?.name}
                     </div>
                   )}
                 </Menu.Item>

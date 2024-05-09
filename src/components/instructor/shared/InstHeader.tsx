@@ -1,20 +1,37 @@
 import { Menu, Popover, Transition } from "@headlessui/react";
 import axios from "axios";
 import classNames from "classnames";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
   HiOutlineBell,
   HiOutlineChatAlt,
   HiOutlineSearch,
 } from "react-icons/hi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../app/store";
+import { Cookies } from "react-cookie";
+import backgroundImage from "../../../assets/profile.png";
+import { resetTutor } from "../../../app/features/loginSlice";
 
 const InstHeader: React.FC = () => {
   const navigate = useNavigate();
+  const cookies = new Cookies();
+  const dispatch = useDispatch();
 
   const tutor = useSelector((state: RootState) => state.login.tutor);
+
+  const localStorageToken = localStorage.getItem("tutor_accessToken");
+  const cookieToken = cookies.get("tutor_token");
+
+  useEffect(() => {
+    if (localStorageToken !== cookieToken) {
+      localStorage.removeItem("tutor_accessToken");
+      cookies.remove("tutor_token");
+
+      navigate("/inst_login");
+    }
+  }, []);
 
   const handleLogout = () => {
     axios
@@ -22,9 +39,10 @@ const InstHeader: React.FC = () => {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         if (response.data.success) {
-          console.log(response.data);
+          // console.log(response.data);
+          dispatch(resetTutor());
           localStorage.removeItem("tutor");
           localStorage.removeItem("tutor_accessToken");
           navigate("/inst_login");
@@ -122,10 +140,9 @@ const InstHeader: React.FC = () => {
             <Menu.Button className="ml-2 inline-flex rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-400">
               <span className="sr-only">Open user menu</span>
               <div
-                className="h-10 w-10 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center"
+                className="h-8 w-8 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center"
                 style={{
-                  backgroundImage:
-                    'url("https://sources.unsplash.com/80x80?face")',
+                  backgroundImage: `url(${backgroundImage})`,
                 }}
               >
                 <span className="sr-only">Arun Surendran</span>

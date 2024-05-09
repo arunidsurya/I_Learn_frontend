@@ -1,0 +1,262 @@
+import { Button } from "@nextui-org/react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { IoCloseOutline } from "react-icons/io5";
+import { MdDelete, MdEdit } from "react-icons/md";
+
+interface Course {
+  _id: string;
+  courseTitle: string;
+  instructorName: string;
+  instructorId: string;
+  category: string;
+  description: string;
+  price: number;
+  estimatedPrice?: number;
+  totalVideos?: number;
+  thumbnail: string;
+  tags: string;
+  level: string;
+  demoUrl: string;
+  benefits: { title: string }[];
+  prerequisites: { title: string }[];
+  reviews: [];
+  courseData: [];
+  approved?: boolean;
+  ratings?: number;
+  purchased?: number;
+  createdAt: string;
+}
+
+const ViewCourses: React.FC = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+  const [selectedAction, setSelectedAction] = useState<string | null>(null);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/v1/admin/courses", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        // console.log(response.data.courses);
+        if (response.data.success) {
+          setCourses(response.data.courses); // Assuming the users array is nested under a key named 'users'
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching courses:", error);
+      });
+  }, [message, error]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const monthIndex = date.getMonth();
+    const year = date.getFullYear();
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return `${day}-${months[monthIndex]}-${year}`;
+  };
+
+  const handleClick = (status: string, courseId: any) => {
+    setError("");
+    setMessage("");
+    axios
+      .put(
+        "http://localhost:5000/api/v1/admin/change_courses_status",
+        { status, courseId },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((response: any) => {
+        console.log(response.data.courses);
+        if (response.data.success) {
+          setMessage(response.data.message);
+        } else {
+          setError(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching courses:", error);
+      });
+  };
+
+  const handleConfirmAction = () => {
+    if (selectedCourseId && selectedAction) {
+      handleClick(selectedAction, selectedCourseId);
+    }
+    setOpen(false);
+    setSelectedCourseId(null);
+    setSelectedAction(null);
+  };
+
+  return (
+    <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
+      <div className="flex justify-between items-center mb-3">
+        <strong className="text-gray-700 font-bold  text-2xl mb-4">
+          Live Courses
+        </strong>
+      </div>
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              s/n
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Course Name
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Ratings
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Purchased
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Created At
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Status
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {courses.map((course, index) => (
+            <tr key={course?._id}>
+              <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {course.courseTitle.slice(0, 25)}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">0</td>
+              <td className="px-6 py-4 whitespace-nowrap">0</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {formatDate(course.createdAt)}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span
+                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    course.approved
+                      ? "bg-green-100 text-green-800 min-w-22 flex items-center justify-center"
+                      : "bg-red-100 text-red-800 min-w-22 flex items-center justify-center"
+                  }`}
+                >
+                  {course.approved ? "Approved" : "Not approved"}
+                </span>
+              </td>
+
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="flex gap-4">
+                  {course.approved ? (
+                    <button
+                      className="bg-red-500 text-white rounded-md p-1 font-bold min-w-20"
+                      onClick={() => {
+                        setSelectedCourseId(course._id);
+                        setSelectedAction("block");
+                        setOpen(true);
+                      }}
+                    >
+                      Block
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-green-500 text-white rounded-md p-1 font-bold min-w-20"
+                      onClick={() => {
+                        setSelectedCourseId(course._id);
+                        setSelectedAction("approve");
+                        setOpen(true);
+                      }}
+                    >
+                      Approve
+                    </button>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {open && (
+        <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center">
+          <div className="bg-black bg-opacity-50 absolute top-0 left-0 w-full h-full"></div>
+          <div className="w-96 bg-white rounded-xl shadow-lg p-4 relative">
+            <div className="absolute top-0 right-0">
+              <IoCloseOutline
+                size={24}
+                className="text-black cursor-pointer"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <h1 className="text-xl font-bold mb-2">Are you sure?</h1>
+              <p className="mb-4">
+                Please confirm to proceed with the action.
+              </p>
+              <div className="flex space-x-4">
+                <button
+                  onClick={handleConfirmAction}
+                  className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-green-600"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedAction("");
+                    setSelectedCourseId("");
+                    setOpen(false);
+                  }}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-red-600"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ViewCourses;
