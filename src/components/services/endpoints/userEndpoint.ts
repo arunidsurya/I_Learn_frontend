@@ -4,6 +4,8 @@ const userRoutes = {
   getCourseContent: "/user/getCourseContent",
   addQuestion: "/user/add-question",
   addAnswer: "/user/add-answer",
+  getChat: "/user/get-chat",
+  addChat: "/user/add-chat",
 };
 
 

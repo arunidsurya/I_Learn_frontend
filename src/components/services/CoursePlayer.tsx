@@ -17,6 +17,7 @@ const CoursePlayer: React.FC<Props> = ({ videoUrl, title, width }) => {
         url={videoUrl}
         controls={true}
         width={width}
+        height={500}
         className="bg-dark overflow-hidden "
       />
     </div>

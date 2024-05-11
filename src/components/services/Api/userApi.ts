@@ -49,7 +49,39 @@ export const addAnswer = async(courseId:string,contentId:string,questionId:strin
     console.log(error);
     
   }
+
 }
 
+export const getChat = async(courseId:string) =>{
+  try {
+    const res = await Api.get(`${userRoutes.getChat}/${ courseId }`);
+    return res;
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+export const addChat = async (
+  courseId: string,
+  userId: string,
+  userName: string,
+  message: string
+) => {
+  try {
+    console.log(userName, userId, courseId, message);
+
+    const res = await Api.put(userRoutes.addChat, {
+      courseId,
+      userId,
+      userName,
+      message,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 

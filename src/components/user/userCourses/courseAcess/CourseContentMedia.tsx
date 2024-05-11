@@ -7,11 +7,13 @@ import {
   AiOutlineStar,
 } from "react-icons/ai";
 import defaultImage from "../../../../assets/profile.png";
-import { MenuItem, Textarea } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import { addAnswer, addQuestion } from "../../../services/Api/userApi";
-import {formatCreatedAt} from '../../../services/formats/FormatDate'
+import { formatCreatedAt } from "../../../services/formats/FormatDate";
 import { BiMessage } from "react-icons/bi";
+import { Textarea } from "@nextui-org/react";
+import Livechat from "./Livechat";
+import { Socket } from "socket.io-client";
 
 type Props = {
   data: any;
@@ -20,6 +22,8 @@ type Props = {
   setActiveVideo: (activeVideo: number) => void;
   user: any;
   updateCourseData: () => void;
+  updateCourseData2: () => void;
+  socket:Socket
 };
 
 const CourseContentMedia: React.FC<Props> = ({
@@ -29,12 +33,13 @@ const CourseContentMedia: React.FC<Props> = ({
   setActiveVideo,
   user,
   updateCourseData,
+  updateCourseData2,
+  socket
 }) => {
   const [activeBar, setActiveBar] = useState(0);
   const [question, setQuestion] = useState("");
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
-  const [isloading, setIsloading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [answerSuccess, setSetAnswerSuccess] = useState(false);
   const [answer, setAnswer] = useState("");
@@ -43,6 +48,8 @@ const CourseContentMedia: React.FC<Props> = ({
   const isReviewExists = data?.reviews?.find(
     (item: any) => item.user._id === user._id
   );
+
+
 
   const handleQuestion = async () => {
     if (question.length === 0) {
@@ -54,7 +61,7 @@ const CourseContentMedia: React.FC<Props> = ({
 
       const res = await addQuestion(courseId, contentId, question);
       if (res?.data.success) {
-        setIsSuccess(!isSuccess);
+        setIsSuccess(true);
         toast.success(res.data.message);
       } else {
         setIsSuccess(false);
@@ -64,33 +71,37 @@ const CourseContentMedia: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    console.log("useEffect-courseContentMedia component");
-    if (isSuccess) {
+    console.log("parent");
+    
+    // console.log("useEffect-courseContentMedia component");
+    if (isSuccess===true) {
       setQuestion("");
-      updateCourseData();
+      
+      updateCourseData2();
       setIsSuccess(false);
     }
-    if(answerSuccess){
-      setAnswer("")
+    if (answerSuccess===true) {
+      setAnswer("");
+      console.log("answer call");
+      
       updateCourseData();
-      setSetAnswerSuccess(false)
+      setSetAnswerSuccess(false);
     }
-  }, [isSuccess,answerSuccess]);
+  }, [isSuccess, answerSuccess]);
 
-  const handleAnswerSubmit = async() => {
+  const handleAnswerSubmit = async () => {
     // console.log("called handleAnswerSubmit");
     // courseId, contentId, questionId, answer;
-    const contentId=data[activeVideo]._id;
-    const res = await addAnswer(courseId,contentId,questionId,answer);
+    const contentId = data[activeVideo]._id;
+    const res = await addAnswer(courseId, contentId, questionId, answer);
     console.log(res);
-    if(res?.data.success){
-      setSetAnswerSuccess(true)
+    if (res?.data.success) {
+      setSetAnswerSuccess(true);
     }
-    
   };
 
   // console.log(questionId);
-  
+
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer videoUrl={data[activeVideo].videoUrl} width="100%" />
@@ -126,7 +137,7 @@ const CourseContentMedia: React.FC<Props> = ({
         {data[activeVideo].title}
       </h1>
       <div className="w-full p-2 flex items-center justify-between bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">
-        {["Overview", "Resources", "Q&A", "Reviews"].map(
+        {["Overview", "Resources", "Q&A", "Reviews" ,"Live Chat"].map(
           (text: any, index: number) => (
             <h5
               key={index}
@@ -172,7 +183,7 @@ const CourseContentMedia: React.FC<Props> = ({
               height={50}
               className="rounded-full w-[50px] h-[50px] object-cover"
             />
-            <Textarea
+            <textarea
               name=""
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
@@ -180,8 +191,8 @@ const CourseContentMedia: React.FC<Props> = ({
               cols={40}
               rows={5}
               placeholder="Write your question"
-              className=" bg-black ml-3 border-black 800px:w-[90%] 800px:text-[18px] font-Poppins"
-            ></Textarea>
+              className=" p-2 ml-3 border border-gary-400 rounded 800px:w-[90%] 800px:text-[18px] font-Poppins"
+            ></textarea>
           </div>
           <div className="w-full flex justify-end ">
             <div
@@ -265,6 +276,11 @@ const CourseContentMedia: React.FC<Props> = ({
           </>
         </div>
       )}
+      {activeBar === 4 &&(
+        <>
+        <Livechat socket={socket} courseId={courseId} user={user}/>
+        </>
+      )}
     </div>
   );
 };
@@ -275,7 +291,6 @@ const CommentReply = ({
   answer,
   setAnswer,
   handleAnswerSubmit,
-  user,
   setQuestionId,
 }: any) => {
   return (
@@ -300,11 +315,9 @@ const CommentReply = ({
 };
 
 const CommentItem = ({
-  key,
-  data,
   setQuestionId,
   item,
-  index,
+
   answer,
   setAnswer,
   handleAnswerSubmit,

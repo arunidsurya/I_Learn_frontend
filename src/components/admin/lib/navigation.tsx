@@ -5,7 +5,7 @@ import { FaRegCirclePlay } from "react-icons/fa6";
 import { GoGraph } from "react-icons/go";
 import { HiOutlineCog, HiOutlineQuestionMarkCircle } from "react-icons/hi";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
-import { MdHomeFilled, MdOutlineAutoGraph } from "react-icons/md";
+import { MdHomeFilled, MdOutlineAutoGraph, MdOutlinePendingActions } from "react-icons/md";
 import { VscGraph } from "react-icons/vsc";
 
 export const DASHBOARD_SIDEBAR_LINKS = [
@@ -32,6 +32,12 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     label: "Live courses",
     path: "/admin/courses",
     icon: <FaRegCirclePlay />,
+  },
+  {
+    key: "Course-Action",
+    label: "Course-Action",
+    path: "/admin/course_action",
+    icon: <MdOutlinePendingActions />,
   },
   {
     key: "faq",

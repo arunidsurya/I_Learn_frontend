@@ -52,6 +52,7 @@ const Header: React.FC = () => {
             setIsLoggedIn(false); // User is not logged in
             localStorage.removeItem("accessToken");
             Cookies.remove("access_token");
+            dispatch(resetUser())
 
     } else {
       setIsLoggedIn(true);
@@ -93,10 +94,10 @@ const Header: React.FC = () => {
   return (
     <div className="bg-white-200 h-20 px-8 flex  justify-between items-center border-b border-gray-300 ">
       <div>
-        <h2 className="text-blue-900 text-3xl font-bold ">E-Learning</h2>
+        <h2 className="text-blue-900 text-[2rem] font-bold ">E-Learning</h2>
       </div>
       <div className="flex items-center gap-2 mr-2">
-        <div className="flex gap-12 ">
+        <div className="flex gap-12 text-[1.2rem]">
           <Link to={"/"} className="hover:text-gray-500">
             Home
           </Link>

@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { resetAdmin } from "../../../app/features/loginSlice";
 
+import backgroundImage from "../../../assets/profile.png";
+
 const AdminHeader: React.FC = () => {
   const navigate = useNavigate();
   const cookies = new Cookies();
@@ -139,10 +141,9 @@ const AdminHeader: React.FC = () => {
             <Menu.Button className="ml-2 inline-flex rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-400">
               <span className="sr-only">Open user menu</span>
               <div
-                className="h-10 w-10 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center"
+                className="h-8 w-8 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center"
                 style={{
-                  backgroundImage:
-                    'url("https://sources.unsplash.com/80x80?face")',
+                  backgroundImage: `url(${backgroundImage})`,
                 }}
               >
                 <span className="sr-only">Arun Surendran</span>

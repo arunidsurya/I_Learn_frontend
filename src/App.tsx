@@ -50,6 +50,9 @@ const EnrolledCoursesLazy = React.lazy(
 const UserCourseAccessLazy = React.lazy(
   () => import("./components/user/userCourses/courseAcess/CourseAccess")
 );
+const ActionCourseLazy = React.lazy(
+  () => import("./components/admin/courses/CourseAction")
+);
 
 const AdminDashBoardLazy = React.lazy(
   () => import("./components/admin/dashboard/AdminDashBoard")
@@ -103,6 +106,9 @@ const AllCoursesLazy = React.lazy(
 const EditCourseLazy = React.lazy(
   () => import("./components/instructor/course/editCourse/EditCourse")
 );
+
+
+
 
 // Import UserLayout, UserAuthRoute, AdminLayout, ProtectiveRoute
 import UserLayout from "./components/user/shared/UserLayout";
@@ -321,6 +327,14 @@ const App: React.FC = () => {
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <CoursesViewLaZY />
+                </Suspense>
+              }
+            />
+            <Route
+              path="course_action/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ActionCourseLazy />
                 </Suspense>
               }
             />

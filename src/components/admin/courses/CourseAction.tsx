@@ -29,7 +29,7 @@ interface Course {
   createdAt: string;
 }
 
-const ViewCourses: React.FC = () => {
+const CourseAction: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -53,7 +53,7 @@ const ViewCourses: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/v1/admin/courses", {
+      .get("http://localhost:5000/api/v1/admin/non_approved_courses", {
         withCredentials: true,
       })
       .then((response) => {
@@ -125,8 +125,8 @@ const ViewCourses: React.FC = () => {
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
       <div className="flex justify-between items-center mb-3">
-        <strong className="text-gray-700 font-bold  text-2xl mb-4">
-          Live Courses
+        <strong className="text-red-700 font-bold  text-2xl mb-4">
+          Action Required
         </strong>
       </div>
       <table className="min-w-full divide-y divide-gray-200">
@@ -179,7 +179,9 @@ const ViewCourses: React.FC = () => {
         <tbody className="bg-white divide-y divide-gray-200">
           {items.map((course, index) => (
             <tr key={course?._id}>
-              <td className="px-6 py-4 whitespace-nowrap">{(page - 1) * rowsPerPage + index + 1}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {(page - 1) * rowsPerPage + index + 1}
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {course.courseTitle.slice(0, 25)}
               </td>
@@ -321,4 +323,4 @@ const ViewCourses: React.FC = () => {
   );
 };
 
-export default ViewCourses;
+export default CourseAction;

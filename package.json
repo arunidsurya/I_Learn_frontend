@@ -19,6 +19,8 @@
     "@mui/x-data-grid": "^7.3.1",
     "@nextui-org/react": "^2.3.6",
     "@reduxjs/toolkit": "^2.2.3",
+    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/stripe-js": "^3.4.0",
     "axios": "^1.6.8",
     "classnames": "^2.5.1",
     "cloudinary": "^2.2.0",
@@ -38,6 +40,7 @@
     "react-router-dom": "^6.22.3",
     "react-toastify": "^10.0.5",
     "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.7.5",
     "tw-elements-react": "^1.0.0-alpha2"
   },
   "devDependencies": {

@@ -58,10 +58,10 @@ const loginSlice = createSlice({
     SaveUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
-    saveAdmin: (state, action: PayloadAction<User>) => {
+    saveAdmin: (state, action: PayloadAction<Admin>) => {
       state.admin = action.payload;
     },
-    saveTutor: (state, action: PayloadAction<User>) => {
+    saveTutor: (state, action: PayloadAction<Tutor>) => {
       state.tutor = action.payload;
     },
     resetUser: (state) => {
