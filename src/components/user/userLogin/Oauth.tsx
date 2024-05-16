@@ -5,7 +5,7 @@ import { app } from "../../../firebase";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { SaveUser } from "../../../app/features/loginSlice";
+import { SaveUser } from "../../../redux/features/loginSlice";
 
 interface OauthProps {
   setError: React.Dispatch<React.SetStateAction<string>>;

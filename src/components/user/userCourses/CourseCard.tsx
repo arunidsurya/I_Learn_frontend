@@ -50,7 +50,7 @@ const CourseCard: React.FC<Props> = ({ course, index, isProfile }) => {
           </div>
           <div className="flex items-center pb-3">
             <AiOutlineUnorderedList size={20} />
-            <h5 className="pl-2">{course.courseData?.length} Lectures</h5>
+            <h5 className="pl-2">{course.courseData?.length-1} Chapters</h5>
           </div>
         </div>
       </div>

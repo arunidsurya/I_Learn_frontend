@@ -40,7 +40,7 @@ const Courses = () => {
   const navigate = useNavigate();
 
   const tutor = useSelector((state: any) => state.login.tutor);
-  console.log(tutor);
+  // console.log(tutor);
 
   useEffect(() => {
     axios
@@ -177,6 +177,12 @@ const Courses = () => {
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
+              Live CLass
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
               Action
             </th>
           </tr>
@@ -204,7 +210,13 @@ const Courses = () => {
                   {course.approved ? "approved" : "Not approved"}
                 </span>
               </td>
-
+              <td className="px-6 py-4 whitespace-nowrap">
+                <button className="bg-blue-500 text-white rounded-md min-w-[80px] min-h-[30px]"
+                onClick={()=>navigate("/instructor/schedule_class",{state:course._id})}
+                >
+                  Schedule
+                </button>
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex gap-4">
                   <div
@@ -244,117 +256,3 @@ const Courses = () => {
 
 export default React.memo(Courses);
 
-// import React from "react";
-// import { DataGrid } from "@mui/x-data-grid";
-// import { Box, Button } from "@mui/material";
-// import { AiOutlineDelete } from "react-icons/ai";
-// import { MdModeEdit } from "react-icons/md";
-
-// const Courses: React.FC = () => {
-//   const columns = [
-//     { field: "id", headerName: "ID", flex: 0.5 },
-//     { field: "courseTitle", headerName: "Course Title", flex: 1 },
-//     { field: "rating", headerName: "Rating", flex: 0.5 },
-//     { field: "purchased", headerName: "Purchased", flex: 0.5 },
-//     { field: "created_at", headerName: "Created AT", flex: 0.5 }, // Corrected field name
-//     {
-//       field: "  ",
-//       headerName: "Edit",
-//       flex: 0.2,
-//       renderCell: (params: any) => {
-//         return (
-//           <>
-//             <Button>
-//               <MdModeEdit className="text-green-500" size={20} />
-//             </Button>
-//           </>
-//         );
-//       },
-//     },
-//     {
-//       field: " ",
-//       headerName: "Delete",
-//       flex: 0.2,
-//       renderCell: (params: any) => {
-//         return (
-//           <>
-//             <Button>
-//               <AiOutlineDelete className="text-red-500" size={20} />
-//             </Button>
-//           </>
-//         );
-//       },
-//     },
-//   ];
-
-//   const rows = [
-//     {
-//       id: "1234",
-//       courseTitle: "React",
-//       purchased: "30",
-//       rating: "5",
-//       created_at: "12/12/12", // You need to provide the correct data here
-//     },
-//   ];
-
-//   return (
-//     <div className="mt-[50px]">
-//       <Box m="20px">
-//         <Box
-//           m="40px 0 0 0"
-//           height="80vh"
-//           sx={{
-//             "& .MuiDataGrid-root": {
-//               backgroundColor: "#fff",
-//             },
-//             "& .css-pqjvzy-MuiSvgIcon-root-MUiSelect-icon": {
-//               color: "#fff",
-//             },
-//             "& .MuiDataGrid-sortIcon": {
-//               color: "#fff",
-//             },
-//             "& .MuiDataGrid-row": {
-//               color: "#fff",
-//               borderBottom: "1px solid #ccc!important",
-//             },
-//             "& .MuiTablePagination-root": {
-//               color: "#fff",
-//             },
-//             "& .MuiDataGrid-cell": {
-//               borderBottom: "none",
-//             },
-//             "& .name-column-cell": {
-//               color: "#fff",
-//             },
-//             "& .MuiDataGrid-columnHeader": {
-//               backgroundColor: "#595959",
-//               borderBottom: "none",
-//               color: "#fff",
-//             },
-//             "& .MuiDataGrid-columnsContainer, & .MuiDataGrid-cell": {
-//               color: "#000",
-//             },
-//             "& .MuiDataGrid-virtualScroller": {
-//               backgroundColor: "#fff",
-//             },
-//             "& .MuiDataGrid-footerContainer": {
-//               backgroundColor: "#595959",
-//               borderTop: "none",
-//               color: "#fff",
-//             },
-//             "& .MuiCheckbox-root": {
-//               color: "#000!important",
-//             },
-//             "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-//               color: "#fff !important",
-//             },
-//           }}
-//         >
-//           <DataGrid checkboxSelection rows={rows} columns={columns} />
-//         </Box>
-//       </Box>
-//     </div>
-//   );
-// };
-
-// export default Courses;

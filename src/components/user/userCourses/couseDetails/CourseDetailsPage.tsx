@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CouseDetails from "./CouseDetails";
 import { loadStripe } from "@stripe/stripe-js";
+import socketIo from "socket.io-client";
+
+const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
+const socket = socketIo(baseUrl, { transports: ["websocket"] });
 
 const CourseDetailsPage = () => {
   const [course, setCourse] = useState<any>();
@@ -12,6 +16,17 @@ const CourseDetailsPage = () => {
   const [clientSecret, setClientSecret] = useState("");
 
   const params = useParams();
+
+    useEffect(() => {
+      socket.on("connect", () => {
+        console.log("Socket connected");
+      });
+
+      // Clean up the socket connection when component unmounts
+      // return () => {
+      //   socket.disconnect();
+      // };
+    }, []);
 
   useEffect(() => {
     axios
@@ -60,7 +75,7 @@ const CourseDetailsPage = () => {
     }
     if (course) {
       const amount = Math.round(course.price * 100);
-      console.log("amount:", amount);
+      // console.log("amount:", amount);
 
       axios
         .post(
@@ -101,6 +116,7 @@ const CourseDetailsPage = () => {
           stripePromise={stripePromise}
           clientSecret={clientSecret}
           error={error}
+          socket={socket}
         />
       )}
     </div>

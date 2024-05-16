@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { IoCloseOutline } from "react-icons/io5";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { getNonApprovedCourses, handleChangeCourseStatus } from "../../services/api/adminApi";
 
 interface Course {
   _id: string;
@@ -51,20 +52,19 @@ const CourseAction: React.FC = () => {
 
   const paginate = (pageNumber: number) => setPage(pageNumber);
 
+  const getCourses = async () => {
+    try {
+      const response = await getNonApprovedCourses();
+      if (response?.data.success) {
+        setCourses(response.data.courses);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/admin/non_approved_courses", {
-        withCredentials: true,
-      })
-      .then((response) => {
-        // console.log(response.data.courses);
-        if (response.data.success) {
-          setCourses(response.data.courses); // Assuming the users array is nested under a key named 'users'
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching courses:", error);
-      });
+    getCourses();
   }, [message, error]);
 
   const formatDate = (dateString: string) => {
@@ -89,28 +89,20 @@ const CourseAction: React.FC = () => {
     return `${day}-${months[monthIndex]}-${year}`;
   };
 
-  const handleClick = (status: string, courseId: any) => {
+  const handleClick = async (status: string, courseId: any) => {
     setError("");
     setMessage("");
-    axios
-      .put(
-        "http://localhost:5000/api/v1/admin/change_courses_status",
-        { status, courseId },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response: any) => {
-        console.log(response.data.courses);
-        if (response.data.success) {
-          setMessage(response.data.message);
-        } else {
-          setError(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching courses:", error);
-      });
+
+    try {
+      const response = await handleChangeCourseStatus(status, courseId);
+      if (response?.data.success) {
+        setMessage(response.data.message);
+      } else {
+        setError(response?.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleConfirmAction = () => {

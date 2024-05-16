@@ -2,6 +2,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import {
+  handleChangeTutorStatus,
+  handlegetTutors,
+} from "../../services/api/adminApi";
+import { IoCloseOutline } from "react-icons/io5";
 
 interface MemberData {
   _id: string;
@@ -19,58 +24,66 @@ interface MemberData {
 
 const MembersView: React.FC = () => {
   const [membersData, setMembersData] = useState<MemberData[]>([]);
-    const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
+  const [success, setSuccess] = useState(0);
+  const [forceRender, setForceRender] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [selectedMethod, setSelectedMethod] = useState("");
+  const [open, setOpen] = useState(false)
 
-    const rowsPerPage = 8;
+  const rowsPerPage = 8;
 
-    const pages = Math.ceil(membersData.length / rowsPerPage);
+  const pages = Math.ceil(membersData.length / rowsPerPage);
 
-    const items = React.useMemo(() => {
-      const start = (page - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
 
-      return membersData.slice(start, end);
-    }, [page, membersData]);
+    return membersData.slice(start, end);
+  }, [page, membersData]);
 
-    const paginate = (pageNumber: number) => setPage(pageNumber);
+  const paginate = (pageNumber: number) => setPage(pageNumber);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/admin/getTutors", {
-        withCredentials: true,
-      })
-      .then((response) => {
-        // console.log(response.data);
-        if (response.data.success) {
-          setMembersData(response.data.tutors); // Assuming the users array is nested under a key named 'users'
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching tutors:", error);
-      });
-  }, []);
-
-  const handleVerification = (method: string, _id: string) => {
-    axios
-      .post(
-        `http://localhost:5000/api/v1/admin/${method}`,
-        { _id },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
+  const getTutors = async () => {
+    try {
+      const response = await handlegetTutors();
+      if (response?.data.success) {
         console.log(response.data);
-        if (response.data.success) {
-          window.location.reload();
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
+        setMembersData(response.data.tutors);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  useEffect(() => {
+    console.log("useEffect called");
+    getTutors();
+  }, [setForceRender,success]);
+
+  const handleVerification = async (method: string, _id: string) => {
+    try {
+      const response = await handleChangeTutorStatus(method, _id);
+
+      if (response?.data.success) {
+        setSuccess((prevSuccess) => (prevSuccess === 0 ? 1 : 0));
+         setForceRender((prev) => !prev);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  };
+    const handleConfirmAction = () => {
+      if (selectedUserId && selectedMethod) {
+        handleVerification(selectedMethod, selectedUserId);
+      }
+      setOpen(false);
+      setSelectedMethod("");
+      setSelectedUserId("");
+    };
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
       <div className="flex justify-between items-center mb-3">
@@ -170,16 +183,26 @@ const MembersView: React.FC = () => {
                 {!user.isVerified ? (
                   <button
                     className="w-32 h-8 rounded-md bg-green-500 text-white mr-2"
-                    onClick={() => handleVerification("verifyTutor", user._id)}
+                    // onClick={() => handleVerification("verifyTutor", user._id)}
+                    onClick={() => {
+                      setSelectedUserId(user._id),
+                        setSelectedMethod("verifyTutor");
+                        setOpen(true)
+                    }}
                   >
-                    Verify
+                    Verify {user.isVerified}
                   </button>
                 ) : (
                   <button
                     className="w-32 h-8 rounded-md bg-red-500 text-white mr-2"
-                    onClick={() => handleVerification("refuteTutor", user._id)}
+                    // onClick={() => handleVerification("refuteTutor", user._id)}
+                    onClick={() => {
+                      setSelectedUserId(user._id),
+                        setSelectedMethod("refuteTutor"),
+                        setOpen(true);
+                    }}
                   >
-                    refute
+                    refute{user.isVerified}
                   </button>
                 )}
 
@@ -196,6 +219,43 @@ const MembersView: React.FC = () => {
           ))}
         </tbody>
       </table>
+      {/* Modal*/}
+      {open && (
+        <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center">
+          <div className="bg-black bg-opacity-50 absolute top-0 left-0 w-full h-full"></div>
+          <div className="w-96 bg-white rounded-xl shadow-lg p-4 relative">
+            <div className="absolute top-0 right-0">
+              <IoCloseOutline
+                size={24}
+                className="text-black cursor-pointer"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <h1 className="text-xl font-bold mb-2">Are you sure?</h1>
+              <p className="mb-4">Please confirm to proceed with the action.</p>
+              <div className="flex space-x-4">
+                <button
+                  onClick={handleConfirmAction}
+                  className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-green-600"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => {
+                    setuserId("");
+                    setMethod("");
+                    setOpen(false);
+                  }}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-red-600"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* pagination */}
       <div className="mt-20 flex justify-center">
         <button

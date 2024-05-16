@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
+import * as Yup from "yup";
+import { editCategory } from "../../services/api/adminApi";
 
 const EditCategory: React.FC = () => {
   const [_id, set_Id] = useState<string>("");
@@ -9,6 +11,8 @@ const EditCategory: React.FC = () => {
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const Navigate = useNavigate();
 
   const location = useLocation();
@@ -27,28 +31,35 @@ const EditCategory: React.FC = () => {
     }
   }, [categoryData]);
 
-  const handleUpdate = (e: any) => {
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    description: Yup.string().required("Description is required"),
+  });
+
+  const handleUpdate = async (e: any) => {
     e.preventDefault();
-    axios
-      .put(
-        "http://localhost:5000/api/v1/admin/edit_category",
-        { _id, name, description },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.success) {
-          setError("");
-          setMessage(res.data.message);
-        } else {
-          setError(res.data.message);
-        }
-      })
-      .catch((error: any) => {
-        console.log(error);
+    try {
+      await validationSchema.validate(
+        { name, description },
+        { abortEarly: false }
+      );
+
+      const res = await editCategory(_id, name, description);
+
+      if (res?.data.success) {
+        setError("");
+        setMessage(res.data.message);
+      } else {
+        setError(res?.data.message);
+      }
+    } catch (error: any) {
+      const newError: { [key: string]: string } = {};
+
+      error.inner.forEach((err: any) => {
+        newError[err.path] = err.message;
       });
+      setErrors(newError);
+    }
   };
 
   return (
@@ -75,6 +86,7 @@ const EditCategory: React.FC = () => {
 
           <div className="flex flex-col gap-2">
             <label htmlFor="name">Name</label>
+            {errors.name && <p className="text-red-500">*{errors.name}</p>}
             <input
               type="text"
               placeholder="Enter Your Name..."
@@ -85,6 +97,9 @@ const EditCategory: React.FC = () => {
             <label htmlFor="email" className="mt-4">
               Description
             </label>
+            {errors.description && (
+              <p className="text-red-500">*{errors.description}</p>
+            )}
             <textarea
               rows={8}
               cols={20}

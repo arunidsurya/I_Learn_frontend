@@ -10,10 +10,16 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import { resetAdmin } from "../../../app/features/loginSlice";
+import { RootState } from "../../../redux/store";
+import { resetAdmin } from "../../../redux/features/loginSlice";
 
 import backgroundImage from "../../../assets/profile.png";
+import { logout } from "../../services/api/adminApi";
+import socketIo from "socket.io-client";
+
+const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
+const socket = socketIo(baseUrl, { transports: ["websocket"] });
+
 
 const AdminHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -25,6 +31,39 @@ const AdminHeader: React.FC = () => {
   const localStorageToken = localStorage.getItem("admin_accessToken");
   const cookieToken = cookies.get("admin_AccessToken");
 
+      useEffect(() => {
+        socket.on("connect", () => {
+          console.log("Socket connected");
+        });
+
+        // Clean up the socket connection when component unmounts
+        // return () => {
+        //   socket.disconnect();
+        // };
+      }, []);
+
+        const receiveMessageHandler = (data: {
+          title: string,
+          messgae: string,
+          userId: string,
+          userName: string
+        }) => {
+          console.log(data);
+          
+          // setMessageData((prevData: any) => [...prevData, data]);
+        };
+
+        useEffect(() => {
+          // Subscribe to "receive_message" event
+          socket.on("receive_notification", receiveMessageHandler);
+
+          // Clean up subscription on unmount
+          return () => {
+            socket.off("receive_message", receiveMessageHandler);
+          };
+        }, [socket]);
+
+
   useEffect(() => {
     if (localStorageToken !== cookieToken) {
       localStorage.removeItem("admin_AccessToken");
@@ -34,24 +73,20 @@ const AdminHeader: React.FC = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    axios
-      .get("http://localhost:5000/api/v1/admin/logout", {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          // console.log(response.data);
-          dispatch(resetAdmin());
-          localStorage.removeItem("admin");
-          localStorage.removeItem("admin_accessToken");
-          navigate("/admin_login");
-        }
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-      });
+  const handleLogout = async() => {
+
+    try {
+      const response = await logout();
+          if (response?.data.success) {
+            dispatch(resetAdmin());
+            localStorage.removeItem("admin");
+            localStorage.removeItem("admin_accessToken");
+            navigate("/admin_login");
+          }
+    } catch (error) {
+      console.log(error);
+      
+    }
   };
 
   return (

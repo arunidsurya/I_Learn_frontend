@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
-import axios from "axios";
+import { handleEditTutor } from "../../services/api/adminApi";
 
 const EditMember: React.FC = () => {
   const [_id, set_Id] = useState<string>("");
@@ -30,26 +30,28 @@ const EditMember: React.FC = () => {
     }
   }, [tutorData]);
 
-  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    axios
-      .put(
-        "http://localhost:5000/api/v1/admin/editTutor",
-        { _id, name, email, institute, qualifiaction, experience },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.success) {
-          setError("");
-          Navigate("/admin/manage_members");
-        } else {
-          setError(res.data.user.message);
-        }
-      });
+    try {
+      const res = await handleEditTutor(
+        _id,
+        name,
+        email,
+        institute,
+        qualifiaction,
+        experience
+      );
+          if (res?.data.success) {
+            setError("");
+            Navigate("/admin/manage_members");
+          } else {
+            setError(res?.data.user.message);
+          }
+    } catch (error) {
+      console.log(error);
+      
+    }
   };
 
   return (

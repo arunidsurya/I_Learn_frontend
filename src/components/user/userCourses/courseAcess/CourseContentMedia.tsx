@@ -8,12 +8,14 @@ import {
 } from "react-icons/ai";
 import defaultImage from "../../../../assets/profile.png";
 import { toast } from "react-hot-toast";
-import { addAnswer, addQuestion } from "../../../services/Api/userApi";
+import { addAnswer, addQuestion } from "../../../services/api/userApi";
 import { formatCreatedAt } from "../../../services/formats/FormatDate";
 import { BiMessage } from "react-icons/bi";
 import { Textarea } from "@nextui-org/react";
-import Livechat from "./Livechat";
+import Livechat from "./livechat/Livechat";
 import { Socket } from "socket.io-client";
+import LiveClass from "./liveClass/LiveClass";
+import LiveVideoPage from "./liveClass/LiveVideoPage";
 
 type Props = {
   data: any;
@@ -23,7 +25,7 @@ type Props = {
   user: any;
   updateCourseData: () => void;
   updateCourseData2: () => void;
-  socket:Socket
+  socket: Socket;
 };
 
 const CourseContentMedia: React.FC<Props> = ({
@@ -34,7 +36,7 @@ const CourseContentMedia: React.FC<Props> = ({
   user,
   updateCourseData,
   updateCourseData2,
-  socket
+  socket,
 }) => {
   const [activeBar, setActiveBar] = useState(0);
   const [question, setQuestion] = useState("");
@@ -48,8 +50,6 @@ const CourseContentMedia: React.FC<Props> = ({
   const isReviewExists = data?.reviews?.find(
     (item: any) => item.user._id === user._id
   );
-
-
 
   const handleQuestion = async () => {
     if (question.length === 0) {
@@ -72,18 +72,18 @@ const CourseContentMedia: React.FC<Props> = ({
 
   useEffect(() => {
     console.log("parent");
-    
+
     // console.log("useEffect-courseContentMedia component");
-    if (isSuccess===true) {
+    if (isSuccess === true) {
       setQuestion("");
-      
+
       updateCourseData2();
       setIsSuccess(false);
     }
-    if (answerSuccess===true) {
+    if (answerSuccess === true) {
       setAnswer("");
       console.log("answer call");
-      
+
       updateCourseData();
       setSetAnswerSuccess(false);
     }
@@ -137,19 +137,24 @@ const CourseContentMedia: React.FC<Props> = ({
         {data[activeVideo].title}
       </h1>
       <div className="w-full p-2 flex items-center justify-between bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">
-        {["Overview", "Resources", "Q&A", "Reviews" ,"Live Chat"].map(
-          (text: any, index: number) => (
-            <h5
-              key={index}
-              className={`800px:text-[20px] cursor-pointer font-bold mb-8 ${
-                activeBar === index && "text-red-500"
-              }`}
-              onClick={() => setActiveBar(index)}
-            >
-              {text}
-            </h5>
-          )
-        )}
+        {[
+          "Overview",
+          "Resources",
+          "Q&A",
+          "Reviews",
+          "Live Chat",
+          "Live Class",
+        ].map((text: any, index: number) => (
+          <h5
+            key={index}
+            className={`800px:text-[20px] cursor-pointer font-bold mb-8 ${
+              activeBar === index && "text-red-500"
+            }`}
+            onClick={() => setActiveBar(index)}
+          >
+            {text}
+          </h5>
+        ))}
       </div>
       {activeBar === 0 && (
         <p className="text-[18px] whitespace-pre-line mb-3 mt-8">
@@ -276,9 +281,14 @@ const CourseContentMedia: React.FC<Props> = ({
           </>
         </div>
       )}
-      {activeBar === 4 &&(
+      {activeBar === 4 && (
         <>
-        <Livechat socket={socket} courseId={courseId} user={user}/>
+          <Livechat socket={socket} courseId={courseId} user={user} />
+        </>
+      )}
+      {activeBar === 5 && (
+        <>
+          <LiveVideoPage courseId={courseId} />
         </>
       )}
     </div>

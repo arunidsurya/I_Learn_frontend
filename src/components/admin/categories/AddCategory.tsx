@@ -2,12 +2,16 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
+import { addCategory } from "../../services/api/adminApi";
+import * as Yup from "yup";
 
 const AddCategory: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const Navigate = useNavigate();
 
   const location = useLocation();
@@ -23,35 +27,39 @@ const AddCategory: React.FC = () => {
     }
   }, [categoryData]);
 
-  const handleAdd = (e: any) => {
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    description: Yup.string().required("Description is required"),
+  });
+
+  const handleAdd = async (e: any) => {
     e.preventDefault();
-    axios
-      .post(
-        "http://localhost:5000/api/v1/admin/create_category",
+
+    setErrors({})
+
+    try {
+      await validationSchema.validate(
         { name, description },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.success) {
-          setError("");
-          setMessage(res.data.message);
-        } else {
-          setMessage("");
-          setError(res.data.message);
-        }
-      })
-      .catch((error: any) => {
-        if (error.response && error.response.status === 409) {
-          setError("The category name already exists!!");
-        } else {
-          console.log(error);
-          setError("Internal server error, please try again later"); // Generic error message
-        }
+        { abortEarly: false }
+      );
+      const res = await addCategory(name, description);
+      if (res?.data.success) {
+        setError("");
+        setMessage(res.data.message);
+      } else {
+        setMessage("");
+        setError(res?.data.message);
+      }
+    } catch (error: any) {
+      const newError: { [key: string]: string } = {};
+
+      error.inner.forEach((err: any) => {
+        newError[err.path] = err.message;
       });
+      setErrors(newError);
+    }
   };
+
   const handleClick = () => {
     setMessage("");
     setError("");
@@ -81,9 +89,11 @@ const AddCategory: React.FC = () => {
 
           <div className="flex flex-col gap-2">
             <label htmlFor="name">Name</label>
+            {errors.name && <p className="text-red-500">*{errors.name}</p>}
             <input
               type="text"
-              placeholder="Enter Your Name..."
+              name="name"
+              placeholder="Enter category name..."
               className="w-full border border-gray-300 rounded h-10 px-2"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -91,9 +101,13 @@ const AddCategory: React.FC = () => {
             <label htmlFor="email" className="mt-4">
               Description
             </label>
+            {errors.description && (
+              <p className="text-red-500">*{errors.description}</p>
+            )}
             <textarea
               rows={8}
               cols={20}
+              name="description"
               placeholder="Enter Description..."
               className="w-full border border-gray-300 rounded pt-4 px-2"
               value={description}

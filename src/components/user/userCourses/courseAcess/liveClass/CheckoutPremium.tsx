@@ -8,15 +8,15 @@ import {
 import axios from "axios";
 import { redirect, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { SaveUser } from "../../../../redux/features/loginSlice";
+import { SaveUser } from "../../../../../redux/features/loginSlice";
+
 
 type Props = {
   setOpen: any;
-  course: any;
-  socket:any;
+  courseId:string
 };
 
-const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
+const CheckoutPremium: React.FC<Props> = ({ setOpen, courseId }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState<any>("");
@@ -44,8 +44,8 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
       setIsLoading(false);
       axios
         .post(
-          "http://localhost:5000/api/v1/user/create-order",
-          { courseId: course._id, payment_info: paymentIntent },
+          "http://localhost:5000/api/v1/user/create-premium-order",
+          { payment_info: paymentIntent },
           {
             withCredentials: true,
           }
@@ -56,14 +56,6 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
 
             setOrderData(res.data.result.newOrder);
             dispatch(SaveUser(res.data.result.user));
-
-            socket.emit("notification",{
-              title:'New Order',
-              messgae:`New order from ${course.courseTitle}`,
-              userId:res.data.result.user._id,
-              userName:res.data.result.user.name
-            })
-
           }
         })
         .catch((error: any) => {
@@ -77,7 +69,7 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
       setLoadUser(true);
       setOpen(false);
       // redirect(`/course-access/${course._id}`)
-      navigate(`/course-access/${course._id}`);
+    //   navigate(`/course-access/${course._id}`);
     }
     if (error) {
       console.log(error);
@@ -118,4 +110,4 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
   );
 };
 
-export default CheckoutForm;
+export default CheckoutPremium;

@@ -6,10 +6,10 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import Modal from "../shared/Modal";
 import { useDispatch } from "react-redux";
-import { SaveUser } from "../../../app/features/loginSlice";
+import { SaveUser } from "../../../redux/features/loginSlice";
 import Oauth from "./Oauth";
 import Cookies from "js-cookie";
-import { login } from "../../services/Api/userApi";
+import { login } from "../../services/api/userApi";
 
 const UserLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -28,64 +28,59 @@ const UserLogin: React.FC = () => {
     // const accessToken = localStorage.getItem("accessToken");
     const CookieToken = Cookies.get("access_token");
 
-
     if (CookieToken) {
       Navigate("/");
     }
   }, []);
 
-  const handleLogin = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
     try {
       const response = await login(email, password);
-      console.log(response?.data.data);
-      
 
-          if (response?.data.data.success) {
-            const userDetails = response.data.data.user;
-            dispatch(SaveUser(userDetails));
-            localStorage.setItem("user", JSON.stringify(response.data.data));
-            localStorage.setItem("accessToken", response.data.data.access_token);
-            const { from } = location.state || {
-              from: { pathname: "/" },
-            };
-            Navigate(from);
-            // window.location.reload();
-          } else {
-            setError(response?.data.data.message);
-          }
-    } catch (error) {
-      
-    }
-  //   axios
-  //     .post(
-  //       "http://localhost:5000/api/v1/user/login",
-  //       { email, password },
-  //       {
-  //         withCredentials: true,
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       if (response.data.data.success) {
-  //         const userDetails = response.data.data.user;
-  //         dispatch(SaveUser(userDetails));
-  //         localStorage.setItem("user", JSON.stringify(response.data.data));
-  //         localStorage.setItem("accessToken", response.data.data.token);
-  //         const { from } = location.state || {
-  //           from: { pathname: "/" },
-  //         };
-  //         Navigate(from);
-  //         // window.location.reload();
-  //       } else {
-  //         setError(response.data.data.message);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
+      if (response?.data.data.success) {
+        const userDetails = response.data.data.user;
+        dispatch(SaveUser(userDetails));
+        localStorage.setItem("user", JSON.stringify(response.data.data));
+        localStorage.setItem("accessToken", response.data.data.access_token);
+        const { from } = location.state || {
+          from: { pathname: "/" },
+        };
+        Navigate(from);
+        // window.location.reload();
+      } else {
+        setError(response?.data.data.message);
+      }
+    } catch (error) {}
+    //   axios
+    //     .post(
+    //       "http://localhost:5000/api/v1/user/login",
+    //       { email, password },
+    //       {
+    //         withCredentials: true,
+    //       }
+    //     )
+    //     .then((response) => {
+    //       console.log(response.data);
+    //       if (response.data.data.success) {
+    //         const userDetails = response.data.data.user;
+    //         dispatch(SaveUser(userDetails));
+    //         localStorage.setItem("user", JSON.stringify(response.data.data));
+    //         localStorage.setItem("accessToken", response.data.data.token);
+    //         const { from } = location.state || {
+    //           from: { pathname: "/" },
+    //         };
+    //         Navigate(from);
+    //         // window.location.reload();
+    //       } else {
+    //         setError(response.data.data.message);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
   };
 
   return (

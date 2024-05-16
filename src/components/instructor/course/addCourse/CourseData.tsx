@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import * as Yup from "yup";
 
 type Props = {
   benefits: { title: string }[];
@@ -10,6 +11,19 @@ type Props = {
   setActive: (active: number) => void;
 };
 
+const validationSchema = Yup.object().shape({
+  benefits: Yup.array().of(
+    Yup.object().shape({
+      title: Yup.string().required("Benefit is required"),
+    })
+  ),
+  prerequisites: Yup.array().of(
+    Yup.object().shape({
+      title: Yup.string().required("Prerequisite is required"),
+    })
+  ),
+});
+
 const CourseData: React.FC<Props> = ({
   benefits,
   setBenefits,
@@ -19,6 +33,7 @@ const CourseData: React.FC<Props> = ({
   setActive,
 }) => {
   const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleBenefitChange = (index: number, value: any) => {
     const updatedBenefits = [...benefits];
@@ -41,17 +56,35 @@ const CourseData: React.FC<Props> = ({
     setActive(active - 1);
   };
 
-  const handleOptions = () => {
-    if (
-      benefits[benefits.length - 1]?.title !== "" &&
-      prerequisites[prerequisites.length - 1]?.title !== ""
-    ) {
-      setActive(active + 1);
-      setError("");
-    } else {
-      setError("Please fill all the fields!!!");
-    }
-  };
+  // const handleOptions = () => {
+  //   if (
+  //     benefits[benefits.length - 1]?.title !== "" &&
+  //     prerequisites[prerequisites.length - 1]?.title !== ""
+  //   ) {
+  //     setActive(active + 1);
+  //     setError("");
+  //   } else {
+  //     setError("Please fill all the fields!!!");
+  //   }
+  // };
+
+    const handleOptions = async () => {
+      try {
+        await validationSchema.validate(
+          { benefits, prerequisites },
+          { abortEarly: false }
+        );
+        setActive(active + 1);
+      } catch (error:any) {
+        const validationErrors: { [key: string]: string } = {};
+        console.log(error.inner);
+        
+        error.inner.forEach((err: any) => {
+          validationErrors[err.path] = err.message;
+        });
+        setErrors(validationErrors);
+      }
+    };
 
   return (
     <div className="w-[80%] m-auto mt-24 mb-20">
@@ -65,16 +98,23 @@ const CourseData: React.FC<Props> = ({
           What are the benefits for students in this course?
         </label>
         {benefits.map((benefit: any, index: number) => (
-          <input
-            type="text"
-            key={index}
-            name="Benefit"
-            placeholder="you will be able build a fulls stack prject platform..."
-            required
-            value={benefit.title}
-            onChange={(e) => handleBenefitChange(index, e.target.value)}
-            className="border border-gray-500 rounded-md h-8 p-4"
-          />
+          <div key={index}>
+            <input
+              type="text"
+              key={index}
+              name="Benefit"
+              placeholder="you will be able build a fulls stack prject platform..."
+              required
+              value={benefit.title}
+              onChange={(e) => handleBenefitChange(index, e.target.value)}
+              className="border border-gray-500 rounded-md h-8 p-4 w-full"
+            />
+            {errors[`benefits[${index}].title`] && (
+              <div className="text-red-500">
+                {errors[`benefits[${index}].title`]}
+              </div>
+            )}
+          </div>
         ))}
         <IoMdAddCircleOutline size={20} onClick={handleAddBenefits} />
       </div>

@@ -84,6 +84,9 @@ const InstLoginLazy = React.lazy(
 const InstRegisterLazy = React.lazy(
   () => import("./components/instructor/login/InstRegister")
 );
+const InstScheduleClassLazy = React.lazy(
+  () => import("./components/instructor/course/liveclass/ScheduleLiveClass")
+);
 const AddCourseLazy = React.lazy(
   () => import("./components/instructor/course/addCourse/AddCourse")
 );
@@ -106,6 +109,9 @@ const AllCoursesLazy = React.lazy(
 const EditCourseLazy = React.lazy(
   () => import("./components/instructor/course/editCourse/EditCourse")
 );
+const VideoCallLazy = React.lazy(
+  () => import("./components/services/VideoCall")
+);
 
 
 
@@ -119,6 +125,7 @@ import InstLayout from "./components/instructor/shared/InstLayout";
 import UserRegister from "./components/user/userRegister/Register";
 import UserLogin from "./components/user/userLogin/UserLogin";
 import InstAuthRoute from "./components/instructor/utils/InstAuthRoute";
+import VideoCall from "./components/services/VideoCall";
 
 const App: React.FC = () => {
   return (
@@ -232,6 +239,14 @@ const App: React.FC = () => {
                 }
               />
             </Route>
+            <Route
+              path="room/:roomId"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <VideoCall />
+                </Suspense>
+              }
+            />
           </Route>
 
           <Route
@@ -379,6 +394,22 @@ const App: React.FC = () => {
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <EditCourseLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="schedule_class/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <InstScheduleClassLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="room/:roomId"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <VideoCall />
                 </Suspense>
               }
             />

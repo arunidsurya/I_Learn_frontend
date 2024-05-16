@@ -4,6 +4,10 @@ import React, { useEffect, useState } from "react";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { IoCloseOutline } from "react-icons/io5";
 import { MdDelete, MdEdit } from "react-icons/md";
+import {
+  getCourses,
+  handleChangeCourseStatus,
+} from "../../services/api/adminApi";
 
 interface Course {
   _id: string;
@@ -38,7 +42,7 @@ const ViewCourses: React.FC = () => {
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
-  const rowsPerPage = 8;
+  const rowsPerPage = 2;
 
   const pages = Math.ceil(courses.length / rowsPerPage);
 
@@ -51,20 +55,19 @@ const ViewCourses: React.FC = () => {
 
   const paginate = (pageNumber: number) => setPage(pageNumber);
 
+  const coursesdata = async () => {
+    try {
+      const response = await getCourses();
+      if (response?.data.success) {
+        setCourses(response.data.courses);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/admin/courses", {
-        withCredentials: true,
-      })
-      .then((response) => {
-        // console.log(response.data.courses);
-        if (response.data.success) {
-          setCourses(response.data.courses); // Assuming the users array is nested under a key named 'users'
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching courses:", error);
-      });
+    coursesdata();
   }, [message, error]);
 
   const formatDate = (dateString: string) => {
@@ -89,28 +92,20 @@ const ViewCourses: React.FC = () => {
     return `${day}-${months[monthIndex]}-${year}`;
   };
 
-  const handleClick = (status: string, courseId: any) => {
+  const handleClick = async (status: string, courseId: any) => {
     setError("");
     setMessage("");
-    axios
-      .put(
-        "http://localhost:5000/api/v1/admin/change_courses_status",
-        { status, courseId },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response: any) => {
-        console.log(response.data.courses);
-        if (response.data.success) {
-          setMessage(response.data.message);
-        } else {
-          setError(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching courses:", error);
-      });
+
+    try {
+      const response = await handleChangeCourseStatus(status, courseId);
+      if (response?.data.success) {
+        setMessage(response.data.message);
+      } else {
+        setError(response?.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleConfirmAction = () => {
@@ -179,7 +174,9 @@ const ViewCourses: React.FC = () => {
         <tbody className="bg-white divide-y divide-gray-200">
           {items.map((course, index) => (
             <tr key={course?._id}>
-              <td className="px-6 py-4 whitespace-nowrap">{(page - 1) * rowsPerPage + index + 1}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {(page - 1) * rowsPerPage + index + 1}
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {course.courseTitle.slice(0, 25)}
               </td>

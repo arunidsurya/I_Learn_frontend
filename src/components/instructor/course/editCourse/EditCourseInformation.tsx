@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
+import { RootState } from "../../../../redux/store";
 import { UploadS3Bucket } from "../../utils/UploadS3Bucket";
 import DemoPlayer from "../DemoPlayer";
 
@@ -27,7 +27,7 @@ const EditCourseInformation: React.FC<Props> = ({
   itemsToRemove,
   setItemsToRemove,
   newUrls,
-  setNewUrls
+  setNewUrls,
 }) => {
   const tutor = useSelector((state: RootState) => state.login.tutor);
   const [image, setImage] = useState<string | null>("");
@@ -101,7 +101,7 @@ const EditCourseInformation: React.FC<Props> = ({
     setItemsToRemove([...itemsToRemove, courseInfo.demoUrl]);
     const response = await UploadS3Bucket(file);
 
-    setNewUrls([...newUrls,response.url])
+    setNewUrls([...newUrls, response.url]);
 
     setCourseInfo({ ...courseInfo, demoUrl: response.url });
   };

@@ -3,7 +3,7 @@ import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
-import { signup } from "../../services/Api/userApi";
+import { signup } from "../../services/api/userApi";
 
 const UserRegister: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -15,7 +15,7 @@ const UserRegister: React.FC = () => {
   const [error, setError] = useState<string>("");
   const Navigate = useNavigate();
 
-  const handleSignUp = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match");
@@ -25,13 +25,13 @@ const UserRegister: React.FC = () => {
 
     const res = await signup(name, email, gender, password);
 
-        if (res?.data.user.success) {
-          const activationToken = res.data.user.activationToken;
-          setError("");
-          Navigate("/activation", { state: activationToken });
-        } else {
-          setError(res?.data.user.message);
-        }
+    if (res?.data.user.success) {
+      const activationToken = res.data.user.activationToken;
+      setError("");
+      Navigate("/activation", { state: activationToken });
+    } else {
+      setError(res?.data.user.message);
+    }
   };
 
   return (

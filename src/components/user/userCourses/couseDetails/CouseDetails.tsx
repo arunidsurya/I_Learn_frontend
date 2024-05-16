@@ -13,10 +13,11 @@ type Props = {
   course: any;
   error: string;
   clientSecret: string;
-  stripePromise:any
+  stripePromise:any;
+  socket:any
 };
 
-const CouseDetails: React.FC<Props> = ({ course ,error,clientSecret,stripePromise}) => {
+const CouseDetails: React.FC<Props> = ({ course ,error,clientSecret,stripePromise,socket}) => {
   const [route, setRoute] = useState("login");
   const [open, setOpen] = useState(false);
 
@@ -39,7 +40,6 @@ const CouseDetails: React.FC<Props> = ({ course ,error,clientSecret,stripePromis
     user?.courses?.find((item: any) => item === course._id);
 
   const handleOrder = () => {
-    console.log("reached here");
     
     if (!user) {
       navigate("/login", { state: { from: `/course_details/${params._id}` } });
@@ -223,7 +223,7 @@ const CouseDetails: React.FC<Props> = ({ course ,error,clientSecret,stripePromis
               {
                 stripePromise && clientSecret && (
                   <Elements stripe={stripePromise} options={{clientSecret}}>
-                    <CheckoutForm setOpen={setOpen} course={course} />
+                    <CheckoutForm setOpen={setOpen} course={course} socket={socket} />
                   </Elements>
                 )
               }

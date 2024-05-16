@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import InstSidebar from "./InstSidebar";
 import InstHeader from "./InstHeader";
+import { Toaster } from "react-hot-toast";
 
 const InstLayout: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const InstLayout: React.FC = () => {
         <InstHeader />
         <div className="p-4 flex-1 overflow-y-auto">
           <Outlet />
+          <Toaster />
         </div>
       </div>
     </div>

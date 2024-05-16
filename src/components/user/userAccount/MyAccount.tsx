@@ -2,7 +2,9 @@ import React, { ChangeEvent, useEffect, useState, useRef } from "react";
 import { CiCamera } from "react-icons/ci";
 import defaultImage from "../../../assets/login.jpg";
 import { RotatingLines } from "react-loader-spinner";
-import axios from "axios";
+import * as Yup from "yup";
+import { updateUserInfo } from "../../services/api/userApi";
+
 
 interface User {
   _id: string;
@@ -32,6 +34,7 @@ const MyAccount: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<string>("");
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const storedUserData = localStorage.getItem("user");
@@ -50,9 +53,6 @@ const MyAccount: React.FC = () => {
     }
   }, []);
 
-  // const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setName(event.target.value);
-  // };
 
   const handleCameraIconClick = () => {
     if (fileInputRef.current) {
@@ -81,68 +81,48 @@ const MyAccount: React.FC = () => {
       setAvatar("");
     }
   };
-  // const uploadFile = async () => {
-  //   if (!avatar) return;
-  //   const data = new FormData();
-  //   data.append("file", avatar);
-  //   data.append("upload_preset", "images_preset");
 
-  //   try {
-  //     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
-  //     console.log(cloudName);
 
-  //     let resourceType = "image";
-  //     let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
-  //     const res = await axios.post(api, data);
-  //     const { secure_url } = res.data;
-  //     console.log(secure_url);
-  //     return secure_url;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   try {
-  //     setLoading(true);
-  //     const imgUrl = await uploadFile();
-  //     // await axios.post(`url`,{name,imgUrl})
+  const validationSchema = Yup.object({
+    name:Yup.string().required("Name is required"),
+    email:Yup.string().email().required("Email is required")
+  })
 
-  //     //Reset states
-  //     setAvatar(null);
-  //     console.log("File upload success!");
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage("");
     // console.log(avatar);
+    const avatarToSend = avatar || "";
+    try {
+      await validationSchema.validate({name,email},{abortEarly:false});
 
-    axios
-      .put(
-        "http://localhost:5000/api/v1/user/update_user_info",
-        { _id, name, email, avatar },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        // console.log(res.data.user.success);
-        if (res.data.user.success) {
-          localStorage.setItem("user", JSON.stringify(res.data.user));
-          setMessage(res.data.message);
-        }
-      });
+      const res = await updateUserInfo(_id, name, email, avatarToSend);
+
+          if (res?.data.user.success) {
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+            setMessage(res.data.message);
+          }
+    } catch (error:any) {
+            const newError: { [key: string]: string } = {};
+
+            // console.log(error.inner);
+
+            error.inner.forEach((err: any) => {
+              newError[err.path] = err.message;
+            });
+            setErrors(newError);
+      
+    }
+
   };
+  console.log(errors);
+  
 
-  console.log("avatarPreview:", avatarPreview);
-  console.log("user?.avatar.url:", user?.avatar?.url);
-  console.log("defaultImage:", defaultImage);
+  // console.log("avatarPreview:", avatarPreview);
+  // console.log("user?.avatar.url:", user?.avatar?.url);
+  // console.log("defaultImage:", defaultImage);
   return (
     <div>
       <form
@@ -165,7 +145,6 @@ const MyAccount: React.FC = () => {
             <CiCamera size={25} />
           </div>
         </div>
-
         <input
           type="file"
           ref={fileInputRef}
@@ -176,18 +155,30 @@ const MyAccount: React.FC = () => {
         {/* {message && <p className="text-green-500">{message}</p>} */}
         <label htmlFor="name" className="text-lg font-bold text-left mt-10">
           Full Name
-        </label>
+        </label>{" "}
+        {errors.name && (
+          <div>
+            <p className="text-red-500">*{errors.name}</p>
+          </div>
+        )}
         <input
           type="text"
           value={name}
+          name="name"
           onChange={(e) => setName(e.target.value)}
           className="rounded-md border border-gray-400 w-2/6 h-10"
         />
         <label htmlFor="email" className="text-lg font-bold">
           Email Address
         </label>
+        {errors.email && (
+          <div>
+            <p className="text-red-500">*{errors.email}</p>
+          </div>
+        )}
         <input
           type="email"
+          name="email"
           value={email}
           className="rounded-md border border-gray-400 w-2/6 h-10"
           onChange={(e) => setEmail(e.target.value)}

@@ -2,46 +2,46 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import loginImage from "../../../assets/login.jpg";
-import axios from "axios";
 import { Cookies } from "react-cookie";
+import { login } from "../../services/api/adminApi";
+import toast from "react-hot-toast";
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("")
   const Navigate = useNavigate();
 
-   const cookies = new Cookies();
+  const cookies = new Cookies();
 
   useEffect(() => {
     const tutorAuth = cookies.get("admin_AccessToken");
     const localStorageToken = localStorage.getItem("admin_accessToken");
 
-    if (tutorAuth && localStorageToken && tutorAuth===localStorageToken) {
+    if (tutorAuth && localStorageToken && tutorAuth === localStorageToken) {
       Navigate("/instructor");
     }
   }, []);
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .post(
-        "http://localhost:5000/api/v1/admin/login",
-        { email, password },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        // console.log(response.data);
-        if (response.data.success) {
-          // console.log(response.data);
-          localStorage.setItem("admin", JSON.stringify(response.data));
-          localStorage.setItem("admin_accessToken", response.data.token);
-          Navigate("/admin");
-        }
-      })
-      .catch((error: any) => {
-        console.error(error);
-      });
+    setError("")
+    try {
+      const response = await login(email, password);
+
+      if (response?.data.success) {
+        localStorage.setItem("admin", JSON.stringify(response.data));
+        localStorage.setItem("admin_accessToken", response.data.token);
+        Navigate("/admin");
+      }else{
+        toast.error(" Invalid email or password");
+        setError("invalid email or password");
+      }
+
+    
+    } catch (error: any) {
+      toast.error(" Invalid email or password");
+      setError("invalid email or password");
+    }
   };
 
   return (
@@ -65,7 +65,8 @@ const AdminLogin: React.FC = () => {
                     Admin Login
                   </p>
                 </div>
-
+                {error && <div className="text-red-500">* {error}</div>}
+                <p>{error}</p>
                 {/* <!-- Email input --> */}
                 {/* <TEInput
                 type="email"

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineSend } from "react-icons/md";
 import { Socket } from "socket.io-client";
-import { addChat, getChat } from "../../../services/Api/userApi";
+import { addChat, getChat } from "../../../../services/api/userApi";
 
 type Props = {
   socket: Socket;

@@ -4,7 +4,7 @@ import { TERipple } from "tw-elements-react";
 import loginImage from "../../../assets/InstLogin.jpg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { saveTutor } from "../../../app/features/loginSlice";
+import { saveTutor } from "../../../redux/features/loginSlice";
 
 const InstLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");

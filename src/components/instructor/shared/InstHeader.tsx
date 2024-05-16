@@ -9,10 +9,10 @@ import {
 } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "../../../app/store";
+import { RootState } from "../../../redux/store";
 import { Cookies } from "react-cookie";
 import backgroundImage from "../../../assets/profile.png";
-import { resetTutor } from "../../../app/features/loginSlice";
+import { resetTutor } from "../../../redux/features/loginSlice";
 
 const InstHeader: React.FC = () => {
   const navigate = useNavigate();

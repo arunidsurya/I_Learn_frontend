@@ -71,31 +71,6 @@ const AddCourse: React.FC = () => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   if (Object.keys(courseData).length !== 0) {
-  //     // Once courseData is available and not empty, make the Axios POST request
-  //     axios
-  //       .post(
-  //         "http://localhost:5000/api/v1/tutor/create_course",
-  //         { data: courseData },
-  //         { withCredentials: true }
-  //       )
-  //       .then((res) => {
-  //         if (res.data.courseStatus.success) {
-  //           setError("");
-  //           // Navigate or perform any other action upon success
-  //         } else {
-  //           setError(res.data.courseStatus.message);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       })
-  //       .finally(() => {
-  //         setIsLoading(false); // Make sure to handle loading state accordingly
-  //       });
-  //   }
-  // }, [courseData]);
 
   const handleSubmit = async () => {
     setIsLoading(true);

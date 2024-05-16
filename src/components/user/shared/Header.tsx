@@ -5,8 +5,8 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import { resetUser } from "../../../app/features/loginSlice";
+import { RootState } from "../../../redux/store";
+import { resetUser } from "../../../redux/features/loginSlice";
 
 interface User {
   _id: string;
@@ -46,14 +46,12 @@ const Header: React.FC = () => {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const CookieToken = Cookies.get("access_token");
-    
 
-    if (!accessToken || !CookieToken) {
-            setIsLoggedIn(false); // User is not logged in
-            localStorage.removeItem("accessToken");
-            Cookies.remove("access_token");
-            dispatch(resetUser())
-
+    if (!accessToken || CookieToken === undefined) {
+      setIsLoggedIn(false); // User is not logged in
+      localStorage.removeItem("accessToken");
+      Cookies.remove("access_token");
+      dispatch(resetUser());
     } else {
       setIsLoggedIn(true);
     }

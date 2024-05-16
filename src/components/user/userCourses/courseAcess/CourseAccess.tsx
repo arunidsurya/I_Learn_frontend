@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootState } from "../../../../app/store";
-import { getCourseContent } from "../../../services/Api/userApi";
+import { RootState } from "../../../../redux/store";
+import { getCourseContent } from "../../../services/api/userApi";
 import CourseContentMedia from "./CourseContentMedia";
 import CourseContentList from "../CourseContentList";
 import Cookies from "js-cookie";
@@ -39,15 +39,19 @@ const CourseAccess = () => {
 
   useEffect(() => {
     const fetchCourseContent = async () => {
+
       try {
-        if(!CookieToken){
-            navigate("/");
-            return;
-        }
+        // console.log(CookieToken);
+        
+        // if (CookieToken === undefined) {
+        //   navigate("/");
+        //   return;
+        // }
         if (user) {
           const courseExists = user?.courses.find((id: any) => id === courseId);
-          if (!courseExists ) {
-
+          if (!courseExists) {
+            navigate("/");
+            return;
           }
         } else {
           navigate("/");

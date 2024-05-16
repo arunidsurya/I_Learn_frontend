@@ -46,33 +46,12 @@ const UserHome: React.FC = () => {
           </div>
           <p className="mt-20">
             500K+ Pleople already trusted us.{" "}
-            <Link to="" className="text-green-600">
+            <Link to={"/courses"} className="text-green-600">
               View Courses
             </Link>
           </p>
         </div>
       </div>
-
-      {/* <div className="bg-black flex gap-2 w-full">
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1"></div>
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1">
-          component2
-        </div>
-      </div>
-
-      <div className="bg-black flex gap-2 w-full">
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1"></div>
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1">
-          component2
-        </div>
-      </div>
-
-      <div className="bg-black flex gap-2 w-full">
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1"></div>
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1">
-          component2
-        </div>
-      </div> */}
     </div>
   );
 };
