@@ -54,9 +54,7 @@ export const editCategory = async (
   }
 };
 
-export const deleteCategory = async (
-  _id: string,
-) => {
+export const deleteCategory = async (_id: string) => {
   try {
     const res = await Api.delete(`${adminRoutes.deleteCategory}/${_id}`);
     return res;
@@ -83,32 +81,111 @@ export const getCourses = async () => {
   }
 };
 
- export const handleChangeCourseStatus = async (status:string, courseId:string) => {
-   try {
-     const res = await Api.put(adminRoutes.changeCourseStatus,{status,courseId});
-      return res;
-   } catch (error) {
+export const handleChangeCourseStatus = async (
+  status: string,
+  courseId: string
+) => {
+  try {
+    const res = await Api.put(adminRoutes.changeCourseStatus, {
+      status,
+      courseId,
+    });
+    return res;
+  } catch (error) {
     console.log(error);
-   }
- };
+  }
+};
 
-  export const handlegetTutors = async () => {
-    try {
-      const res = await Api.get(adminRoutes.getTutors);
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+export const handlegetTutors = async () => {
+  try {
+    const res = await Api.get(adminRoutes.getTutors);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleChangeTutorStatus = async (method: string, _id: string) => {
+  try {
+    const res = await Api.post(`${adminRoutes.tutorVerificaton}/${method}`, {
+      _id,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleEditTutor = async (
+  _id: string,
+  name: string,
+  email: string,
+  institute: string,
+  qualifiaction: string,
+  experience: string
+) => {
+  try {
+    const res = await Api.post(adminRoutes.editTutor, {
+      _id,
+      name,
+      email,
+      institute,
+      qualifiaction,
+      experience,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handlegetNotifications = async () => {
+  try {
+    const res = await Api.get(adminRoutes.getNotifications);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleGetCourseAnalytics = async () => {
+  try {
+    const res = await Api.get(adminRoutes.getCourseAnalytics);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleGetOrderAnalytics = async () => {
+  try {
+    const res = await Api.get(adminRoutes.getOrderAnalytics);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleGetUserAnalytics = async () => {
+  try {
+    const res = await Api.get(adminRoutes.getUserAnalytics);
+
+    
+    return res;
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleChangeNotificationStatus = async (id:string) => {
+  try {
+    const res = await Api.get(`${adminRoutes.changeNotificationStatus}/${id}`);
 
 
-   export const handleChangeTutorStatus = async (method: string, _id: string) => {
-     try {
-       const res = await Api.post(`${adminRoutes.tutorVerificaton}/${method}`, {
-         _id,
-       });
-       return res;
-     } catch (error) {
-       console.log(error);
-     }
-   };
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+

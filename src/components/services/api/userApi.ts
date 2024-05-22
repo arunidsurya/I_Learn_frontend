@@ -10,6 +10,16 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const logout = async () => {
+  try {
+    const res = await Api.get(userRoutes.logout);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const signup = async (
   name: string,
   email: string,
@@ -105,15 +115,7 @@ export const addChat = async (
   }
 };
 
-export const logout = async () => {
-  try {
-    const res = await Api.get(userRoutes.logout);
 
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export const changePassword = async (
   email: string,
@@ -139,7 +141,7 @@ export const updateUserInfo = async (
   _id: string,
   name: string,
   email: string,
-  avatar: string 
+  avatar: string
 ) => {
   try {
     // console.log(userName, userId, courseId, message);
@@ -157,12 +159,19 @@ export const updateUserInfo = async (
   }
 };
 
-export const enrolledCourses = async (
-  userId: string,
-) => {
+export const enrolledCourses = async (userId: string) => {
   try {
-
     const res = await Api.get(`${userRoutes.enrolledCourses}/${userId}`);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleGetCourses = async () => {
+  try {
+    const res = await Api.get(userRoutes.courses);
 
     return res;
   } catch (error) {
@@ -180,3 +189,75 @@ export const handleGetOneCourse = async (courseId: string) => {
   }
 };
 
+export const handleCreateOrder = async (
+  courseId: string,
+  payment_info: any
+) => {
+  try {
+    const res = await Api.post(userRoutes.createOrder, {
+      courseId,
+      payment_info,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleGetStripePublishablekey = async () => {
+  try {
+    
+    
+    const res = await Api.get(userRoutes.getStripepublishablekey);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleCoursePayment= async (amount:number) => {
+  console.log(userRoutes.coursePayment);
+  console.log(amount);
+  
+  try {
+    const res = await Api.post(userRoutes.coursePayment,{amount});
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleAddReview = async (
+  courseId: string,
+  rating: number,
+  review: string,
+) => {
+  try {
+    const res = await Api.put(`${userRoutes.addReview}/${courseId}`, {
+      courseId,
+      rating,
+      review,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleAddProgress = async (
+  courseId: string,
+  contentId: string,
+) => {
+  try {
+    const res = await Api.put(userRoutes.addProgress, {
+      courseId,
+      contentId,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

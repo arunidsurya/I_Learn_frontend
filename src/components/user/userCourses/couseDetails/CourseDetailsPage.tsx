@@ -4,6 +4,11 @@ import { useParams } from "react-router-dom";
 import CouseDetails from "./CouseDetails";
 import { loadStripe } from "@stripe/stripe-js";
 import socketIo from "socket.io-client";
+import {
+  handleCoursePayment,
+  handleGetOneCourse,
+  handleGetStripePublishablekey,
+} from "../../../services/api/userApi";
 
 const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
 const socket = socketIo(baseUrl, { transports: ["websocket"] });
@@ -17,57 +22,52 @@ const CourseDetailsPage = () => {
 
   const params = useParams();
 
-    useEffect(() => {
-      socket.on("connect", () => {
-        console.log("Socket connected");
-      });
-
-      // Clean up the socket connection when component unmounts
-      // return () => {
-      //   socket.disconnect();
-      // };
-    }, []);
-
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/v1/user/getCourse/${params._id}`, {
-        withCredentials: true,
-      })
-      .then((res: any) => {
-        // console.log(res.data.result.course);
-        return new Promise((resolve, reject) => {
-          if (res.data) {
-            setCourse(res.data.result.course);
-            resolve(res.data.result.course);
-          } else {
-            setError(res.data.message);
-            reject(res.data.message);
-          }
-        });
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
+    socket.on("connect", () => {
+      console.log("Socket connected");
+    });
+
+    // Clean up the socket connection when component unmounts
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, []);
 
+  const getCourse = async () => {
+    const courseId = params._id || "";
+    const res = await handleGetOneCourse(courseId);
+    return new Promise((resolve, reject) => {
+      if (res?.data) {
+        setCourse(res.data.result.course);
+        resolve(res.data.result.course);
+      } else {
+        setError(res?.data.message);
+        reject(res?.data.message);
+      }
+    });
+  };
+
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/user/stripepublishablekey", {
-        withCredentials: true,
-      })
-      .then((res: any) => {
-        // console.log(res.data.result.course);
-
-        if (res.data) {
-        //   console.log(res.data);
-
-          setPublishablekey(res.data.publishablekey);
-        }
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
+    getCourse();
   }, []);
+
+  const getStripepublishablekey = async () => {
+    const res = await handleGetStripePublishablekey();
+    if (res?.data) {
+      setPublishablekey(res.data.publishablekey);
+    }
+  };
+
+  useEffect(() => {
+    getStripepublishablekey();
+  }, []);
+
+  const makePayment = async (amount: number) => {
+    const res = await handleCoursePayment(amount);
+    if (res?.data) {
+      setClientSecret(res.data.client_secret);
+    }
+  };
 
   useEffect(() => {
     if (publishablekey) {
@@ -75,38 +75,10 @@ const CourseDetailsPage = () => {
     }
     if (course) {
       const amount = Math.round(course.price * 100);
-      // console.log("amount:", amount);
-
-      axios
-        .post(
-          "http://localhost:5000/api/v1/user/payment",
-          { amount },
-          {
-            withCredentials: true,
-          }
-        )
-
-        .then((res: any) => {
-        //   console.log(res.data);
-
-          if (res.data) {
-            // console.log(res.data);
-
-            setClientSecret(res.data.client_secret);
-          }
-        })
-        .catch((error: any) => {
-          console.log("this is error");
-
-          console.log(error);
-        });
+      makePayment(amount);
     }
   }, [publishablekey, course]);
 
-//   console.log(course);
-//   console.log("publishablekey:",publishablekey);
-//   console.log("clientSecret :",clientSecret);
-//   console.log("stripePromise:",stripePromise);
 
   return (
     <div>

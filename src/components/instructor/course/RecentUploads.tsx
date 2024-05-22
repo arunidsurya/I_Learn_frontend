@@ -1,14 +1,16 @@
-import { Button } from "@nextui-org/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
-import { IoCloseOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import { DeleteFileFromS3Bucket } from "../utils/DeletefromS3Bucket";
+import CourseModal from "./CourseModal";
 import { MdDelete, MdEdit } from "react-icons/md";
-import {
-  getCourses,
-  handleChangeCourseStatus,
-} from "../../services/api/adminApi";
+import { useSelector } from "react-redux";
 import { formatDate } from "../../services/formats/FormatDate";
+import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import {
+  handleDeleteCourse,
+  handleGetNonApprovedCourses,
+} from "../../services/api/tutorApi";
 
 interface Course {
   _id: string;
@@ -34,16 +36,21 @@ interface Course {
   createdAt: string;
 }
 
-const ViewCourses: React.FC = () => {
+const RecentUploads = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [open, setOpen] = useState(false);
-  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
-  const [selectedAction, setSelectedAction] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState<Course | null>(null);
   const [page, setPage] = useState(1);
+  const [isDeleted, setIsDeleted] = useState(0);
 
-  const rowsPerPage = 2;
+  const navigate = useNavigate();
+
+  const tutor = useSelector((state: any) => state.login.tutor);
+  // console.log(tutor);
+
+  const rowsPerPage = 8;
 
   const pages = Math.ceil(courses.length / rowsPerPage);
 
@@ -56,54 +63,70 @@ const ViewCourses: React.FC = () => {
 
   const paginate = (pageNumber: number) => setPage(pageNumber);
 
-  const coursesdata = async () => {
+  const nonApprovedCourses = async () => {
     try {
-      const response = await getCourses();
+      const response = await handleGetNonApprovedCourses(tutor._id);
       if (response?.data.success) {
-        setCourses(response.data.courses);
+        setCourses(response.data.courses.courses);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching users:", error);
     }
   };
 
   useEffect(() => {
-    coursesdata();
-  }, [message, error]);
+    nonApprovedCourses();
+  }, [isDeleted]);
 
-
-  const handleClick = async (status: string, courseId: any) => {
-    setError("");
-    setMessage("");
-
+  const handleDelete = async (course: Course) => {
     try {
-      const response = await handleChangeCourseStatus(status, courseId);
+      await Promise.all(
+        course.courseData.map(async (data: any) => {
+          try {
+            await DeleteFileFromS3Bucket(data.videoUrl);
+          } catch (error) {
+            console.error("Error deleting file from S3 bucket:", error);
+            setError("Course deletion unsuccessful");
+            throw new Error("Error deleting file from S3 bucket");
+          }
+        })
+      );
+
+      await DeleteFileFromS3Bucket(course.thumbnail);
+      await DeleteFileFromS3Bucket(course.demoUrl);
+
+      const response = await handleDeleteCourse(course._id);
+
       if (response?.data.success) {
-        setMessage(response.data.message);
+        setMessage("Course deleted Successfully!!");
+        setIsDeleted((prevState) => (prevState === 0 ? 1 : 0));
       } else {
-        setError(response?.data.message);
+        setError("Course deletion unsuccessful");
+
+        throw new Error("Server returned unsuccessful response");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error deleting course:", error);
     }
-  };
-
-  const handleConfirmAction = () => {
-    if (selectedCourseId && selectedAction) {
-      handleClick(selectedAction, selectedCourseId);
-    }
-    setOpen(false);
-    setSelectedCourseId(null);
-    setSelectedAction(null);
   };
 
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1">
       <div className="flex justify-between items-center mb-3">
-        <strong className="text-gray-700 font-bold  text-2xl mb-4">
+        <strong className="text-gray-700 font-bold text-2xl">
           Live Courses
         </strong>
       </div>
+      {error && (
+        <div className="text-red-500 w-full bg-blue-100 mb-4 font-bold p-4 rounded-md">
+          {error}
+        </div>
+      )}
+      {message && (
+        <div className="text-green-500 w-full bg-blue-100 mb-4 font-bold p-4 rounded-md">
+          {message}
+        </div>
+      )}
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -169,80 +192,46 @@ const ViewCourses: React.FC = () => {
                 <span
                   className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                     course.approved
-                      ? "bg-green-100 text-green-800 min-w-22 flex items-center justify-center"
-                      : "bg-red-100 text-red-800 min-w-22 flex items-center justify-center"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
                   }`}
                 >
-                  {course.approved ? "Approved" : "Not approved"}
+                  {course.approved ? "approved" : "Not approved"}
                 </span>
               </td>
 
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex gap-4">
-                  {course.approved ? (
-                    <button
-                      className="bg-red-500 text-white rounded-md p-1 font-bold min-w-20"
-                      onClick={() => {
-                        setSelectedCourseId(course._id);
-                        setSelectedAction("block");
-                        setOpen(true);
-                      }}
-                    >
-                      Block
-                    </button>
-                  ) : (
-                    <button
-                      className="bg-green-500 text-white rounded-md p-1 font-bold min-w-20"
-                      onClick={() => {
-                        setSelectedCourseId(course._id);
-                        setSelectedAction("approve");
-                        setOpen(true);
-                      }}
-                    >
-                      Approve
-                    </button>
-                  )}
+                  <div
+                    onClick={() =>
+                      navigate("/instructor/edit_Course", { state: course })
+                    }
+                  >
+                    <MdEdit size={25} className="text-green-500" />
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      setCourseToDelete(course);
+                      setShowModal(true);
+                    }}
+                  >
+                    <MdDelete size={25} className="text-red-500" />
+                  </div>
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {open && (
-        <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center">
-          <div className="bg-black bg-opacity-50 absolute top-0 left-0 w-full h-full"></div>
-          <div className="w-96 bg-white rounded-xl shadow-lg p-4 relative">
-            <div className="absolute top-0 right-0">
-              <IoCloseOutline
-                size={24}
-                className="text-black cursor-pointer"
-                onClick={() => setOpen(false)}
-              />
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <h1 className="text-xl font-bold mb-2">Are you sure?</h1>
-              <p className="mb-4">Please confirm to proceed with the action.</p>
-              <div className="flex space-x-4">
-                <button
-                  onClick={handleConfirmAction}
-                  className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-green-600"
-                >
-                  Confirm
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedAction("");
-                    setSelectedCourseId("");
-                    setOpen(false);
-                  }}
-                  className="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-red-600"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      {showModal && (
+        <CourseModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          courseToDelete={courseToDelete}
+          setCourseToDelete={setCourseToDelete}
+          handleDelete={handleDelete}
+        />
       )}
 
       {/* pagination */}
@@ -298,4 +287,4 @@ const ViewCourses: React.FC = () => {
   );
 };
 
-export default ViewCourses;
+export default React.memo(RecentUploads);

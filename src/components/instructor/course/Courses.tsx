@@ -5,6 +5,13 @@ import { DeleteFileFromS3Bucket } from "../utils/DeletefromS3Bucket";
 import CourseModal from "./CourseModal";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useSelector } from "react-redux";
+import {
+  handleDeleteCourse,
+  handleGetAllCourses,
+} from "../../services/api/tutorApi";
+import toast from "react-hot-toast";
+import { formatDate } from "../../services/formats/FormatDate";
+import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 
 interface Course {
   _id: string;
@@ -35,28 +42,43 @@ const Courses = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(0);
   const [courseToDelete, setCourseToDelete] = useState<Course | null>(null);
+  const [page, setPage] = useState(1);
 
   const navigate = useNavigate();
 
   const tutor = useSelector((state: any) => state.login.tutor);
-  // console.log(tutor);
+  // console.log(tutor);.
+
+  const rowsPerPage = 8;
+
+  const pages = Math.ceil(courses.length / rowsPerPage);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return courses.slice(start, end);
+  }, [page, courses]);
+
+  const paginate = (pageNumber: number) => setPage(pageNumber);
+
+  const allCourses = async () => {
+    try {
+      const response = await handleGetAllCourses(tutor._id);
+      if (response?.data.success) {
+        setCourses(response.data.courses.courses);
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/v1/tutor/courses/${tutor._id}`, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        // console.log(response.data.courses.courses);
-        if (response.data.success) {
-          setCourses(response.data.courses.courses);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
-  }, []);
+    allCourses();
+    console.log("call");
+  }, [isDeleted]);
 
   const handleDelete = async (course: Course) => {
     try {
@@ -75,16 +97,11 @@ const Courses = () => {
       await DeleteFileFromS3Bucket(course.thumbnail);
       await DeleteFileFromS3Bucket(course.demoUrl);
 
-      const response = await axios.delete(
-        `http://localhost:5000/api/v1/tutor/delete_course/${course._id}`,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(response);
+      const response = await handleDeleteCourse(course._id);
 
-      if (response.data.success) {
+      if (response?.data.success) {
         setMessage("Course deleted Successfully!!");
+        setIsDeleted((prevState) => (prevState === 0 ? 1 : 0));
       } else {
         setError("Course deletion unsuccessful");
 
@@ -93,28 +110,6 @@ const Courses = () => {
     } catch (error) {
       console.error("Error deleting course:", error);
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const monthIndex = date.getMonth();
-    const year = date.getFullYear();
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return `${day}-${months[monthIndex]}-${year}`;
   };
 
   return (
@@ -188,9 +183,11 @@ const Courses = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {courses.map((course, index) => (
+          {items.map((course, index) => (
             <tr key={course?._id}>
-              <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {(page - 1) * rowsPerPage + index + 1}
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {course.courseTitle.slice(0, 25)}
               </td>
@@ -211,8 +208,13 @@ const Courses = () => {
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <button className="bg-blue-500 text-white rounded-md min-w-[80px] min-h-[30px]"
-                onClick={()=>navigate("/instructor/schedule_class",{state:course._id})}
+                <button
+                  className="bg-blue-500 text-white rounded-md min-w-[80px] min-h-[30px]"
+                  onClick={() =>
+                    navigate("/instructor/schedule_class", {
+                      state: course._id,
+                    })
+                  }
                 >
                   Schedule
                 </button>
@@ -250,9 +252,58 @@ const Courses = () => {
           handleDelete={handleDelete}
         />
       )}
+
+      {/* pagination */}
+      <div className="mt-20 flex justify-center">
+        <button
+          onClick={() => paginate(page - 1)}
+          disabled={page === 1}
+          className="mx-1 px-3 py-1 border bg-gray-100"
+        >
+          <BiSkipPrevious size={20} />
+        </button>
+        {Array.from({ length: Math.min(5, pages) }, (_, index) => {
+          const pageNumber = index + 1;
+          const pageLimit = 5;
+          const middleIndex = Math.floor(pageLimit / 2);
+          const displayPages =
+            pages <= pageLimit
+              ? pages
+              : page + middleIndex >= pages
+              ? Math.min(pages, pageLimit)
+              : page <= middleIndex
+              ? pageLimit
+              : page + middleIndex >= pages
+              ? pages
+              : page + middleIndex;
+          const firstPage =
+            page <= middleIndex
+              ? 1
+              : page + middleIndex >= pages
+              ? pages - (pageLimit - 1)
+              : page - middleIndex;
+          return (
+            <button
+              key={index}
+              className={`mx-1 px-3 py-1 border ${
+                page === pageNumber ? "bg-gray-300" : "bg-gray-100"
+              }`}
+              onClick={() => paginate(firstPage + index)}
+            >
+              {firstPage + index}
+            </button>
+          );
+        })}
+        <button
+          onClick={() => paginate(page + 1)}
+          disabled={page === pages}
+          className="mx-1 px-3 py-1 border bg-gray-100"
+        >
+          <BiSkipNext size={20} />
+        </button>
+      </div>
     </div>
   );
 };
 
 export default React.memo(Courses);
-

@@ -3,16 +3,17 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../../redux/store";
 import { getCourseContent } from "../../../services/api/userApi";
-import CourseContentMedia from "./CourseContentMedia";
-import CourseContentList from "../CourseContentList";
+import CourseContentList from "./CourseContentList";
 import Cookies from "js-cookie";
 
 import socketIo from "socket.io-client";
+import CourseMedia from "./courseMedia";
+import { handleGetOneCourse } from "../../../services/api/tutorApi";
 
 const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
 const socket = socketIo(baseUrl, { transports: ["websocket"] });
 
-const CourseAccess = () => {
+const InstCourseAccess = () => {
   const [course, setCourse] = useState<object>();
   const [data, setData] = useState<object[]>([{}]);
   const [activeVideo, setActiveVideo] = useState(0);
@@ -21,47 +22,23 @@ const CourseAccess = () => {
 
   const params = useParams();
   const courseId = params._id || "";
+  console.log("courseID:",courseId);
+  
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.login.user);
+
+  const tutor = useSelector((state:any)=>state.login.tutor)
 
   const CookieToken = Cookies.get("access_token");
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Socket connected");
-    });
-
-    // Clean up the socket connection when component unmounts
-    // return () => {
-    //   socket.disconnect();
-    // };
-  }, []);
 
   useEffect(() => {
     const fetchCourseContent = async () => {
-
       try {
-        // console.log(CookieToken);
-        
-        // if (CookieToken === undefined) {
-        //   navigate("/");
-        //   return;
-        // }
-        if (user) {
-          const courseExists = user?.courses.find((id: any) => id === courseId);
-          if (!courseExists) {
-            navigate("/");
-            return;
-          }
-        } else {
-          navigate("/");
-          return;
-        }
 
-        const res = await getCourseContent(courseId);
+        const res = await handleGetOneCourse(courseId);
         if (res) {
-          setCourse(res?.data.result.course);
-          setData(res?.data.result.course.courseData);
+          setCourse(res?.data.result);
+          setData(res?.data.result.courseData);
           // console.log(res?.data.result.course.courseData);
         }
         // console.log(res?.data.result.course);
@@ -71,7 +48,7 @@ const CourseAccess = () => {
     };
 
     fetchCourseContent();
-  }, [user, courseId, navigate, isDataUpdated, newData]);
+  }, [courseId, navigate, isDataUpdated, newData]);
 
   const updateCourseData = async () => {
     setIsdataUpdated((prevData) => (prevData + 1) % 2);
@@ -83,12 +60,12 @@ const CourseAccess = () => {
   return (
     <div className="w-full grid 800px:grid-cols-10 mb-12 mt-4">
       <div className="col-span-7">
-        <CourseContentMedia
+        <CourseMedia
           data={data}
           courseId={courseId}
           activeVideo={activeVideo}
           setActiveVideo={setActiveVideo}
-          user={user}
+          tutor={tutor}
           updateCourseData={updateCourseData}
           updateCourseData2={updateCourseData2}
           socket={socket}
@@ -99,12 +76,10 @@ const CourseAccess = () => {
           setActiveVideo={setActiveVideo}
           data={data}
           activeVideo={activeVideo}
-          user={user}
-          courseId={courseId}
         />
       </div>
     </div>
   );
 };
 
-export default CourseAccess;
+export default InstCourseAccess;

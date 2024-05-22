@@ -112,7 +112,27 @@ const EditCourseLazy = React.lazy(
 const VideoCallLazy = React.lazy(
   () => import("./components/services/VideoCall")
 );
-
+const RecentUploadsLazy = React.lazy(
+  () => import("./components/instructor/course/RecentUploads")
+);
+const InstStudentsLazy = React.lazy(
+  () => import("./components/instructor/students/Students")
+);
+const InstCoursesHomeLazy = React.lazy(
+  () => import("./components/instructor/course/courseTile/courseTileHome")
+);
+const InstCourseAccessLazy = React.lazy(
+  () => import("./components/instructor/course/courseAcess/InstCourseAccess")
+);
+const CourseAnalyticsLazy = React.lazy(
+  () => import("./components/admin/dashboard/analytics/CourseAnalytics")
+);
+const OrderAnalyticsLazy = React.lazy(
+  () => import("./components/admin/dashboard/analytics/OrderAnalytics")
+);
+const UserAnalyticsLazy = React.lazy(
+  () => import("./components/admin/dashboard/analytics/UserAnalytics")
+);
 
 
 
@@ -248,7 +268,6 @@ const App: React.FC = () => {
               }
             />
           </Route>
-
           <Route
             path="admin/"
             element={
@@ -353,6 +372,30 @@ const App: React.FC = () => {
                 </Suspense>
               }
             />
+            <Route
+              path="courses_analytics/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <CourseAnalyticsLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="orders_analytics/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <OrderAnalyticsLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="users_analytics/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserAnalyticsLazy />
+                </Suspense>
+              }
+            />
           </Route>
 
           <Route
@@ -413,8 +456,39 @@ const App: React.FC = () => {
                 </Suspense>
               }
             />
+            <Route
+              path="pending_courses/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <RecentUploadsLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="students/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <InstStudentsLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="courses/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <InstCoursesHomeLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="course_access/:_id"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <InstCourseAccessLazy />
+                </Suspense>
+              }
+            />
           </Route>
-
           <Route
             path="admin_login/"
             element={

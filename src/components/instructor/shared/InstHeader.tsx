@@ -1,7 +1,7 @@
 import { Menu, Popover, Transition } from "@headlessui/react";
 import axios from "axios";
 import classNames from "classnames";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   HiOutlineBell,
   HiOutlineChatAlt,
@@ -13,8 +13,11 @@ import { RootState } from "../../../redux/store";
 import { Cookies } from "react-cookie";
 import backgroundImage from "../../../assets/profile.png";
 import { resetTutor } from "../../../redux/features/loginSlice";
+import { handleGetSearchResults, handleLogout } from "../../services/api/tutorApi";
+import socketIo from "socket.io-client";
 
 const InstHeader: React.FC = () => {
+  const [searchKey, setSearchKey] = useState<string>("")
   const navigate = useNavigate();
   const cookies = new Cookies();
   const dispatch = useDispatch();
@@ -28,43 +31,67 @@ const InstHeader: React.FC = () => {
     if (localStorageToken !== cookieToken) {
       localStorage.removeItem("tutor_accessToken");
       cookies.remove("tutor_token");
-
       navigate("/inst_login");
     }
   }, []);
 
-  const handleLogout = () => {
-    axios
-      .get("http://localhost:5000/api/v1/tutor/logout", {
-        withCredentials: true,
-      })
-      .then((response) => {
-        // console.log(response.data);
-        if (response.data.success) {
-          // console.log(response.data);
-          dispatch(resetTutor());
-          localStorage.removeItem("tutor");
-          localStorage.removeItem("tutor_accessToken");
-          navigate("/inst_login");
-        }
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-      });
+
+  const handleLogoutFunction = async() => {
+    try {
+      const response = await handleLogout();
+          if (response?.data.success) {
+            // console.log(response.data);
+            dispatch(resetTutor());
+            localStorage.removeItem("tutor");
+            localStorage.removeItem("tutor_accessToken");
+            navigate("/inst_login");
+          }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+const handleSearch = async () => {
+  try {
+    const response = await handleGetSearchResults(searchKey);
+    console.log(response?.data);
+    
+
+    if (response && response.data && response.data.result) {
+      const courses = response.data.result;
+      setSearchKey("")
+      navigate("/instructor/courses", { state: { courses } });
+    } else {
+      // Handle case when no courses are found
+      console.error("No courses found");
+      navigate("/instructor/courses", { state: { courses: [] } });
+    }
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    // Optionally navigate with an empty courses array or handle error accordingly
+    navigate("/instructor/courses", { state: { courses: [] } });
+  }
+};
 
   return (
     <div className="bg-white h-16 px-4 flex justify-between items-center border-b border-gray-200 ">
       <div className="relative">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchKey}
+          className="text-sm focus:outline-none active:outline-none h-10 w-[24rem] border border-gray-300 rounded-lg pl-11 pr-4"
+          onChange={(e:any)=>setSearchKey(e.target.value)}
+        />
         <HiOutlineSearch
           fontSize={20}
           className="text-gray-400 absolute top-1/2 -translate-y-1/2 left-3"
         />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="text-sm focus:outline-none active:outline-none h-10 w-[24rem] border border-gray-300 rounded-lg pl-11 pr-4"
-        />
+        <button className=" bg-blue-900 text-white h-10 w-[5rem] border border-gray-300 rounded-lg ml-1 "
+        onClick={handleSearch}
+        >
+          Search
+        </button>
       </div>
       <div className="flex items-center gap-2 mr-2">
         <Popover className="relative">
@@ -189,7 +216,7 @@ const InstHeader: React.FC = () => {
                 <Menu.Item>
                   {({ active }) => (
                     <div
-                      onClick={handleLogout}
+                      onClick={handleLogoutFunction}
                       className={classNames(
                         active && "bg-gray-100",
                         "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2"

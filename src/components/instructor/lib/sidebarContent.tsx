@@ -2,7 +2,7 @@ import { FaPhoneAlt, FaUsers } from "react-icons/fa";
 import { HiOutlineCog, HiOutlineQuestionMarkCircle } from "react-icons/hi";
 import { IoIosPlayCircle } from "react-icons/io";
 import { IoChatboxEllipses } from "react-icons/io5";
-import { MdHomeFilled } from "react-icons/md";
+import { MdHomeFilled, MdPlayLesson } from "react-icons/md";
 import { RiVideoAddFill } from "react-icons/ri";
 
 export const DASHBOARD_SIDEBAR_LINKS = [
@@ -23,6 +23,12 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     label: "Live Courses",
     path: "/instructor/Live_courses",
     icon: <IoIosPlayCircle />,
+  },
+  {
+    key: "PendingApproval",
+    label: "Pending Approval",
+    path: "/instructor/pending_courses",
+    icon: <MdPlayLesson />,
   },
   {
     key: "Students",

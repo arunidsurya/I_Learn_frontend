@@ -1,26 +1,22 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
+import { handleGetCourses } from "../../services/api/userApi";
 
 const UserCourses: React.FC = () => {
   const [courses, setCourses] = useState<any[]>([]);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const coursesPerPage = 12; // Adjust as needed
+  const coursesPerPage = 12; 
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/v1/user/courses",
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.data.success) {
+      const response = await handleGetCourses();
+      if (response?.data.success) {
         setCourses(response.data.result.courses);
       } else {
-        setError(response.data.message);
+        setError(response?.data.message);
       }
     } catch (error) {
       console.log(error);

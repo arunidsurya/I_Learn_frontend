@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { resetUser } from "../../../redux/features/loginSlice";
+import { logout } from "../../services/api/userApi";
 
 interface User {
   _id: string;
@@ -36,18 +37,12 @@ const Header: React.FC = () => {
 
   const user = useSelector((state: RootState) => state.login.user);
 
-  // console.log(user?.name);
-  // const accessToken = localStorage.getItem("accessToken");
-  // const CookieToken = Cookies.get("access_token");
-  // console.log(accessToken)
-  // console.log(CookieToken);
-  // console.log(accessToken===CookieToken);
-
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const CookieToken = Cookies.get("access_token");
+    // console.log(CookieToken);
 
-    if (!accessToken || CookieToken === undefined) {
+    if (!accessToken) {
       setIsLoggedIn(false); // User is not logged in
       localStorage.removeItem("accessToken");
       Cookies.remove("access_token");
@@ -65,28 +60,18 @@ const Header: React.FC = () => {
     }
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("logout");
 
-    axios
-      .get("http://localhost:5000/api/v1/user/logout", {
-        withCredentials: true,
-      })
-      .then((response) => {
-        // console.log(response.data);
-        if (response.data.success) {
-          // console.log(response.data);
-          dispatch(resetUser());
-          localStorage.removeItem("user");
-          localStorage.removeItem("accessToken");
-          setIsLoggedIn(false);
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-        navigate("/");
-      });
+    const response = await logout();
+    if (response?.data.success) {
+      // console.log(response.data);
+      dispatch(resetUser());
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      setIsLoggedIn(false);
+      navigate("/");
+    }
   };
 
   return (

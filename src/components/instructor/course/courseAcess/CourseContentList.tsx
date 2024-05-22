@@ -7,8 +7,6 @@ type Props = {
   activeVideo?: number;
   setActiveVideo?: any;
   isDemo?: boolean;
-  user?: any;
-  courseId: string;
 };
 
 const CourseContentList: React.FC<Props> = ({
@@ -16,24 +14,10 @@ const CourseContentList: React.FC<Props> = ({
   activeVideo,
   setActiveVideo,
   isDemo,
-  user,
-  courseId,
 }) => {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(
     new Set<string>()
   );
-
-  // console.log(user.courseProgress);
-  const isChecked = (id: string) => {
-    console.log(id);
-    const courseProgressObj = user?.courseProgress.find(
-      (progress: any) => progress.courseId === courseId
-    );
-    if (!courseProgressObj) {
-      return null;
-    }
-    return courseProgressObj.sectionId.includes(id);
-  };
 
   // Find unique video sections
   const videoSections: string[] = [
@@ -131,16 +115,9 @@ const CourseContentList: React.FC<Props> = ({
                             color="#1cdada"
                           />
                         </div>
-                        <div className="flex-1 flex justify-between items-center">
-                          <h1 className="text-[18px] inline-block break-words">
-                            {item.title}
-                          </h1>
-                          <input
-                            type="checkbox"
-                            checked={isChecked(item._id)}
-                            className="w-[18px] h-[18px]"
-                          />
-                        </div>
+                        <h1 className="text-[18px] inline-block break-words">
+                          {item.title}
+                        </h1>
                       </div>
                       <h5 className="pl-8">
                         {item.videoLength > 60

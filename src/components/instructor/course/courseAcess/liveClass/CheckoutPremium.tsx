@@ -8,16 +8,15 @@ import {
 import axios from "axios";
 import { redirect, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { SaveUser } from "../../../../redux/features/loginSlice";
-import { handleCreateOrder } from "../../../services/api/userApi";
+import { SaveUser } from "../../../../../redux/features/loginSlice";
+
 
 type Props = {
   setOpen: any;
-  course: any;
-  socket:any;
+  courseId:string
 };
 
-const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
+const CheckoutPremium: React.FC<Props> = ({ setOpen, courseId }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState<any>("");
@@ -43,25 +42,26 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
       setIsLoading(false);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       setIsLoading(false);
-
-      const payment_info = paymentIntent;
-      const courseId = course._id;
-
-      const res = await handleCreateOrder(courseId, payment_info);
-          if (res?.data.success) {
+      axios
+        .post(
+          "http://localhost:5000/api/v1/user/create-premium-order",
+          { payment_info: paymentIntent },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res: any) => {
+          if (res.data.success) {
             console.log(res.data);
 
             setOrderData(res.data.result.newOrder);
             dispatch(SaveUser(res.data.result.user));
-
-            socket.emit("notification",{
-              title:'New Order',
-              message:`New order from ${course.courseTitle}`,
-              userId:res.data.result.user._id,
-              createdAt:Date.now()
-            })
-
           }
+        })
+        .catch((error: any) => {
+          console.log(error);
+          setError(error);
+        });
     }
   };
   useEffect(() => {
@@ -69,7 +69,7 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
       setLoadUser(true);
       setOpen(false);
       // redirect(`/course-access/${course._id}`)
-      navigate(`/course-access/${course._id}`);
+    //   navigate(`/course-access/${course._id}`);
     }
     if (error) {
       console.log(error);
@@ -110,4 +110,4 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
   );
 };
 
-export default CheckoutForm;
+export default CheckoutPremium;

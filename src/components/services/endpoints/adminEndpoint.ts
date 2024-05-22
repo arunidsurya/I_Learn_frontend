@@ -11,6 +11,11 @@ const adminRoutes = {
   editTutor: "/admin/editTutor",
   getTutors: "/admin/getTutors",
   tutorVerificaton: "/admin",
+  getNotifications: "/admin/get-notifications",
+  getCourseAnalytics: "/admin/course-analytics",
+  getOrderAnalytics: "/admin/order-analytics",
+  getUserAnalytics: "/admin/user-analytics",
+  changeNotificationStatus: "/admin/change-notification-status",
 };
 
 export default adminRoutes;

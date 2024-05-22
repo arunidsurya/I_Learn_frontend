@@ -1,7 +1,7 @@
 import { Menu, Popover, Transition } from "@headlessui/react";
 import axios from "axios";
 import classNames from "classnames";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   HiOutlineBell,
   HiOutlineChatAlt,
@@ -12,24 +12,61 @@ import { Cookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { resetAdmin } from "../../../redux/features/loginSlice";
+import sound from '../../../assets/level-up-191997.mp3';
 
 import backgroundImage from "../../../assets/profile.png";
-import { logout } from "../../services/api/adminApi";
+import { handleChangeNotificationStatus, handlegetNotifications, logout } from "../../services/api/adminApi";
 import socketIo from "socket.io-client";
+import toast from "react-hot-toast";
+import { formatCreatedAt } from "../../services/formats/FormatDate";
+
 
 const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
 const socket = socketIo(baseUrl, { transports: ["websocket"] });
 
+interface Notification extends Document {
+  _id:string,
+  title: string;
+  message: string;
+  status: string;
+  userId: string;
+  createdAt:Date;
+}
+
+
 
 const AdminHeader: React.FC = () => {
+
+  const [notification, setNotification] = useState<Notification[]>([]);
+  const [notificationStatus, setNotificationStatus] = useState(0)
   const navigate = useNavigate();
   const cookies = new Cookies();
   const dispatch = useDispatch();
 
   const admin = useSelector((state: RootState) => state.login.admin);
 
+
   const localStorageToken = localStorage.getItem("admin_accessToken");
   const cookieToken = cookies.get("admin_AccessToken");
+
+  const getNotifications = async()=>{
+    const response = await handlegetNotifications();
+
+    if(response?.data.success){
+//  console.log(response?.data.result);
+
+    setNotification(response?.data.result)
+    
+    }else{
+      toast.error(response?.data.message)
+    } 
+
+  }
+
+      useEffect(() => {
+        getNotifications();
+      }, [notificationStatus]);
+  
 
       useEffect(() => {
         socket.on("connect", () => {
@@ -42,15 +79,19 @@ const AdminHeader: React.FC = () => {
         // };
       }, []);
 
+        function play() {
+          new Audio(sound).play();
+        }
+
         const receiveMessageHandler = (data: {
           title: string,
           messgae: string,
           userId: string,
-          userName: string
         }) => {
           console.log(data);
           
-          // setMessageData((prevData: any) => [...prevData, data]);
+          setNotification((prevData: any) => [...prevData, data]);
+          play()
         };
 
         useEffect(() => {
@@ -88,6 +129,18 @@ const AdminHeader: React.FC = () => {
       
     }
   };
+
+const handleNotification=async(id:string)=>{
+  try {
+    const response = await handleChangeNotificationStatus(id)
+    if(response?.data.success){
+      setNotificationStatus((state:any)=>state===0 ? 1 : 0)
+    }
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
 
   return (
     <div className="bg-white h-16 px-4 flex justify-between items-center border-b border-gray-200 ">
@@ -143,11 +196,17 @@ const AdminHeader: React.FC = () => {
               <Popover.Button
                 className={classNames(
                   open && "bg-gray-200",
-                  "p-1.5 rounded-sm inline-flex items-center text-gray-700 hover:bg-gray-200 focus:outline-gray-200 active:bg-gray-100"
+                  "relative p-1.5 rounded-sm inline-flex items-center text-gray-700 hover:bg-gray-200 focus:outline-gray-200 active:bg-gray-100"
                 )}
               >
-                <HiOutlineBell fontSize={24} />
+                <HiOutlineBell fontSize={25} />
+                <span className="relative">
+                  <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500 text-white w-4 h-4 flex justify-center items-center text-xs">
+                    {notification.length}
+                  </div>
+                </span>
               </Popover.Button>
+
               <Transition
                 as={Fragment}
                 enter="transition ease-out duration-200"
@@ -157,13 +216,40 @@ const AdminHeader: React.FC = () => {
                 leaveFrom="opacity-100 translate-y-0"
                 leaveTo="opacity-0 translate-y-1"
               >
-                <Popover.Panel className="absolute right-0 z-10 mt-2.5 w-80">
-                  <div className="bg-shite rounded-sm shadow-md ring-1 ring-black ring-opacity-5 px-2 py-2.5">
-                    <strong className="text-gray-700 font-medium">
-                      Notifications
-                    </strong>
-                    <div className="mt-2 py-1 text-sm">
-                      This is Notification panel
+                <Popover.Panel className="absolute right-0 z-10 mt-5 w-80">
+                  <div className="bg-white rounded-lg shadow-md ring-1 ring-black ring-opacity-5 p-4 max-w-md mx-auto">
+                    <div className="border-b pb-2 mb-2">
+                      <strong className="text-lg text-gray-700 font-medium">
+                        Notifications
+                      </strong>
+                    </div>
+                    <div className="max-h-80 overflow-y-auto space-y-2">
+                      {notification.map((item, index) => (
+                        <div
+                          className="bg-gray-100 rounded-md shadow-sm border border-gray-200"
+                          key={index}
+                        >
+                          <div className="flex items-center justify-between p-3">
+                            <div>
+                              <p className="text-sm font-semibold text-gray-800">
+                                {item.title}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                {formatCreatedAt(item.createdAt)}
+                              </p>
+                            </div>
+                            <p
+                              className="text-blue-500 text-xs cursor-pointer hover:underline"
+                              onClick={() => handleNotification(item._id)}
+                            >
+                              Mark as read
+                            </p>
+                          </div>
+                          <p className="px-3 pb-3 text-sm text-gray-700">
+                            {item.message}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </Popover.Panel>
