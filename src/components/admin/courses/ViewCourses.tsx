@@ -160,8 +160,8 @@ const ViewCourses: React.FC = () => {
               <td className="px-6 py-4 whitespace-nowrap">
                 {course.courseTitle.slice(0, 25)}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">0</td>
-              <td className="px-6 py-4 whitespace-nowrap">0</td>
+              <td className="px-6 py-4 whitespace-nowrap">{Math.round(course.ratings ?? 0)}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{course.purchased}</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {formatDate(course.createdAt)}
               </td>

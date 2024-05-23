@@ -1,7 +1,14 @@
 import React from "react";
+import CourseAnalytics from "./CourseAnalytics";
 
 const InstDashBoard: React.FC = () => {
-  return <div>InstDashBoard</div>;
+  return (
+    <>
+      <div className="h-[100%]">
+        <CourseAnalytics />
+      </div>
+    </>
+  );
 };
 
 export default InstDashBoard;

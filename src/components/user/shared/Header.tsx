@@ -42,7 +42,7 @@ const Header: React.FC = () => {
     const CookieToken = Cookies.get("access_token");
     // console.log(CookieToken);
 
-    if (!accessToken) {
+    if (!accessToken || CookieToken === undefined) {
       setIsLoggedIn(false); // User is not logged in
       localStorage.removeItem("accessToken");
       Cookies.remove("access_token");

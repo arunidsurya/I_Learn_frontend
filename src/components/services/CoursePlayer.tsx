@@ -6,7 +6,7 @@ type Props = {
   title?: string;
   width: string;
   handleVideoEnd?: (id:string) => void;
-  id:string;
+  id?:string;
 };
 
 const CoursePlayer: React.FC<Props> = ({ videoUrl, title, width, handleVideoEnd ,id}) => {

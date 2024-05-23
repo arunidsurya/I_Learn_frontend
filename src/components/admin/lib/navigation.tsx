@@ -9,6 +9,7 @@ import {
   MdHomeFilled,
   MdOutlineAutoGraph,
   MdOutlinePendingActions,
+  MdOutlineWorkspacePremium,
 } from "react-icons/md";
 import { VscGraph } from "react-icons/vsc";
 
@@ -25,12 +26,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     path: "/admin/users",
     icon: <FaUsers />,
   },
-  // {
-  //   key: "invoices",
-  //   label: "Invoices",
-  //   path: "/admin/invoices",
-  //   icon: <LiaFileInvoiceSolid />,
-  // },
+
   {
     key: "liveCourses",
     label: "Live courses",
@@ -60,6 +56,12 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     label: "Manage Team",
     path: "/admin/manage_members",
     icon: <AiOutlineUsergroupAdd />,
+  },
+  {
+    key: "Premium",
+    label: "Premium",
+    path: "/admin/premium",
+    icon: <MdOutlineWorkspacePremium color="yellow" />,
   },
   {
     key: "courseAnalytics",

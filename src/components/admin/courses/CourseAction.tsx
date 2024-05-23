@@ -1,10 +1,12 @@
-import { Button } from "@nextui-org/react";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { IoCloseOutline } from "react-icons/io5";
-import { MdDelete, MdEdit } from "react-icons/md";
-import { getNonApprovedCourses, handleChangeCourseStatus } from "../../services/api/adminApi";
+import {
+  getNonApprovedCourses,
+  handleChangeCourseStatus,
+  handleGetOneCourse,
+} from "../../services/api/adminApi";
+import { useNavigate } from "react-router-dom";
 
 interface Course {
   _id: string;
@@ -38,6 +40,8 @@ const CourseAction: React.FC = () => {
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+
+  const navigate = useNavigate();
 
   const rowsPerPage = 8;
 
@@ -112,6 +116,12 @@ const CourseAction: React.FC = () => {
     setOpen(false);
     setSelectedCourseId(null);
     setSelectedAction(null);
+  };
+
+  const handleViewCourse = async (id: string) => {
+    const courseId = id;
+
+    navigate(`/admin/course_access/${courseId}`);
   };
 
   return (
@@ -208,16 +218,24 @@ const CourseAction: React.FC = () => {
                       Block
                     </button>
                   ) : (
-                    <button
-                      className="bg-green-500 text-white rounded-md p-1 font-bold min-w-20"
-                      onClick={() => {
-                        setSelectedCourseId(course._id);
-                        setSelectedAction("approve");
-                        setOpen(true);
-                      }}
-                    >
-                      Approve
-                    </button>
+                    <div>
+                      <button
+                        className="bg-green-500 text-white rounded-md p-1 font-bold min-w-20 mr-4"
+                        onClick={() => handleViewCourse(course._id)}
+                      >
+                        View Coures
+                      </button>
+                      <button
+                        className="bg-green-500 text-white rounded-md p-1 font-bold min-w-20"
+                        onClick={() => {
+                          setSelectedCourseId(course._id);
+                          setSelectedAction("approve");
+                          setOpen(true);
+                        }}
+                      >
+                        Approve
+                      </button>
+                    </div>
                   )}
                 </div>
               </td>

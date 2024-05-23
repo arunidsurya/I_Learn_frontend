@@ -46,12 +46,12 @@ const CourseAnalytics:React.FC = () => {
 
   return (
     <div className='height-[50px]'>
-      <div className="h-[800px]">
-        <div className="mt-[50px]">
+      <div className="h-[80vh] ">
+        <div>
           <h1 className="font-bold text-[2rem] text-gray-500 px-4">
             Courses Analytics
           </h1>
-          <p className="font-bold text-[1rem] text-gray-500 px-5 mb-8">
+          <p className="font-bold text-[1rem] text-gray-500 px-5 ">
             Last 12 months analytics data
           </p>
         </div>

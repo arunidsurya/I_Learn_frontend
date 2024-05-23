@@ -28,7 +28,7 @@ const UserHome: React.FC = () => {
             <input
               type="text"
               placeholder="Search Courses "
-              className="border border-gray-200 w-4/6 h-12 "
+              className="border border-gray-200 w-4/6 h-12 p-4"
             />
             <span>
               <FaSearch
@@ -50,6 +50,33 @@ const UserHome: React.FC = () => {
               View Courses
             </Link>
           </p>
+        </div>
+      </div>
+
+      <div className="m-auto w-[90%] 800px:w-[80%] ">
+        <h1 className="text-center font-Poppins text-[25px] leading-[35px] sm:text-3xl lg:text-4xl 800px:!leading-[60px] font-[700] tracking-tight">
+          Expand Your Career{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500">
+            Opportunity
+          </span>{" "}
+          <br /> Opportunity With Our Courses
+        </h1>
+        <div className="grid grid-cols-1 gap-[20px] md:grod-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] 1500px:grid-cols-4 1500px:gap-[35px] mb-12 border-0">
+
+        </div>
+      </div>
+
+      <div className="bg-black flex gap-2 w-full">
+        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1"></div>
+        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1">
+          component2
+        </div>
+      </div>
+
+      <div className="bg-black flex gap-2 w-full">
+        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1"></div>
+        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1">
+          component2
         </div>
       </div>
     </div>

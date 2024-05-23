@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootState } from "../../../../redux/store";
-import { getCourseContent } from "../../../services/api/userApi";
 import CourseContentList from "./CourseContentList";
 import Cookies from "js-cookie";
-
-import socketIo from "socket.io-client";
 import CourseMedia from "./courseMedia";
-import { handleGetOneCourse } from "../../../services/api/tutorApi";
+import { handleGetOneCourse } from "../../../services/api/adminApi";
 
-const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
-const socket = socketIo(baseUrl, { transports: ["websocket"] });
-
-const InstCourseAccess = () => {
+const AdminCourseAccess = () => {
   const [course, setCourse] = useState<object>();
   const [data, setData] = useState<object[]>([{}]);
   const [activeVideo, setActiveVideo] = useState(0);
@@ -26,7 +19,7 @@ const InstCourseAccess = () => {
   
   const navigate = useNavigate();
 
-  const tutor = useSelector((state:any)=>state.login.tutor)
+  const admin = useSelector((state:any)=>state.login.admin)
 
   const CookieToken = Cookies.get("access_token");
 
@@ -65,10 +58,9 @@ const InstCourseAccess = () => {
           courseId={courseId}
           activeVideo={activeVideo}
           setActiveVideo={setActiveVideo}
-          tutor={tutor}
+          admin={admin}
           updateCourseData={updateCourseData}
           updateCourseData2={updateCourseData2}
-          socket={socket}
         />
       </div>
       <div className="800px:block 800px:col-span-3">
@@ -82,4 +74,4 @@ const InstCourseAccess = () => {
   );
 };
 
-export default InstCourseAccess;
+export default AdminCourseAccess;

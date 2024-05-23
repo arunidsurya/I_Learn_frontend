@@ -6,9 +6,15 @@ import UserAnalytics from "./analytics/UserAnalytics";
 const AdminDashBoard: React.FC = () => {
   return (
     <div>
-      <CourseAnalytics  />
-      <UserAnalytics isDashboard={true} />
-      <OrderAnalytics isDashboard={true} />
+      <CourseAnalytics />
+      <div className="flex">
+        <div className="flex-1">
+          <UserAnalytics isDashboard={true} />
+        </div>
+        <div className="flex-1">
+          <OrderAnalytics isDashboard={true} />
+        </div>
+      </div>
     </div>
   );
 };

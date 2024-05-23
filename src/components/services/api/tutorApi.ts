@@ -101,3 +101,21 @@ export const handleReplyToQuestion = async (
     console.log(error);
   }
 };
+
+export const handleGetCredentials = async () => {
+  try {
+    const res = await Api.get(tutorRoutes.getVideoCallCredentials);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleGetCourseAnalytics = async () => {
+  try {
+    const res = await Api.get(tutorRoutes.getCourseAnalaytics);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

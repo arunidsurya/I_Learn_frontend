@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
-import { handleGetVideoCallCredentials } from "./api/userApi";
+import { handleGetCredentials } from "../../../services/api/tutorApi";
 
-const VideoCall: React.FC = () => {
+
+const InstVideoCall: React.FC = () => {
   const [appID, setAppID] = useState<number | null>(null);
   const [serverSecret, setServerSecret] = useState<string | null>(null);
   const { roomId } = useParams<{ roomId: string }>();
@@ -14,15 +15,15 @@ const VideoCall: React.FC = () => {
   const navigate = useNavigate();
 
   const getCredentials = async () => {
-    const response = await handleGetVideoCallCredentials();
+    const response = await handleGetCredentials();
 
     if (response?.data.success) {
       const id = Number(response.data.appID);
+      console.log(id);
+      
       setAppID(id);
       setServerSecret(response.data.serverSecret);
-    } else {
-      navigate("/");
-    }
+    } 
   };
 
   useEffect(() => {
@@ -72,4 +73,4 @@ const VideoCall: React.FC = () => {
   );
 };
 
-export default VideoCall;
+export default InstVideoCall;

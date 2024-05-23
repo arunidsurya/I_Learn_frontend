@@ -17,7 +17,8 @@ const userRoutes = {
   coursePayment: "/user/payment",
   addReview: "/user/add-review",
   addProgress: "/user/add-progress",
+  getPremiumPackages: "/user/get-premiumOffers",
+  getVideoCallCredentials: "/user/get-videocall-credentials",
 };
-
 
 export default userRoutes;

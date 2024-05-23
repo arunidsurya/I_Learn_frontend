@@ -16,6 +16,13 @@ const adminRoutes = {
   getOrderAnalytics: "/admin/order-analytics",
   getUserAnalytics: "/admin/user-analytics",
   changeNotificationStatus: "/admin/change-notification-status",
+  addPremiumPackage: "/admin/add-premiumOffer",
+  editPremiumPackage: "/admin/edit-premiumOffer",
+  deletePremiumPackage: "/admin/delete-premiumOffer",
+  getOnePremiumPackage: "/admin/get-one-premiumOffer",
+  getPremiumPackages: "/admin/get-premiumOffers",
+  getSearchResult: "/admin/get-search-result",
+  getOneCourse: "/admin/get-one-course",
 };
 
 export default adminRoutes;

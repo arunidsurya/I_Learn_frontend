@@ -47,8 +47,8 @@ const OrderAnalytics:React.FC<Props> = ({isDashboard}) => {
         
   return (
     <div className="height-[50px]">
-      <div className="h-[800px]">
-        <div className="mt-[50px]">
+      <div className="h-[33vh]">
+        <div>
           <h1 className="font-bold text-[2rem] text-gray-500 px-4">
             Orders Analytics
           </h1>

@@ -8,6 +8,8 @@ const tutorRoutes = {
   getStudents: "/tutor/get-students",
   getSearchResult: "/tutor/get-search-result",
   replyQuestion: "/tutor/reply-question",
+  getVideoCallCredentials:"/tutor/get-credentials",
+  getCourseAnalaytics:"/tutor/course-analytics"
 };
 
 export default tutorRoutes;

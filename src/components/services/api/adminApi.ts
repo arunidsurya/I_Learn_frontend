@@ -81,6 +81,16 @@ export const getCourses = async () => {
   }
 };
 
+export const handleGetOneCourse = async (courseId: string) => {
+  try {
+    const res = await Api.get(`${adminRoutes.getOneCourse}/${courseId}`);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 export const handleChangeCourseStatus = async (
   status: string,
   courseId: string
@@ -189,3 +199,51 @@ export const handleChangeNotificationStatus = async (id:string) => {
   }
 };
 
+export const handleAddPremiumPackage = async (title:string,description:string,price:number) => {
+  try {
+    const res = await Api.post(adminRoutes.addPremiumPackage,{title,description,price});
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleEditPremiumPackage = async (packageId:string,title:string,description:string,price:number) => {
+  try {
+    const res = await Api.put(`${adminRoutes.editPremiumPackage}/${packageId}`,{title,description,price});
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleDeletePremiumPackage = async (packageId:string) => {
+  try {
+    const res = await Api.delete(`${adminRoutes.deletePremiumPackage}/${packageId}`);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleGetOnePremiumPackage = async (packageId:string) => {
+  try {
+    const res = await Api.get(`${adminRoutes.getOnePremiumPackage}/${packageId}`);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleGetPremiumPackages = async () => {
+  try {
+    const res = await Api.get(adminRoutes.getPremiumPackages);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleGetSearchResults = async (searchKey: string) => {
+  try {
+    const res = await Api.post(adminRoutes.getSearchResult, { searchKey });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

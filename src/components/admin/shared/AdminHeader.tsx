@@ -15,7 +15,7 @@ import { resetAdmin } from "../../../redux/features/loginSlice";
 import sound from '../../../assets/level-up-191997.mp3';
 
 import backgroundImage from "../../../assets/profile.png";
-import { handleChangeNotificationStatus, handlegetNotifications, logout } from "../../services/api/adminApi";
+import { handleChangeNotificationStatus, handleGetSearchResults, handlegetNotifications, logout } from "../../services/api/adminApi";
 import socketIo from "socket.io-client";
 import toast from "react-hot-toast";
 import { formatCreatedAt } from "../../services/formats/FormatDate";
@@ -38,7 +38,8 @@ interface Notification extends Document {
 const AdminHeader: React.FC = () => {
 
   const [notification, setNotification] = useState<Notification[]>([]);
-  const [notificationStatus, setNotificationStatus] = useState(0)
+  const [notificationStatus, setNotificationStatus] = useState(0);
+  const [searchKey, setSearchKey] = useState<string>("");
   const navigate = useNavigate();
   const cookies = new Cookies();
   const dispatch = useDispatch();
@@ -142,18 +143,47 @@ const handleNotification=async(id:string)=>{
   }
 }
 
+const handleSearch = async () => {
+  try {
+    const response = await handleGetSearchResults(searchKey);
+    console.log(response?.data);
+
+    if (response && response.data && response.data.result) {
+      const courses = response.data.result;
+      setSearchKey("");
+      navigate("course_tile_home", { state: { courses } });
+    } else {
+      // Handle case when no courses are found
+      console.error("No courses found");
+      navigate("course_tile_home", { state: { courses: [] } });
+    }
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    // Optionally navigate with an empty courses array or handle error accordingly
+    navigate("course_tile_home", { state: { courses: [] } });
+  }
+};
+
   return (
     <div className="bg-white h-16 px-4 flex justify-between items-center border-b border-gray-200 ">
       <div className="relative">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchKey}
+          className="text-sm focus:outline-none active:outline-none h-10 w-[24rem] border border-gray-300 rounded-lg pl-11 pr-4"
+          onChange={(e: any) => setSearchKey(e.target.value)}
+        />
         <HiOutlineSearch
           fontSize={20}
           className="text-gray-400 absolute top-1/2 -translate-y-1/2 left-3"
         />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="text-sm focus:outline-none active:outline-none h-10 w-[24rem] border border-gray-300 rounded-lg pl-11 pr-4"
-        />
+        <button
+          className=" bg-blue-900 text-white h-10 w-[5rem] border border-gray-300 rounded-lg ml-1 "
+          onClick={handleSearch}
+        >
+          Search
+        </button>
       </div>
       <div className="flex items-center gap-2 mr-2">
         <Popover className="relative">

@@ -133,6 +133,25 @@ const OrderAnalyticsLazy = React.lazy(
 const UserAnalyticsLazy = React.lazy(
   () => import("./components/admin/dashboard/analytics/UserAnalytics")
 );
+const PremiumPackageViewLazy = React.lazy(
+  () => import("./components/admin/premiumPackage/PremiumPackageView")
+);
+const AddPremiumPackageLazy = React.lazy(
+  () => import("./components/admin/premiumPackage/AddPackage")
+);
+const CourseTileHomeLazy = React.lazy(
+  () => import("./components/admin/courses/courseTile/courseTileHome")
+);
+const CourseTileLazy = React.lazy(
+  () => import("./components/admin/courses/courseTile/courseTIle")
+);
+const AdminCourseAccess = React.lazy(
+  () => import("./components/admin/courses/courseAccess/AdminCourseAccess")
+);
+const AdminEditPackageLazy = React.lazy(
+  () => import("./components/admin/premiumPackage/EditPackage")
+);
+
 
 
 
@@ -146,6 +165,9 @@ import UserRegister from "./components/user/userRegister/Register";
 import UserLogin from "./components/user/userLogin/UserLogin";
 import InstAuthRoute from "./components/instructor/utils/InstAuthRoute";
 import VideoCall from "./components/services/VideoCall";
+import Error404 from "./components/errorPages/Error404";
+import Error500 from "./components/errorPages/Error500";
+import InstVideoCall from "./components/instructor/course/liveclass/InstVideoCall";
 
 const App: React.FC = () => {
   return (
@@ -396,6 +418,46 @@ const App: React.FC = () => {
                 </Suspense>
               }
             />
+            <Route
+              path="premium/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <PremiumPackageViewLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="add_premium_package/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <AddPremiumPackageLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="course_tile_home/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <CourseTileHomeLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="course_access/:_id"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <AdminCourseAccess />
+                </Suspense>
+              }
+            />
+            <Route
+              path="edit_package/"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <AdminEditPackageLazy />
+                </Suspense>
+              }
+            />
           </Route>
 
           <Route
@@ -452,7 +514,7 @@ const App: React.FC = () => {
               path="room/:roomId"
               element={
                 <Suspense fallback={<div>Loading...</div>}>
-                  <VideoCall />
+                  <InstVideoCall />
                 </Suspense>
               }
             />
@@ -515,6 +577,9 @@ const App: React.FC = () => {
           />
           <Route path="user_register/" element={<UserRegister />} />
           <Route path="login/" element={<UserLogin />} />
+          <Route path="error404/" element={<Error404 />} />
+          <Route path="error500/" element={<Error500 />} />
+          <Route path="*" element={<Error404 />} />
         </Routes>
       </NextUIProvider>
     </Router>
