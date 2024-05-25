@@ -10,6 +10,8 @@ import { SaveUser } from "../../../redux/features/loginSlice";
 import Oauth from "./Oauth";
 import Cookies from "js-cookie";
 import { login } from "../../services/api/userApi";
+import Header from "../shared/Header";
+import Footer from "../shared/Footer";
 
 const UserLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -60,7 +62,8 @@ const UserLogin: React.FC = () => {
 
   return (
     <section>
-      <div className="h-full">
+      <Header />
+      <div className="h-full m-8">
         {/* <!-- Left column container with background--> */}
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
           <div className="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
@@ -189,6 +192,7 @@ const UserLogin: React.FC = () => {
         </div>
       </div>
       {showModal && <Modal onClose={() => setShowModal(false)} />}
+      <Footer />
     </section>
   );
 };

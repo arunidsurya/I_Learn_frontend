@@ -87,6 +87,7 @@ export const addAnswer = async (
 export const getChat = async (courseId: string) => {
   try {
     const res = await Api.get(`${userRoutes.getChat}/${courseId}`);
+    
     return res;
   } catch (error) {
     console.log(error);
@@ -272,6 +273,15 @@ export const handleGetVideoCallCredentials = async () => {
   try {
     const res = await Api.get(userRoutes.getVideoCallCredentials);
 
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleGetSearchResults = async (searchKey: string) => {
+  try {
+    const res = await Api.post(userRoutes.getSearchResult, { searchKey });
     return res;
   } catch (error) {
     console.log(error);

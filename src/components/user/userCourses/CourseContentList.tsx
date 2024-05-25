@@ -54,7 +54,7 @@ const CourseContentList: React.FC<Props> = ({
 
   return (
     <div
-      className={`mt-[15px] w-full ${
+      className={`mt-[20px] w-full sm:flex sm:flex-col sm:items-center sm:justify-center  ${
         !isDemo && "ml-[-30px] sticky top-24 left-0 z-30"
       }`}
     >
@@ -79,7 +79,7 @@ const CourseContentList: React.FC<Props> = ({
 
         return (
           <div
-            className={`${isDemo && "border-b border-[#ffffff8e] pb-2"}`}
+            className={`${isDemo && "border-b border-[#ffffff8e] pb-2"}  `}
             key={section}
           >
             <div className="w-full flex">
@@ -109,7 +109,7 @@ const CourseContentList: React.FC<Props> = ({
             </h5>
             <br />
             {isSectionVisible && (
-              <div className="w-full">
+              <div className="w-full ">
                 {sectionVideos.map((item: any, index: number) => {
                   const videoIndex: number = sectionStartIndex + index;
                   const contentLength: number = item.videoLength / 60;

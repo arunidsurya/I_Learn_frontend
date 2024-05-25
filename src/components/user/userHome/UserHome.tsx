@@ -6,17 +6,17 @@ import { Link } from "react-router-dom";
 const UserHome: React.FC = () => {
   return (
     <div className="flex flex-col gap-2 mt-4 w-full  ">
-      <div className=" flex gap-2 w-full ">
-        <div className=" p-4 flex flex-1  rounded-full items-center ">
+      <div className="flex flex-col md:flex-row gap-2 w-full ">
+        <div className="p-4 flex rounded-full items-center md:w-1/2">
           <img
             src={studyImage}
             alt="Img1"
-            className=" w-5/6 h-5/6 ml-20 rounded-full border border-white-200"
+            className="w-5/6 h-5/6 md:ml-20 rounded-full border border-white-200"
           />
         </div>
-        <div className=" rounded-sm p-4 flex flex-1 flex-col ">
-          <div className=" flex flex-col gap-8 items-left">
-            <h1 className="text-7xl font-bold w-4/6">
+        <div className="rounded-sm p-4 flex flex-1 flex-col md:w-1/2">
+          <div className="flex flex-col gap-8 items-left">
+            <h1 className="text-3xl md:text-7xl font-bold w-full md:w-4/6">
               Improve Your Online Learning Experience Better Instantly
             </h1>
             <p>
@@ -24,14 +24,15 @@ const UserHome: React.FC = () => {
               Find your desired Courses from them.
             </p>
           </div>
-          <div className="mt-20 flex ">
+          <div className="mt-20 flex flex-col md:flex-row">
             <input
               type="text"
               placeholder="Search Courses "
-              className="border border-gray-200 w-4/6 h-12 p-4"
+              className="border border-gray-200 w-full md:w-4/6 h-12 p-4"
             />
             <span>
               <FaSearch
+                className="cursor-pointer ml-2 md:ml-0 mt-2 md:mt-0"
                 style={{
                   width: 47,
                   height: 47,
@@ -44,8 +45,8 @@ const UserHome: React.FC = () => {
               />
             </span>
           </div>
-          <p className="mt-20">
-            500K+ Pleople already trusted us.{" "}
+          <p className="mt-8">
+            500K+ People already trusted us.{" "}
             <Link to={"/courses"} className="text-green-600">
               View Courses
             </Link>
@@ -53,30 +54,16 @@ const UserHome: React.FC = () => {
         </div>
       </div>
 
-      <div className="m-auto w-[90%] 800px:w-[80%] ">
-        <h1 className="text-center font-Poppins text-[25px] leading-[35px] sm:text-3xl lg:text-4xl 800px:!leading-[60px] font-[700] tracking-tight">
+      <div className="m-auto w-[90%] md:w-800px lg:w-[80%] mt-8">
+        <h1 className="text-center font-Poppins text-[25px] leading-[35px] sm:text-3xl lg:text-4xl lg:!leading-[60px] font-[700] tracking-tight">
           Expand Your Career{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-500">
             Opportunity
           </span>{" "}
-          <br /> Opportunity With Our Courses
+          <br /> With Our Courses
         </h1>
-        <div className="grid grid-cols-1 gap-[20px] md:grod-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] 1500px:grid-cols-4 1500px:gap-[35px] mb-12 border-0">
-
-        </div>
-      </div>
-
-      <div className="bg-black flex gap-2 w-full">
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1"></div>
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1">
-          component2
-        </div>
-      </div>
-
-      <div className="bg-black flex gap-2 w-full">
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1"></div>
-        <div className="bg-white rounded-sm p-4 border border-gray-200 flex flex-1">
-          component2
+        <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[35px] mb-12 border-0">
+          {/* Add your course components here */}
         </div>
       </div>
     </div>

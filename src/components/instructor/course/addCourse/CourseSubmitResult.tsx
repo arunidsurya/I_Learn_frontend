@@ -1,6 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import socketIo from "socket.io-client";
+
+const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
+const socket = socketIo(baseUrl, { transports: ["websocket"] });
 
 type Props = {
   courseData: any;
@@ -16,35 +21,7 @@ const CourseSubmitResult: React.FC<Props> = ({
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  //   useEffect(() => {
-  //     if (Object.keys(courseData).length !== 0) {
-  //       console.log("calling axios");
-
-  //       // Once courseData is available and not empty, make the Axios POST request
-  //       axios
-  //         .post(
-  //           "http://localhost:5000/api/v1/tutor/create_course",
-  //           { data: courseData },
-  //           { withCredentials: true }
-  //         )
-  //         .then((res) => {
-  //           console.log(res.data);
-
-  //           if (res.data.success) {
-  //             setError("");
-  //             setMessage("course added Successfully");
-  //             // Navigate or perform any other action upon success
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //           setError("Internal server error, please try again later!!!");
-  //         })
-  //         .finally(() => {
-  //           setIsLoading(false); // Make sure to handle loading state accordingly
-  //         });
-  //     }
-  //   }, []);.
+  const tutor = useSelector((state:any)=>state.login.tutor)
 
   const handleSUbmit = () => {
     if (!isLoading) {
@@ -55,12 +32,16 @@ const CourseSubmitResult: React.FC<Props> = ({
           { withCredentials: true }
         )
         .then((res) => {
-          console.log(res.data);
 
           if (res.data.success) {
             setError("");
             setMessage("course added Successfully");
-            // Navigate or perform any other action upon success
+                        socket.emit("notification", {
+                          title: "New Order",
+                          message: `New order from ${courseData.courseTitle}`,
+                          userId: tutor._id,
+                          createdAt: Date.now(),
+                        });
           }
         })
         .catch((err) => {
@@ -68,7 +49,7 @@ const CourseSubmitResult: React.FC<Props> = ({
           setError("Internal server error, please try again later!!!");
         })
         .finally(() => {
-          setIsLoading(false); // Make sure to handle loading state accordingly
+          setIsLoading(false); 
         });
     }
   };

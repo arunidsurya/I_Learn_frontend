@@ -19,6 +19,7 @@ const userRoutes = {
   addProgress: "/user/add-progress",
   getPremiumPackages: "/user/get-premiumOffers",
   getVideoCallCredentials: "/user/get-videocall-credentials",
+  getSearchResult: "/user/get-search-result",
 };
 
 export default userRoutes;

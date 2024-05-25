@@ -4,6 +4,8 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import { signup } from "../../services/api/userApi";
+import Header from "../shared/Header";
+import Footer from "../shared/Footer";
 
 const UserRegister: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -36,7 +38,8 @@ const UserRegister: React.FC = () => {
 
   return (
     <section>
-      <div className="h-full mt-10">
+      <Header />
+      <div className="h-full m-8">
         {/* <!-- Left column container with background--> */}
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
           <div className="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
@@ -187,6 +190,7 @@ const UserRegister: React.FC = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </section>
   );
 };

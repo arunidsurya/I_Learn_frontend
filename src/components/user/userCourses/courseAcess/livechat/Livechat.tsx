@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineSend } from "react-icons/md";
 import { Socket } from "socket.io-client";
 import { addChat, getChat } from "../../../../services/api/userApi";
+import { formatCreatedAt } from "../../../../services/formats/FormatDate";
 
 type Props = {
   socket: Socket;
@@ -9,31 +10,41 @@ type Props = {
   user: any;
 };
 
+export interface IChat extends Document {
+  userId: string;
+  userName: string;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const Livechat: React.FC<Props> = ({ socket, courseId, user }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
-  const [messageData, setMessageData] = useState<
-    { userName: string; userId: string; message: string; courseId: string }[]
-  >([]);
+  const [messageData, setMessageData] = useState<IChat[]>([]);
 
   const handleMessaging = async () => {
     const userId = user._id;
     const userName = user.name;
 
     const data = {
+      _id:Math.random(),
       userName,
       userId,
       courseId,
       message,
+      updatedAt:new Date().toISOString(),
+      createdAt:new Date().toISOString()
     };
 
-    console.log(userName, userId, courseId, message);
+    // console.log(userName, userId, courseId, message);
 
     const res = await addChat(courseId, userId, userName, message);
 
-    console.log(res?.data);
+    // console.log(res?.data);
 
     if (res?.data.success) {
+      
       socket.emit("live-chat", data);
       setMessageData((prevData: any) => [...prevData, data]);
       setMessage("");
@@ -45,11 +56,12 @@ const Livechat: React.FC<Props> = ({ socket, courseId, user }) => {
       try {
         const result = await getChat(courseId);
         const chatData = result?.data.result.chat || [];
+        console.log(chatData);
+
         const filteredData = chatData.map(
-          ({ _id, createdAt, ...rest }: { _id: string; createdAt: Date }) =>
-            rest
+          ({ _id, ...rest }: { _id: string }) => rest
         ); // Explicitly define types for _id and createdAt
-        setMessageData(filteredData);
+        setMessageData(chatData);
       } catch (error) {
         console.log(error);
       }
@@ -63,6 +75,8 @@ const Livechat: React.FC<Props> = ({ socket, courseId, user }) => {
     courseId: string;
     currentMessage: string;
     name: string;
+    updatedAt:string;
+    createdAt:string
   }) => {
     setMessageData((prevData: any) => [...prevData, data]);
   };
@@ -88,12 +102,14 @@ const Livechat: React.FC<Props> = ({ socket, courseId, user }) => {
     }
   }, [messageData]);
 
+  // console.log(messageData);
+
   return (
-    <div className="flex items-center justify-center w-full">
-      <div className="w-[50%] mt-5 mx-auto">
+    <div className="flex items-center justify-center w-full md:w-[90%} sm:w-[90%]">
+      <div className="w-[80%] mt-5 mx-auto">
         <div
           ref={containerRef}
-          className="w-full border border-gray-400 rounded max-h-[500px] overflow-auto flex flex-col relative p-2"
+          className="w-full border shadow-lg border-gray-300 p-4 rounded max-h-[500px] overflow-auto flex flex-col relative "
           style={{ minHeight: "500px" }}
         >
           <div className="flex-grow">
@@ -111,8 +127,13 @@ const Livechat: React.FC<Props> = ({ socket, courseId, user }) => {
                       : "bg-gray-600 text-white rounded-tl-lg rounded-br-lg rounded-tr-lg p-3"
                   } min-w-[100px]`}
                 >
-                  <p className="text-sm font-medium">{data.userName}</p>
-                  <p className="text-base">{data.message}</p>
+                  <p className="text-sm font-medium sm:text-base">
+                    {data.userName}
+                  </p>
+                  <p className="text-base sm:text-base">{data.message}</p>
+                  <p className="text-base sm:text-[12px]">
+                    {formatCreatedAt(data.updatedAt)}
+                  </p>
                 </div>
               </div>
             ))}
