@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { MdOutlineOndemandVideo } from "react-icons/md";
+import ProgressBar from "./courseAcess/ProgressBar";
+import { log } from "console";
 
 type Props = {
   data: any;
@@ -22,10 +24,27 @@ const CourseContentList: React.FC<Props> = ({
   const [visibleSections, setVisibleSections] = useState<Set<string>>(
     new Set<string>()
   );
+const [progress, setProgress] = useState(0);
 
+useEffect(()=>{
+// console.log(user.courseProgress);
+if(user){
+    const courseProgressObj = user?.courseProgress.find(
+      (progress: any) => progress.courseId === courseId
+    );
+
+    const currentProgress =
+      ([...courseProgressObj.sectionId].length / [...data].length) * 100;
+
+    setProgress(currentProgress);
+    console.log("called");
+}
+
+   
+  
+},[user])
   // console.log(user.courseProgress);
   const isChecked = (id: string) => {
-    console.log(id);
     const courseProgressObj = user?.courseProgress.find(
       (progress: any) => progress.courseId === courseId
     );
@@ -54,10 +73,14 @@ const CourseContentList: React.FC<Props> = ({
 
   return (
     <div
-      className={`mt-[20px] w-full sm:flex sm:flex-col sm:items-center sm:justify-center  ${
+      className={`mt-[20px] w-full sm:flex sm:flex-col  sm:justify-center  ${
         !isDemo && "ml-[-30px] sticky top-24 left-0 z-30"
       }`}
     >
+      <div className="mb-8">
+        <h1 className="text-gray-600 font-bold">Your progress</h1>
+        <ProgressBar progress={progress} />
+      </div>
       {videoSections.map((section: string, sectionIndex: number) => {
         const isSectionVisible = visibleSections.has(section);
 

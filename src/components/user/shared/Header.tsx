@@ -37,7 +37,6 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.login.user);
   const location = useLocation();
-  console.log(location);
   
 
   useEffect(() => {
@@ -78,7 +77,7 @@ const Header: React.FC = () => {
 
   return (
     <header>
-      <nav className="border border-b-gray-200 w-full border-gray-200 px-2 text-[1.2rem] sm:px-3 py-5 dark:bg-gray-800 ">
+      <nav className="border border-b-gray-200 w-full shadow-md border-gray-200 px-2 text-[1.2rem] sm:px-3 py-5 dark:bg-gray-800 ">
         <div className="flex flex-wrap justify-between items-center mx-[20px] max-w-screen">
           <Link to="/" className="flex items-center">
             <h2 className="text-blue-900 text-3xl font-bold">E-Learning</h2>
@@ -87,10 +86,10 @@ const Header: React.FC = () => {
             {isLoggedIn ? (
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className="ml-2 inline-flex rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-400">
+                  <Menu.Button className="ml-2 inline-flex rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <span className="sr-only">Open user menu</span>
                     <div
-                      className="h-8 w-8 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center"
+                      className="h-10 w-10 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center"
                       style={{
                         backgroundImage: savedUser?.avatar
                           ? `url(${savedUser.avatar.url})`
@@ -110,38 +109,36 @@ const Header: React.FC = () => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="origin-top-right z-50 absolute right-0 mt-2 w-48 rounded-sm shadow-md p-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="origin-top-right z-50 absolute right-0 mt-2 w-60 rounded-sm shadow-md p-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="px-1 py-1 ">
                       <Menu.Item>
                         {({ active }) => (
                           <div
-                            onClick={() => navigate("/manage_account")}
                             className={classNames(
                               active && "bg-gray-100",
-                              "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2 flex gap-2 items-center border-b border-neutral-700 my-2"
+                              "text-gray-700 focus:bg-gray-200  rounded-sm px-4 py-2 flex gap-2 items-center my-2"
                             )}
                           >
                             <div
-                              className="h-8 w-8 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center "
+                              className="h-12 w-12 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center "
                               style={{
-                                backgroundImage:
-                                  'url("https://sources.unsplash.com/80x80?face")',
+                                backgroundImage: `url(${user?.avatar?.url})`,
                               }}
                             ></div>
-                            <span>{user?.name}</span>
+                            <span className="ml-2">{user?.name}</span>
                           </div>
                         )}
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
                           <div
-                            onClick={() => navigate("/admin/settings")}
+                            onClick={() => navigate("/manage_account")}
                             className={classNames(
                               active && "bg-gray-100",
                               "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2"
                             )}
                           >
-                            Settings
+                            My Account
                           </div>
                         )}
                       </Menu.Item>
@@ -228,7 +225,7 @@ const Header: React.FC = () => {
                   to="/"
                   className={classNames(
                     "block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700",
-                    isActive("/") && "text-blue-500" 
+                    isActive("/") && "text-blue-500"
                   )}
                 >
                   Home

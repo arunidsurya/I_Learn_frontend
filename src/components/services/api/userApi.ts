@@ -287,3 +287,21 @@ export const handleGetSearchResults = async (searchKey: string) => {
     console.log(error);
   }
 };
+
+export const handleGetCategories = async () => {
+  try {
+    const res = await Api.get(userRoutes.getCategories);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleGetCourseByCategory = async (category: string) => {
+  try {
+    const res = await Api.post(userRoutes.getCourseByCategory, { category });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

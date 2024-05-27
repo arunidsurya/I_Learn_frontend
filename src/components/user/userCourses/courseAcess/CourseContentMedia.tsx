@@ -129,7 +129,6 @@ const CourseContentMedia: React.FC<Props> = ({
     // console.log("useEffect-courseContentMedia component");
     if (isSuccess === true) {
       setQuestion("");
-
       updateCourseData2();
       setIsSuccess(false);
     }
@@ -158,25 +157,26 @@ const CourseContentMedia: React.FC<Props> = ({
       toast.error("Review can't be empty");
     } else {
       const response = await handleAddReview(courseId, rating, review);
-      socket.emit("notification", {
-        title: "New Review Added",
-        message: `New review fror ${course?.courseTitle}`,
-        userId: user._id,
-        createdAt: Date.now(),
-      });
-      setCourse(response?.data.result);
+
+      if (response?.data.success) {
+        socket.emit("notification", {
+          title: "New Review Added",
+          message: `New review fror ${course?.courseTitle}`,
+          userId: user._id,
+          createdAt: Date.now(),
+        });
+        setCourse(response?.data.result);
+      }
+      if (!response?.data.success) {
+        toast.error(response?.data.message);
+      }
     }
   };
 
   const handleVideoEnd = async (id: string) => {
-    console.log("video ended");
-    console.log("courseId", courseId);
-    console.log(id);
-
     const contentId = id;
 
     const response = await handleAddProgress(courseId, contentId);
-    console.log(response?.data);
     if (response?.data.result) {
       dispatch(SaveUser(response?.data.result));
     }
@@ -190,7 +190,6 @@ const CourseContentMedia: React.FC<Props> = ({
         handleVideoEnd={handleVideoEnd}
         id={data[activeVideo]._id}
       />
-      {data[activeVideo]._id}
       <div className="w-full flex items-center justify-between my-3">
         <div
           className={`!min-h-[40px] !py-[unset] ${
@@ -222,7 +221,7 @@ const CourseContentMedia: React.FC<Props> = ({
       <h1 className="pt-2 text-[25px] font-[600] mb-10 mt-8">
         {data[activeVideo].title}
       </h1>
-      <div className="w-full p-2 flex items-center justify-between bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">
+      <div className="w-full p-2 flex items-center justify-between text-center bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">
         {[
           "Overview",
           "Resources",
@@ -233,7 +232,7 @@ const CourseContentMedia: React.FC<Props> = ({
         ].map((text: any, index: number) => (
           <h5
             key={index}
-            className={`800px:text-[20px] cursor-pointer font-bold mb-8 ${
+            className={`800px:text-[20px] cursor-pointer font-bold mb-8 text-center ${
               activeBar === index && "text-red-500"
             }`}
             onClick={() => setActiveBar(index)}
@@ -312,7 +311,7 @@ const CourseContentMedia: React.FC<Props> = ({
           <>
             {!isReviewExists && (
               <>
-                <div className="flex w-full">
+                <div className="flex w-[95%] mt-8 ">
                   <img
                     src={user?.avatar ? user.avatar.url : defaultImage}
                     alt=""
@@ -370,31 +369,36 @@ const CourseContentMedia: React.FC<Props> = ({
             <br />
             <div className="w-full h-[1px] bg-[#ffffff3b]"></div>
             <div className="w-full">
-              {course?.reviews.map((item: any, index: number) => (
-                <div className="w-full my-5" key={index}>
-                  <div className="w-full flex">
-                    <div>
-                      <img
-                        src={
-                          item.user.avatar ? item.user.avatar.url : defaultImage
-                        }
-                        alt=""
-                        width={50}
-                        height={50}
-                        className="rounded-full w-[50px] h-[50px] object-cover"
-                      />
+              {course?.reviews &&
+                [...course?.reviews]
+                  .reverse()
+                  .map((item: any, index: number) => (
+                    <div className="w-full my-5" key={index}>
+                      <div className="w-full flex">
+                        <div>
+                          <img
+                            src={
+                              item.user.avatar
+                                ? item.user.avatar.url
+                                : defaultImage
+                            }
+                            alt=""
+                            width={50}
+                            height={50}
+                            className="rounded-full w-[50px] h-[50px] object-cover"
+                          />
+                        </div>
+                        <div className="ml-2">
+                          <h1 className="text-[18px]">{item?.user.name}</h1>
+                          <Ratings rating={item.rating} />
+                          <p>{item.comment}</p>
+                          <small className="text-gray-500">
+                            {formatCreatedAt(item.createdAt)}
+                          </small>
+                        </div>
+                      </div>
                     </div>
-                    <div className="ml-2">
-                      <h1 className="text-[18px]">{item?.user.name}</h1>
-                      <Ratings rating={item.rating} />
-                      <p>{item.comment}</p>
-                      <small className="text-[#ffffff83]">
-                        {formatCreatedAt(item.createdAt)}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  ))}
             </div>
           </>
         </div>
@@ -424,19 +428,21 @@ const CommentReply = ({
   return (
     <>
       <div className="w-full-my-3">
-        {data[activeVideo].questions.map((item: any, index: any) => (
-          <CommentItem
-            key={index}
-            data={data}
-            activeVideo={activeVideo}
-            item={item}
-            index={index}
-            answer={answer}
-            setAnswer={setAnswer}
-            setQuestionId={setQuestionId}
-            handleAnswerSubmit={handleAnswerSubmit}
-          />
-        ))}
+        {[...data[activeVideo].questions]
+          .reverse()
+          .map((item: any, index: any) => (
+            <CommentItem
+              key={index}
+              data={data}
+              activeVideo={activeVideo}
+              item={item}
+              index={index}
+              answer={answer}
+              setAnswer={setAnswer}
+              setQuestionId={setQuestionId}
+              handleAnswerSubmit={handleAnswerSubmit}
+            />
+          ))}
       </div>
     </>
   );

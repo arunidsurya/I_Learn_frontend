@@ -15,9 +15,9 @@ import backgroundImage from "../../../assets/profile.png";
 import { resetTutor } from "../../../redux/features/loginSlice";
 import { handleGetSearchResults, handleLogout } from "../../services/api/tutorApi";
 import socketIo from "socket.io-client";
+import debounce from 'lodash.debounce'
 
 const InstHeader: React.FC = () => {
-  const [searchKey, setSearchKey] = useState<string>("")
   const navigate = useNavigate();
   const cookies = new Cookies();
   const dispatch = useDispatch();
@@ -40,7 +40,6 @@ const InstHeader: React.FC = () => {
     try {
       const response = await handleLogout();
           if (response?.data.success) {
-            // console.log(response.data);
             dispatch(resetTutor());
             localStorage.removeItem("tutor");
             localStorage.removeItem("tutor_accessToken");
@@ -51,7 +50,7 @@ const InstHeader: React.FC = () => {
     }
   };
 
-const handleSearch = async () => {
+const handleSearch = async (searchKey:string) => {
   try {
     const response = await handleGetSearchResults(searchKey);
     console.log(response?.data);
@@ -59,7 +58,6 @@ const handleSearch = async () => {
 
     if (response && response.data && response.data.result) {
       const courses = response.data.result;
-      setSearchKey("")
       navigate("/instructor/courses", { state: { courses } });
     } else {
       // Handle case when no courses are found
@@ -73,25 +71,23 @@ const handleSearch = async () => {
   }
 };
 
+const debounceRequest = debounce((searchKey:string)=>handleSearch(searchKey),500)
+
   return (
     <div className="bg-white h-16 px-4 flex justify-between items-center border-b border-gray-200 ">
       <div className="relative">
         <input
           type="text"
           placeholder="Search..."
-          value={searchKey}
+          // value={searchKey}
           className="text-sm focus:outline-none active:outline-none h-10 w-[24rem] border border-gray-300 rounded-lg pl-11 pr-4"
-          onChange={(e:any)=>setSearchKey(e.target.value)}
+          onChange={(e: any) => debounceRequest(e.target.value)}
         />
         <HiOutlineSearch
           fontSize={20}
           className="text-gray-400 absolute top-1/2 -translate-y-1/2 left-3"
         />
-        <button className=" bg-blue-900 text-white h-10 w-[5rem] border border-gray-300 rounded-lg ml-1 "
-        onClick={handleSearch}
-        >
-          Search
-        </button>
+
       </div>
       <div className="flex items-center gap-2 mr-2">
         <Popover className="relative">
@@ -209,7 +205,7 @@ const handleSearch = async () => {
                         "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2"
                       )}
                     >
-                      settings
+                      Manage Account
                     </div>
                   )}
                 </Menu.Item>

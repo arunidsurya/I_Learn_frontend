@@ -114,6 +114,7 @@ const CourseContent: React.FC<Props> = ({
 
   const handleOptions = (e: any) => {
     e.preventDefault();
+    
     if (
       courseContentData[courseContentData.length - 1].title === "" ||
       courseContentData[courseContentData.length - 1].description === "" ||
@@ -243,6 +244,24 @@ const CourseContent: React.FC<Props> = ({
                             setCourseContentData(updatedData);
                           }
                         }}
+                      />
+                    </div>
+                    <div className="mb-3 flex flex-col">
+                      <label htmlFor="" className="text-gray-700 font-bold">
+                        Video Length (in minutes)
+                      </label>
+                      <input
+                        type="number"
+                        name="videoLength"
+                        value={item.videoLength}
+                        onChange={(e) => {
+                          const updatedData = [...courseContentData];
+                          updatedData[index].videoLength = e.target.value;
+                          setCourseContentData(updatedData);
+                        }}
+                        id="price"
+                        placeholder="Video Length..."
+                        className="border border-gray-400 rounded-md bg-transparent p-2"
                       />
                     </div>
                     <div className="mb-3 flex flex-col">

@@ -20,6 +20,8 @@ const userRoutes = {
   getPremiumPackages: "/user/get-premiumOffers",
   getVideoCallCredentials: "/user/get-videocall-credentials",
   getSearchResult: "/user/get-search-result",
+  getCategories: "/user/get-categories",
+  getCourseByCategory: "user/get-courses-by_category",
 };
 
 export default userRoutes;

@@ -35,6 +35,7 @@ const AddCourse: React.FC = () => {
       title: "",
       description: "",
       videoSection: "Untitled Chapter",
+      videoLength:0,
       links: [
         {
           title: "",
@@ -94,6 +95,7 @@ const AddCourse: React.FC = () => {
             title: courseContent.title,
             description: courseContent.description,
             videoSection: courseContent.videoSection,
+            videoLength:courseContent.videoLength,
             links: courseContent.links.map((link) => ({
               title: link.title,
               url: link.url,
@@ -134,78 +136,6 @@ const AddCourse: React.FC = () => {
   const handleCourseCreate = async () => {
     console.log("Reached courseCreate");
 
-    //  setIsLoading(true);
-
-    //  //format benefits array
-    //  const formattedBenefits = benefits.map((benefit) => ({
-    //    title: benefit.title,
-    //  }));
-    //  //format prerequisites array
-    //  const formattedPrerequisites = prerequisites.map((prerequisite) => ({
-    //    title: prerequisite.title,
-    //  }));
-
-    //  const formattedCourseContentData = await Promise.all(
-    //    courseContentData.map(async (courseContent) => {
-    //      const uploadedVideo = await UploadS3Bucket(courseContent.videoUrl);
-    //      if (uploadedVideo) {
-    //        return {
-    //          videoUrl: uploadedVideo.url,
-    //          title: courseContent.title,
-    //          description: courseContent.description,
-    //          videoSection: courseContent.videoSection,
-    //          links: courseContent.links.map((link) => ({
-    //            title: link.title,
-    //            url: link.url,
-    //          })),
-    //          suggestion: courseContent.suggestion,
-    //        };
-    //      }
-    //    })
-    //  );
-
-    //  const demoVideo = await UploadS3Bucket(courseInfo.demoUrl);
-    //  const thumnailImage = await UploadS3Bucket(courseInfo.thumbnail);
-
-    //  //prepare our data object
-    //  const data = {
-    //    courseTitle: courseInfo.courseTitle,
-    //    instructorId: courseInfo.instructorId,
-    //    instructorName: courseInfo.instructorName,
-    //    category: courseInfo.category,
-    //    description: courseInfo.description,
-    //    price: courseInfo.price,
-    //    estimatedPrice: courseInfo.estimatedPrice,
-    //    tags: courseInfo.tags,
-    //    thumbnail: thumnailImage.url,
-    //    level: courseInfo.level,
-    //    demoUrl: demoVideo.url,
-    //    totalVideos: courseContentData.length,
-    //    benefits: formattedBenefits,
-    //    prerequisites: formattedPrerequisites,
-    //    courseData: formattedCourseContentData,
-    //  };
-    //  setCourseData(data);
-    //  setIsLoading(false);
-
-    // setError("");
-    // axios
-    //   .post(
-    //     "http://localhost:5000/api/v1/tutor/create_course",
-    //     { data: courseData },
-    //     { withCredentials: true }
-    //   )
-    //   .then((res) => {
-    //     if (res.data.courseStatus.success) {
-    //       setError("");
-    //       // navigate()
-    //     } else {
-    //       setError(res.data.courseStatus.message);
-    //     }
-    //   })
-    //   .catch((error: any) => {
-    //     console.log(error);
-    //   });
   };
 
   return (
@@ -249,6 +179,7 @@ const AddCourse: React.FC = () => {
             prerequisites={prerequisites}
             handleCourseCreate={handleCourseCreate}
             handleSubmit={handleSubmit}
+            courseContentData={courseContentData}
           />
         )}
         {Object.keys(courseData).length > 0 && active === 4 && (

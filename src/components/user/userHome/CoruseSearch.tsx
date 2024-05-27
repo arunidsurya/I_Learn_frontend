@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
 import {
-  handleGetCategories,
-  handleGetCourseByCategory,
   handleGetCourses,
   handleGetSearchResults,
 } from "../../services/api/userApi";
@@ -42,18 +40,16 @@ interface Course {
 const UserCourses: React.FC = () => {
   const [courses, setCourses] = useState<any[]>([]);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
-  const [categories, setCategories] = useState<{_id:string,name:string}[]>([])
-
-
   const coursesPerPage = 12;
 
   const fetchCourses = async () => {
     try {
       const response = await handleGetCourses();
       if (response?.data.success) {
-        setCourses(response.data.result.courses);
+        setFilteredCourses(response.data.result.courses);
       } else {
         setError(response?.data.message);
       }
@@ -62,17 +58,9 @@ const UserCourses: React.FC = () => {
     }
   };
 
-    const getCategories = async () => {
-      const response = await handleGetCategories();
-      setCategories(response?.data.result)
-    };
-
   useEffect(() => {
     fetchCourses();
-    getCategories()
   }, []);
-
-
 
   let currentCourses;
   const indexOfLastCourse = currentPage * coursesPerPage;
@@ -87,8 +75,8 @@ const UserCourses: React.FC = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-
-  const totalCourses = filteredCourses.length > 0 ? filteredCourses.length : courses.length;
+  const totalCourses =
+    filteredCourses.length > 0 ? filteredCourses.length : courses.length;
   const totalPages = Math.ceil(totalCourses / coursesPerPage);
   const pageNumbers = [];
 
@@ -133,40 +121,13 @@ const UserCourses: React.FC = () => {
     500
   );
 
-
-  const getCourseByCategory=async(category:string)=>{
-
-    const response = await handleGetCourseByCategory(category);
-
-    if(response?.data.success){
-      setCourses(response.data.result)
-    }
-    
-      
-      
-  }
-
   return (
-    <div className="mx-10 my-2 w-80vw">
+    <div className="mx-20 my-12 w-80vw">
       {error && <>{error}</>}
-
-      {categories.length > 0 && (
-        // <div className="flex justify-between p-4 shadow-lg rounded-lg mb-10 sm:hidden">
-        <div className="hidden md:flex items-center justify-between  mt-4  mb-10  p-4 shadow-lg rounded-md">
-          {categories.map((item, index) => (
-            <div key={item._id}>
-            <p className="cursor-pointer"  onClick={()=>getCourseByCategory(item.name)}>
-              {item.name}
-            </p>
-            </div>
-
-          ))}
-        </div>
-      )}
       <input
         type="text"
         placeholder="Search Courses"
-        className="mb-10 rounded-md w-[300px] p-1 border border-gray-200"
+        className="mb-10 rounded-md w-[20%] p-1 border border-gray-200"
         onChange={(e) => debounceRequest(e.target.value)}
       />
 
@@ -225,3 +186,91 @@ const UserCourses: React.FC = () => {
 
 export default UserCourses;
 
+// import axios from "axios";
+// import React, { useEffect, useState } from "react";
+// import CourseCard from "./CourseCard";
+// import { handleGetCourses } from "../../services/api/userApi";
+
+// const UserCourses: React.FC = () => {
+//   const [courses, setCourses] = useState<any[]>([]);
+//   const [error, setError] = useState("");
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const coursesPerPage = 12;
+
+//   const fetchCourses = async () => {
+//     try {
+//       const response = await handleGetCourses();
+//       if (response?.data.success) {
+//         setCourses(response.data.result.courses);
+//       } else {
+//         setError(response?.data.message);
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchCourses();
+//   }, []);
+
+//   // console.log(courses);
+
+//   const filteredCourses = courses.filter(
+//     (course: any) =>
+//       course.courseTitle &&
+//       course.courseTitle.toLowerCase().includes(searchQuery.toLowerCase())
+//   );
+
+//   // Pagination logic
+//   const indexOfLastCourse = currentPage * coursesPerPage;
+//   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+//   const currentCourses = filteredCourses.slice(
+//     indexOfFirstCourse,
+//     indexOfLastCourse
+//   );
+
+//   // console.log(currentCourses);
+
+//   // Change page
+//   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+//   return (
+//     <div className="mx-20 my-12 w-80vw">
+//       {error && <>{error}</>}
+//       <input
+//         type="text"
+//         placeholder="Search Courses"
+//         className="mb-10 rounded-md w-[20%] p-1 border border-gray-200"
+//         value={searchQuery}
+//         onChange={(e) => setSearchQuery(e.target.value)}
+//       />
+//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+//         {currentCourses.map((course: any, index: number) => (
+//           <div key={index}>
+//             <CourseCard course={course} index={index} />
+//           </div>
+//         ))}
+//       </div>
+//       {/* Pagination */}
+//       <div className="mt-20 flex justify-center">
+//         {Array(Math.ceil(filteredCourses.length / coursesPerPage))
+//           .fill(null)
+//           .map((_, index) => (
+//             <button
+//               key={index}
+//               className={`mx-1 px-3 py-1 border ${
+//                 currentPage === index + 1 ? "bg-gray-300" : "bg-gray-100"
+//               }`}
+//               onClick={() => paginate(index + 1)}
+//             >
+//               {index + 1}
+//             </button>
+//           ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default UserCourses;

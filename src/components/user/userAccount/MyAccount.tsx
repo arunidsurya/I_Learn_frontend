@@ -235,7 +235,7 @@ const MyAccount: React.FC = () => {
                     className="flex items-center justify-center w-full px-4 py-2 text-transparent bg-gradient-to-r from-green-300 to-yellow-600 bg-clip-text font-bold border border-yellow-400 rounded-md shadow-md hover:shadow-lg transition-shadow mt-2 mb-2"
                     onClick={() => {
                       setOpen(true);
-                      setSelectedPrice(item.price);
+                      setSelectedPrice(Number(item?.price));
                       setIsOpen(false);
                     }}
                   >

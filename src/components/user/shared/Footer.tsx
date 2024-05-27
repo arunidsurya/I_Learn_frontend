@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
   return (
-    <div className="bg-white-200 bg-white h-auto px-10 py-8 flex flex-col md:flex-row md:justify-between md:items-start sm:flex-row sm:justify-between sm:items-start border-t border-gray-300 text-gray-600">
+    <div className="bg-white-200  h-auto mt-8 px-10 py-8 flex flex-col md:flex-row md:justify-between md:items-start sm:flex-row sm:justify-between sm:items-start border-t border-gray-300 text-gray-600">
       <div className="flex flex-col mb-4 sm:mb-0">
         <h4 className="text-lg font-semibold mb-2">About</h4>
         <Link to="/" className="hover:text-gray-500">

@@ -11,10 +11,11 @@ type Props = {
 
 const CoursePlayer: React.FC<Props> = ({ videoUrl, title, width, handleVideoEnd ,id}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  // console.log(videoUrl);
   const onVideoEnd=()=>{
     if(handleVideoEnd){
-      handleVideoEnd(id)
+      if(id){
+      handleVideoEnd(id);
+      }
     }
   }
 

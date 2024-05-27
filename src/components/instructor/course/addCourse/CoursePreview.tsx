@@ -11,6 +11,7 @@ type Props = {
   benefits: any;
   handleCourseCreate: any;
   handleSubmit: any;
+  courseContentData:any;
 };
 
 const CoursePreview: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const CoursePreview: React.FC<Props> = ({
   benefits,
   handleCourseCreate,
   handleSubmit,
+  courseContentData
 }) => {
   const [demoVideoUrl, setDemoVideoUrl] = useState<string | null>(null);
 
@@ -29,6 +31,7 @@ const CoursePreview: React.FC<Props> = ({
       const videoObjectUrl = URL.createObjectURL(courseInfo.demoUrl);
       setDemoVideoUrl(videoObjectUrl);
     }
+    
   }, [courseInfo.demoUrl]);
 
   const discountPercentage =

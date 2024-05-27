@@ -59,9 +59,9 @@ const VideoCall: React.FC = () => {
       {!isInitialized && (
         <button
           onClick={handleStartCall}
-          className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors"
+          className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors mt-16"
         >
-          Enter Call
+          Enter Class
         </button>
       )}
       <div

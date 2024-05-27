@@ -91,7 +91,7 @@ getCourse()
                   window.open(url, "_blank");
                 }}
               >
-                Join Meeting
+                Join Live Class
               </button>
             </div>
           ) : (

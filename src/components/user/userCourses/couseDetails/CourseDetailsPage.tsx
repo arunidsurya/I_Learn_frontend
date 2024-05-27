@@ -27,10 +27,6 @@ const CourseDetailsPage = () => {
       console.log("Socket connected");
     });
 
-    // Clean up the socket connection when component unmounts
-    // return () => {
-    //   socket.disconnect();
-    // };
   }, []);
 
   const getCourse = async () => {

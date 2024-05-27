@@ -57,7 +57,6 @@ const CourseInformation: React.FC<Props> = ({
     e.preventDefault();
     try {
       await validationSchema.validate(courseInfo, { abortEarly: false });
-      // console.log("form submitted");
       setActive(active + 1);
     } catch (error: any) {
       // console.log(error.inner);

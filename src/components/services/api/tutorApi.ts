@@ -119,3 +119,23 @@ export const handleGetCourseAnalytics = async () => {
     console.log(error);
   }
 };
+
+export const handleGetOrderAnalytics = async () => {
+  try {
+    const res = await Api.get(tutorRoutes.getOrderAnalytics);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleGetUserAnalytics = async () => {
+  try {
+    const res = await Api.get(tutorRoutes.getUserAnalytics);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -13,12 +13,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { resetAdmin } from "../../../redux/features/loginSlice";
 import sound from '../../../assets/level-up-191997.mp3';
-
 import backgroundImage from "../../../assets/profile.png";
 import { handleChangeNotificationStatus, handleGetSearchResults, handlegetNotifications, logout } from "../../services/api/adminApi";
 import socketIo from "socket.io-client";
 import toast from "react-hot-toast";
 import { formatCreatedAt } from "../../services/formats/FormatDate";
+import debounce from 'lodash.debounce';
 
 
 const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
@@ -39,7 +39,6 @@ const AdminHeader: React.FC = () => {
 
   const [notification, setNotification] = useState<Notification[]>([]);
   const [notificationStatus, setNotificationStatus] = useState(0);
-  const [searchKey, setSearchKey] = useState<string>("");
   const navigate = useNavigate();
   const cookies = new Cookies();
   const dispatch = useDispatch();
@@ -74,10 +73,7 @@ const AdminHeader: React.FC = () => {
           console.log("Socket connected");
         });
 
-        // Clean up the socket connection when component unmounts
-        // return () => {
-        //   socket.disconnect();
-        // };
+
       }, []);
 
         function play() {
@@ -143,14 +139,12 @@ const handleNotification=async(id:string)=>{
   }
 }
 
-const handleSearch = async () => {
+const handleSearch = async (searchKey:string) => {
   try {
     const response = await handleGetSearchResults(searchKey);
-    console.log(response?.data);
 
     if (response && response.data && response.data.result) {
       const courses = response.data.result;
-      setSearchKey("");
       navigate("course_tile_home", { state: { courses } });
     } else {
       // Handle case when no courses are found
@@ -164,26 +158,22 @@ const handleSearch = async () => {
   }
 };
 
+const debounceRequest = debounce((searchKey:string)=>handleSearch(searchKey),500)
+
   return (
     <div className="bg-white h-16 px-4 flex justify-between items-center border-b border-gray-200 ">
       <div className="relative">
         <input
           type="text"
           placeholder="Search..."
-          value={searchKey}
           className="text-sm focus:outline-none active:outline-none h-10 w-[24rem] border border-gray-300 rounded-lg pl-11 pr-4"
-          onChange={(e: any) => setSearchKey(e.target.value)}
+          onChange={(e: any) => debounceRequest(e.target.value)}
         />
         <HiOutlineSearch
           fontSize={20}
           className="text-gray-400 absolute top-1/2 -translate-y-1/2 left-3"
         />
-        <button
-          className=" bg-blue-900 text-white h-10 w-[5rem] border border-gray-300 rounded-lg ml-1 "
-          onClick={handleSearch}
-        >
-          Search
-        </button>
+
       </div>
       <div className="flex items-center gap-2 mr-2">
         <Popover className="relative">

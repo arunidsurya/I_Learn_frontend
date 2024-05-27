@@ -8,7 +8,7 @@ import {
   YAxis,
   LabelList,
 } from "recharts";
-import { handleGetCourseAnalytics } from "../../services/api/tutorApi";
+import { handleGetCourseAnalytics } from "../../../services/api/tutorApi";
 
 
 const CourseAnalytics: React.FC = () => {
