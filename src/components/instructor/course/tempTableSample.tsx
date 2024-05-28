@@ -14,7 +14,7 @@ const Courses: React.FC = () => {
       field: " ",
       headerName: "Delete",
       flex: 0.2,
-      renderCell: (params: any) => {
+      renderCell: () => {
         return (
           <>
             <Button>

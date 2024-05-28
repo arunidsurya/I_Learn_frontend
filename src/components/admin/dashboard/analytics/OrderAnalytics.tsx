@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {BarChart,Bar,ResponsiveContainer,XAxis,Label,YAxis,LabelList, LineChart, CartesianGrid, Tooltip, Legend, Line} from 'recharts'
+import {ResponsiveContainer,XAxis,YAxis, LineChart, CartesianGrid, Tooltip, Legend, Line} from 'recharts'
 import { handleGetOrderAnalytics } from "../../../services/api/adminApi";
 
 type Props = {
@@ -41,10 +41,6 @@ const OrderAnalytics:React.FC<Props> = ({isDashboard}) => {
             analyticsData.push({ name: item.month, count: item.count });
           });
 
-        const minValue = 0;
-
-        // console.log(orderAanalytics);
-        
   return (
     <div className="height-[50px]">
       <div className="h-[33vh]">

@@ -1,7 +1,6 @@
 import { Menu, Popover, Transition } from "@headlessui/react";
-import axios from "axios";
 import classNames from "classnames";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
   HiOutlineBell,
   HiOutlineChatAlt,
@@ -14,7 +13,6 @@ import { Cookies } from "react-cookie";
 import backgroundImage from "../../../assets/profile.png";
 import { resetTutor } from "../../../redux/features/loginSlice";
 import { handleGetSearchResults, handleLogout } from "../../services/api/tutorApi";
-import socketIo from "socket.io-client";
 import debounce from 'lodash.debounce'
 
 const InstHeader: React.FC = () => {

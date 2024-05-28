@@ -15,7 +15,6 @@ const PremiumAccountPay:React.FC<Props> = ({open,setOpen,price}) => {
     const [publishablekey, setPublishablekey] = useState("");
     const [stripePromise, setStripePromise] = useState<any>(null);
     const [clientSecret, setClientSecret] = useState("");
-    const [error, setError] = useState("");
 
     useEffect(() => {
       axios

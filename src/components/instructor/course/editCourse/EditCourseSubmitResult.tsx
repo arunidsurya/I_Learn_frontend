@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { DeleteFileFromS3Bucket } from "../../utils/DeletefromS3Bucket";
 

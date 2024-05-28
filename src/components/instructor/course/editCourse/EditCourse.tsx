@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import CourseInformation from "./EditCourseInformation";
 import CourseOptions from "./EditCourseOptions";
-import CourseData from "./EditCourseData";
-import CourseContent from "./EditCourseContent";
-import CoursePreview from "./EditCoursePreview";
 import axios from "axios";
-import { UploadS3Bucket } from "../../utils/UploadS3Bucket";
 import LoadingComponent from "../../templates/LoadingComponent";
-import { useLocation, useNavigate } from "react-router-dom";
-import CourseSubmitResult from "./EditCourseSubmitResult";
+import { useLocation,} from "react-router-dom";
+import EditCourseInformation from "./EditCourseInformation";
+import EditCourseData from "./EditCourseData";
+import EditCourseContent from "./EditCourseContent";
+import EditCoursePreview from "./EditCoursePreview";
+import EditCourseSubmitResult from "./EditCourseSubmitResult";
 // import { Upload } from "@aws-sdk/lib-storage";
 // import { S3Client, S3, PutObjectCommand } from "@aws-sdk/client-s3";
 
@@ -50,7 +49,6 @@ const EditCourse: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [error, setError] = useState("");
 
   const [categories, setCategories] = useState([]);
 
@@ -58,7 +56,7 @@ const EditCourse: React.FC = () => {
 
   const [newUrls, setNewUrls] = useState<any[]>([]);
 
-  const navigate = useNavigate();
+
 
   const location = useLocation();
 
@@ -173,7 +171,7 @@ const EditCourse: React.FC = () => {
     <div className="flex flex-row mx-10 ">
       <div className="flex-1 ">
         {active === 0 && (
-          <CourseInformation
+          <EditCourseInformation
             courseInfo={courseInfo}
             setCourseInfo={setCourseInfo}
             active={active}
@@ -183,11 +181,10 @@ const EditCourse: React.FC = () => {
             setItemsToRemove={setItemsToRemove}
             newUrls={newUrls}
             setNewUrls={setNewUrls}
-            error={error}
           />
         )}
         {active === 1 && (
-          <CourseData
+          <EditCourseData
             benefits={benefits}
             setBenefits={setBenefits}
             prerequisites={prerequisites}
@@ -197,20 +194,20 @@ const EditCourse: React.FC = () => {
           />
         )}
         {active === 2 && (
-          <CourseContent
+          <EditCourseContent
             active={active}
             setActive={setActive}
             courseContentData={courseContentData}
             setCourseContentData={setCourseContentData}
-            handleSubmit={handleSubmit}
             itemsToRemove={itemsToRemove}
             setItemsToRemove={setItemsToRemove}
+            handleSubmit={handleSubmit}
             newUrls={newUrls}
             setNewUrls={setNewUrls}
           />
         )}
         {active === 3 && (
-          <CoursePreview
+          <EditCoursePreview
             active={active}
             setActive={setActive}
             courseInfo={courseInfo}
@@ -221,7 +218,7 @@ const EditCourse: React.FC = () => {
           />
         )}
         {Object.keys(courseData).length > 0 && active === 4 && (
-          <CourseSubmitResult
+          <EditCourseSubmitResult
             courseData={courseData}
             isLoading={isLoading}
             setIsLoading={setIsLoading}

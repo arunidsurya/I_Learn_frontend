@@ -1,12 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation} from "react-router-dom";
 
 const ConfirmEmail: React.FC = () => {
   const location = useLocation();
   const activation_token = location.state.activationToken;
-  //   console.log(activation_token);
-  const navigate = useNavigate();
 
   const [otp, setOtp] = useState<string>("");
   const [error, setError] = useState("");

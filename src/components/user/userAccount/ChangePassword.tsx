@@ -8,7 +8,6 @@ const ChangePassword: React.FC = () => {
   const [oldPassword, setoldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [errorPassword, setErrorPassword] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [unsuccessMessage, setUnSuccessMessage] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -23,7 +22,6 @@ const ChangePassword: React.FC = () => {
 
       setEmail(currentUser.email);
       setSuccessMessage("");
-      setErrorPassword("");
       // console.log(currentUser.name, currentUser.email);
     }
   }, []);
@@ -50,12 +48,10 @@ const ChangePassword: React.FC = () => {
       );
       const res = await changePassword(email, oldPassword, newPassword);
       if (res?.data.success) {
-        setErrorPassword("");
         setUnSuccessMessage("");
         setSuccessMessage(res.data.user.message);
       } else {
         setSuccessMessage("");
-        setErrorPassword("");
         setUnSuccessMessage(res?.data.message);
       }
     } catch (error: any) {

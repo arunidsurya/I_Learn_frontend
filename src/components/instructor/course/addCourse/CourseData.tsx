@@ -32,7 +32,6 @@ const CourseData: React.FC<Props> = ({
   active,
   setActive,
 }) => {
-  const [error, setError] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleBenefitChange = (index: number, value: any) => {
@@ -77,7 +76,6 @@ const CourseData: React.FC<Props> = ({
         setActive(active + 1);
       } catch (error:any) {
         const validationErrors: { [key: string]: string } = {};
-        console.log(error.inner);
         
         error.inner.forEach((err: any) => {
           validationErrors[err.path] = err.message;
@@ -89,11 +87,11 @@ const CourseData: React.FC<Props> = ({
   return (
     <div className="w-[80%] m-auto mt-24 mb-20">
       <div className="flex flex-col gap-4 mb-20">
-        {error && (
+        {/* {error && (
           <div className="font-bold text-red-500">
             <h1>{error}</h1>
           </div>
-        )}
+        )} */}
         <label htmlFor="benefits" className="text-gray-700 font-bold">
           What are the benefits for students in this course?
         </label>

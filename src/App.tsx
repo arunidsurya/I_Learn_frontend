@@ -4,21 +4,14 @@ import {
   Route,
   BrowserRouter as Router,
   Routes,
-  useNavigate,
 } from "react-router-dom";
 import "./App.css";
-import { ToastContainer } from "react-toastify";
 
 // Lazy-loaded imports for page components
 const UserHomeLazy = React.lazy(
   () => import("./components/user/userHome/UserHome")
 );
-const UserLoginLazy = React.lazy(
-  () => import("./components/user/userLogin/UserLogin")
-);
-// const UserRegisterLazy = React.lazy(
-//   () => import("./components/user/userRegister/Register")
-// );
+
 const UserCoursesLazy = React.lazy(
   () => import("./components/user/userCourses/UserCourses")
 );
@@ -109,9 +102,7 @@ const AllCoursesLazy = React.lazy(
 const EditCourseLazy = React.lazy(
   () => import("./components/instructor/course/editCourse/EditCourse")
 );
-const VideoCallLazy = React.lazy(
-  () => import("./components/services/VideoCall")
-);
+
 const RecentUploadsLazy = React.lazy(
   () => import("./components/instructor/course/RecentUploads")
 );
@@ -142,9 +133,7 @@ const AddPremiumPackageLazy = React.lazy(
 const CourseTileHomeLazy = React.lazy(
   () => import("./components/admin/courses/courseTile/courseTileHome")
 );
-const CourseTileLazy = React.lazy(
-  () => import("./components/admin/courses/courseTile/courseTIle")
-);
+
 const AdminCourseAccess = React.lazy(
   () => import("./components/admin/courses/courseAccess/AdminCourseAccess")
 );

@@ -8,8 +8,8 @@ type Props = {
   setCourseInfo: (courseInfo: any) => void;
   active: number;
   setActive: (active: number) => void;
-  error: string;
-  categories: [];
+  error?: string;
+  categories: any[];
 };
 
 const CourseInformation: React.FC<Props> = ({
@@ -75,7 +75,7 @@ const CourseInformation: React.FC<Props> = ({
     if (file) {
       const reader = new FileReader();
 
-      reader.onload = (e: any) => {
+      reader.onload = () => {
         if (reader.readyState === 2) {
           setImage(reader.result as string);
         }

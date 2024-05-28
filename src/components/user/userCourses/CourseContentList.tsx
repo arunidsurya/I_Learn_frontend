@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { MdOutlineOndemandVideo } from "react-icons/md";
 import ProgressBar from "./courseAcess/ProgressBar";
-import { log } from "console";
 
 type Props = {
   data: any;
@@ -81,7 +80,7 @@ if(user){
         <h1 className="text-gray-600 font-bold">Your progress</h1>
         <ProgressBar progress={progress} />
       </div>
-      {videoSections.map((section: string, sectionIndex: number) => {
+      {videoSections.map((section: string) => {
         const isSectionVisible = visibleSections.has(section);
 
         //Filter videos by section

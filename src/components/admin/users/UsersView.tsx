@@ -2,16 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Pagination,
-  getKeyValue,
-} from "@nextui-org/react";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 
 interface UserData {
@@ -29,7 +19,6 @@ interface UserData {
 
 const UsersView: React.FC = () => {
   const [usersData, setUsersData] = useState<UserData[]>([]);
-  const [displayData, setdisplayData] = useState<UserData[]>([]);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [selectedMethod, setSelectedMethod] = useState("");
   const [open, setOpen] = useState(false);
@@ -261,7 +250,6 @@ const UsersView: React.FC = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-          const displayPages =
             pages <= pageLimit
               ? pages
               : page + middleIndex >= pages

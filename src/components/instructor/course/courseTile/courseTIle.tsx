@@ -8,7 +8,7 @@ type Props = {
   index: number;
 };
 
-const CourseTile: React.FC<Props> = ({ course, index }) => {
+const CourseTile: React.FC<Props> = ({ course }) => {
   //   console.log("Course:", course.courseTitle);
 
   return (

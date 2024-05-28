@@ -1,9 +1,7 @@
-import { Button } from "@nextui-org/react";
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { IoCloseOutline } from "react-icons/io5";
-import { MdDelete, MdEdit } from "react-icons/md";
 import {
   getCourses,
   handleChangeCourseStatus,
@@ -258,7 +256,6 @@ const ViewCourses: React.FC = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-          const displayPages =
             pages <= pageLimit
               ? pages
               : page + middleIndex >= pages

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import axios from "axios";

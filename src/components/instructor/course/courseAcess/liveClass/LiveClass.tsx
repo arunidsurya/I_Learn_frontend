@@ -6,7 +6,6 @@ import { IoCloseOutline } from "react-icons/io5";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutPremium from "./CheckoutPremium";
 import { handleGetOneCourse } from "../../../../services/api/userApi";
-import { useNavigate } from "react-router-dom";
 
 
 interface Course {
@@ -40,21 +39,20 @@ interface Course {
 }
 
 type Props = {
-  error: string;
+  error?: string;
   clientSecret: string;
   stripePromise: any;
   courseId: string;
 };
 
 
-const LiveClass: React.FC<Props> = ({error,clientSecret,stripePromise,courseId}) => {
+const LiveClass: React.FC<Props> = ({clientSecret,stripePromise,courseId}) => {
 
   const [open, setOpen] = useState(false);
   const [course, setCourse] = useState < Course>();
 
   const user = useSelector((state: RootState) => state.login.user);
 
-  const navigate = useNavigate()
 
   const getCourse =async()=>{
     console.log(courseId);

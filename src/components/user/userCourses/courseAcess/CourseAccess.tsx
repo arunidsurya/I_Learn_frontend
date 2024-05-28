@@ -5,15 +5,14 @@ import { RootState } from "../../../../redux/store";
 import { getCourseContent } from "../../../services/api/userApi";
 import CourseContentMedia from "./CourseContentMedia";
 import CourseContentList from "../CourseContentList";
-import Cookies from "js-cookie";
 
 import socketIo from "socket.io-client";
 
 const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
 const socket = socketIo(baseUrl, { transports: ["websocket"] });
 
-const CourseAccess = () => {
-  const [course, setCourse] = useState<object>();
+const CourseAccess:React.FC = () => {
+
   const [data, setData] = useState<object[]>([{}]);
   const [activeVideo, setActiveVideo] = useState(0);
   const [isDataUpdated, setIsdataUpdated] = useState(0);
@@ -24,7 +23,7 @@ const CourseAccess = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.login.user);
 
-  const CookieToken = Cookies.get("access_token");
+
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -60,7 +59,6 @@ const CourseAccess = () => {
 
         const res = await getCourseContent(courseId);
         if (res) {
-          setCourse(res?.data.result.course);
           setData(res?.data.result.course.courseData);
           // console.log(res?.data.result.course.courseData);
         }

@@ -42,7 +42,7 @@ const CourseContentList: React.FC<Props> = ({
         !isDemo && "ml-[-30px] sticky top-24 left-0 z-30"
       }`}
     >
-      {videoSections.map((section: string, sectionIndex: number) => {
+      {videoSections.map((section: string) => {
         const isSectionVisible = visibleSections.has(section);
 
         //Filter videos by section

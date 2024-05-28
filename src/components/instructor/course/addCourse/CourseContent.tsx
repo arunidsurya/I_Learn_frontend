@@ -16,7 +16,6 @@ const CourseContent: React.FC<Props> = ({
   setActive,
   courseContentData,
   setCourseContentData,
-  handleSubmit: handleCourseSubmit,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(
     Array(courseContentData.length).fill(false)
@@ -26,9 +25,9 @@ const CourseContent: React.FC<Props> = ({
 
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-  };
+  // const handleSubmit = (e: any) => {
+  //   e.preventDefault();
+  // };
 
   const handleCollapseToggle = (index: number) => {
     const updatedCollapsed = [...isCollapsed];
@@ -345,7 +344,7 @@ const CourseContent: React.FC<Props> = ({
                   <div>
                     <p
                       className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
-                      onClick={(e: any) => newContentHandler(item)}
+                      onClick={() => newContentHandler(item)}
                     >
                       <AiOutlinePlusCircle className="mr-2" /> Add New Content
                     </p>

@@ -1,6 +1,5 @@
 import React from "react";
 import { FaGraduationCap } from "react-icons/fa";
-import { FcBullish } from "react-icons/fc";
 import { IoMdLogOut } from "react-icons/io";
 import { MdAccountBalance } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";

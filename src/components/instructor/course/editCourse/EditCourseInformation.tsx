@@ -9,7 +9,7 @@ type Props = {
   setCourseInfo: (courseInfo: any) => void;
   active: number;
   setActive: (active: number) => void;
-  error: string;
+  error?: string;
   categories: any[];
   itemsToRemove: any[];
   setItemsToRemove: Dispatch<SetStateAction<any[]>>;
@@ -42,7 +42,6 @@ const EditCourseInformation: React.FC<Props> = ({
     }
   }, []);
 
-  const [dragging, setDragging] = useState(false);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -53,7 +52,7 @@ const EditCourseInformation: React.FC<Props> = ({
     if (file) {
       const reader = new FileReader();
 
-      reader.onload = (e: any) => {
+      reader.onload = () => {
         if (reader.readyState === 2) {
           setImage(reader.result as string);
         }

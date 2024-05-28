@@ -1,5 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Ratings from "../../../instructor/utils/Ratings";
@@ -18,7 +18,7 @@ type Props = {
 };
 
 const CouseDetails: React.FC<Props> = ({ course ,error,clientSecret,stripePromise,socket}) => {
-  const [route, setRoute] = useState("login");
+
   const [open, setOpen] = useState(false);
 
   const params = useParams();
@@ -102,7 +102,7 @@ const CouseDetails: React.FC<Props> = ({ course ,error,clientSecret,stripePromis
                   <h1 className="text-[25px] font-Poppins font-[600]">
                     Course Overview
                   </h1>
-                  <CourseContentList data={course.courseData} isDemo={true} />
+                  <CourseContentList courseId={course._id} data={course.courseData} isDemo={true} />
                 </div>
                 <br />
                 <br />

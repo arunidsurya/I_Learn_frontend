@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+
 import DemoPlayer from "../DemoPlayer";
 import Ratings from "../../utils/Ratings";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
@@ -19,17 +19,10 @@ const EditCoursePreview: React.FC<Props> = ({
   courseInfo,
   prerequisites,
   benefits,
-  handleCourseCreate,
   handleSubmit,
 }) => {
-  const [demoVideoUrl, setDemoVideoUrl] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   if (courseInfo.demoUrl) {
-  //     const videoObjectUrl = URL.createObjectURL(courseInfo.demoUrl);
-  //     setDemoVideoUrl(videoObjectUrl);
-  //   }
-  // }, [courseInfo.demoUrl]);
+
 
   const discountPercentage =
     ((courseInfo.estimatedPrice - courseInfo.price) /
@@ -42,9 +35,7 @@ const EditCoursePreview: React.FC<Props> = ({
   };
 
   const createCourse = () => {
-    // console.log("Reached here");
     setActive(active + 1);
-    // handleCourseCreate();
     handleSubmit();
   };
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { handleGetCredentials } from "../../../services/api/tutorApi";
-
+import { useParams } from "react-router-dom";
 
 const InstVideoCall: React.FC = () => {
   const [appID, setAppID] = useState<number | null>(null);
@@ -12,18 +11,16 @@ const InstVideoCall: React.FC = () => {
   const zpRef = useRef<any>(null);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
-  const navigate = useNavigate();
-
   const getCredentials = async () => {
     const response = await handleGetCredentials();
 
     if (response?.data.success) {
       const id = Number(response.data.appID);
       console.log(id);
-      
+
       setAppID(id);
       setServerSecret(response.data.serverSecret);
-    } 
+    }
   };
 
   useEffect(() => {

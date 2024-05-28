@@ -20,9 +20,7 @@ const CoursePreview: React.FC<Props> = ({
   courseInfo,
   prerequisites,
   benefits,
-  handleCourseCreate,
   handleSubmit,
-  courseContentData
 }) => {
   const [demoVideoUrl, setDemoVideoUrl] = useState<string | null>(null);
 

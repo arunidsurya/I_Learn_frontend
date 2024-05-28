@@ -105,7 +105,6 @@ const Students = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-          const displayPages =
             pages <= pageLimit
               ? pages
               : page + middleIndex >= pages

@@ -1,5 +1,4 @@
 import { Menu, Transition } from "@headlessui/react";
-import axios from "axios";
 import classNames from "classnames";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";

@@ -2,7 +2,6 @@ import React, { ChangeEvent, useEffect, useState, useRef } from "react";
 import { CiCamera } from "react-icons/ci";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import defaultImage from "../../../assets/login.jpg";
-import { RotatingLines } from "react-loader-spinner";
 import * as Yup from "yup";
 import {
   handleGetPremiumPackages,
@@ -46,9 +45,7 @@ const MyAccount: React.FC = () => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [premiumPackages, setPremiumPackages] = useState<PremiumPackage[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [message, setMessage] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -66,7 +63,6 @@ const MyAccount: React.FC = () => {
       setName(storedUserData.name);
       setEmail(storedUserData.email);
       set_Id(storedUserData._id);
-      setMessage("");
     }
   }, [storedUserData]);
 
@@ -119,7 +115,6 @@ const MyAccount: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage("");
     const avatarToSend = avatar || "";
     try {
       await validationSchema.validate({ name, email }, { abortEarly: false });
@@ -128,7 +123,6 @@ const MyAccount: React.FC = () => {
 
       if (res?.data.user.success) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        setMessage(res.data.message);
       }
     } catch (error: any) {
       const newError: { [key: string]: string } = {};
@@ -206,11 +200,11 @@ const MyAccount: React.FC = () => {
         </button>
       </form>
 
-      {loading && (
+      {/* {loading && (
         <div className="flex items-center justify-center h-full mt-5">
           <RotatingLines visible={true} />
         </div>
-      )}
+      )} */}
 
       <div className="absolute top-0 right-0 m-4 flex items-center gap-2">
         {user?.premiumAccount ? (

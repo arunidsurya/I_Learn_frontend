@@ -9,7 +9,6 @@ type Props = {
 };
 
 const CourseModal: React.FC<Props> = ({
-  showModal,
   courseToDelete,
   setCourseToDelete,
   handleDelete,

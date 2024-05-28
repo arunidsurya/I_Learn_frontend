@@ -6,7 +6,7 @@ type Props = {
   setActive: (active: number) => void;
 };
 
-const EditCourseOptions: React.FC<Props> = ({ active, setActive }) => {
+const EditCourseOptions: React.FC<Props> = ({ active }) => {
   const options = [
     "Course Information",
     "Course Options",

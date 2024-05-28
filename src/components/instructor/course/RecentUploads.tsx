@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DeleteFileFromS3Bucket } from "../utils/DeletefromS3Bucket";
@@ -247,7 +247,6 @@ const RecentUploads = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-          const displayPages =
             pages <= pageLimit
               ? pages
               : page + middleIndex >= pages

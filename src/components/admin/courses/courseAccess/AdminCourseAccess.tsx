@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import CourseContentList from "./CourseContentList";
-import Cookies from "js-cookie";
 import CourseMedia from "./courseMedia";
 import { handleGetOneCourse } from "../../../services/api/adminApi";
 
-const AdminCourseAccess = () => {
-  const [course, setCourse] = useState<object>();
+const AdminCourseAccess:React.FC = () => {
   const [data, setData] = useState<object[]>([{}]);
   const [activeVideo, setActiveVideo] = useState(0);
   const [isDataUpdated, setIsdataUpdated] = useState(0);
@@ -21,7 +19,6 @@ const AdminCourseAccess = () => {
 
   const admin = useSelector((state:any)=>state.login.admin)
 
-  const CookieToken = Cookies.get("access_token");
 
 
   useEffect(() => {
@@ -30,7 +27,6 @@ const AdminCourseAccess = () => {
 
         const res = await handleGetOneCourse(courseId);
         if (res) {
-          setCourse(res?.data.result);
           setData(res?.data.result.courseData);
           // console.log(res?.data.result.course.courseData);
         }

@@ -4,7 +4,7 @@ type Props = {
   videoUrl: string;
   title: string;
 };
-const CoursePlayer: React.FC<Props> = ({ videoUrl, title }) => {
+const CoursePlayer: React.FC<Props> = () => {
   return <div>CoursePlayer</div>;
 };
 

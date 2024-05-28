@@ -7,7 +7,6 @@ import CoursePreview from "./CoursePreview";
 import axios from "axios";
 import { UploadS3Bucket } from "../../utils/UploadS3Bucket";
 import LoadingComponent from "../../templates/LoadingComponent";
-import { useNavigate } from "react-router-dom";
 import CourseSubmitResult from "./CourseSubmitResult";
 // import { Upload } from "@aws-sdk/lib-storage";
 // import { S3Client, S3, PutObjectCommand } from "@aws-sdk/client-s3";
@@ -49,11 +48,9 @@ const AddCourse: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [error, setError] = useState("");
 
   const [categories, setCategories] = useState([]);
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -148,7 +145,6 @@ const AddCourse: React.FC = () => {
             active={active}
             setActive={setActive}
             categories={categories}
-            error={error}
           />
         )}
         {active === 1 && (

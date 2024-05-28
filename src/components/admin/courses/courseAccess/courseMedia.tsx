@@ -8,7 +8,7 @@ import {
 } from "react-icons/ai";
 import defaultImage from "../../../../assets/profile.png";
 import { toast } from "react-hot-toast";
-import { addAnswer, addQuestion } from "../../../services/api/userApi";
+import { addQuestion } from "../../../services/api/userApi";
 import { formatCreatedAt } from "../../../services/formats/FormatDate";
 import { BiMessage } from "react-icons/bi";
 import { handleReplyToQuestion } from "../../../services/api/tutorApi";
@@ -19,6 +19,7 @@ type Props = {
   activeVideo: number;
   setActiveVideo: (activeVideo: number) => void;
   admin: any;
+  user?:any;
   updateCourseData: () => void;
   updateCourseData2: () => void;
 };
@@ -29,6 +30,7 @@ const CourseMedia: React.FC<Props> = ({
   activeVideo,
   setActiveVideo,
   admin,
+  user,
   updateCourseData,
   updateCourseData2,
 }) => {
@@ -152,7 +154,7 @@ const CourseMedia: React.FC<Props> = ({
       )}
       {activeBar === 1 && (
         <div className="mt-4">
-          {data[activeVideo]?.links.map((item: any, index: number) => (
+          {data[activeVideo]?.links.map((item: any) => (
             <div className="mb-5">
               <h2 className="800px:text-[20px] 800px:inline-block">
                 {item.title && item.title + " : "}

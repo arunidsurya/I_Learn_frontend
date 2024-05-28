@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DeleteFileFromS3Bucket } from "../utils/DeletefromS3Bucket";
@@ -9,7 +9,7 @@ import {
   handleDeleteCourse,
   handleGetAllCourses,
 } from "../../services/api/tutorApi";
-import toast from "react-hot-toast";
+
 import { formatDate } from "../../services/formats/FormatDate";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 
@@ -266,7 +266,6 @@ const Courses = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-          const displayPages =
             pages <= pageLimit
               ? pages
               : page + middleIndex >= pages

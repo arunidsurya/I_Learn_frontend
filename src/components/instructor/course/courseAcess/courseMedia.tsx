@@ -8,14 +8,10 @@ import {
 } from "react-icons/ai";
 import defaultImage from "../../../../assets/profile.png";
 import { toast } from "react-hot-toast";
-import { addAnswer, addQuestion } from "../../../services/api/userApi";
+import {  addQuestion } from "../../../services/api/userApi";
 import { formatCreatedAt } from "../../../services/formats/FormatDate";
 import { BiMessage } from "react-icons/bi";
-import { Textarea } from "@nextui-org/react";
-import Livechat from "./livechat/Livechat";
 import { Socket } from "socket.io-client";
-import LiveClass from "./liveClass/LiveClass";
-import LiveVideoPage from "./liveClass/LiveVideoPage";
 import { handleReplyToQuestion } from "../../../services/api/tutorApi";
 
 type Props = {
@@ -23,7 +19,8 @@ type Props = {
   courseId: string;
   activeVideo: number;
   setActiveVideo: (activeVideo: number) => void;
-  user: any;
+  user?: any;
+  tutor:any;
   updateCourseData: () => void;
   updateCourseData2: () => void;
   socket: Socket;
@@ -35,9 +32,9 @@ const CourseMedia: React.FC<Props> = ({
   activeVideo,
   setActiveVideo,
   tutor,
+  user,
   updateCourseData,
   updateCourseData2,
-  socket,
 }) => {
   const [activeBar, setActiveBar] = useState(0);
   const [question, setQuestion] = useState("");
@@ -159,7 +156,7 @@ const CourseMedia: React.FC<Props> = ({
       )}
       {activeBar === 1 && (
         <div className="mt-4">
-          {data[activeVideo]?.links.map((item: any, index: number) => (
+          {data[activeVideo]?.links.map((item: any) => (
             <div className="mb-5">
               <h2 className="800px:text-[20px] 800px:inline-block">
                 {item.title && item.title + " : "}

@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CouseDetails from "./CouseDetails";
@@ -13,7 +13,7 @@ import {
 const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
 const socket = socketIo(baseUrl, { transports: ["websocket"] });
 
-const CourseDetailsPage = () => {
+const CourseDetailsPage:React.FC = () => {
   const [course, setCourse] = useState<any>();
   const [error, setError] = useState("");
   const [publishablekey, setPublishablekey] = useState("");

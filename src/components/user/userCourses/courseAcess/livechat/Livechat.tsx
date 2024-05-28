@@ -58,9 +58,9 @@ const Livechat: React.FC<Props> = ({ socket, courseId, user }) => {
         const chatData = result?.data.result.chat || [];
         console.log(chatData);
 
-        const filteredData = chatData.map(
-          ({ _id, ...rest }: { _id: string }) => rest
-        ); // Explicitly define types for _id and createdAt
+        // const filteredData = chatData.map(
+        //   ({ _id, ...rest }: { _id: string }) => rest
+        // ); // Explicitly define types for _id and createdAt
         setMessageData(chatData);
       } catch (error) {
         console.log(error);

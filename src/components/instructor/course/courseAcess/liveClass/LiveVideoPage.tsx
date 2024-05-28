@@ -11,7 +11,6 @@ const LiveVideoPage: React.FC<Props> = ({ courseId }) => {
   const [publishablekey, setPublishablekey] = useState("");
   const [stripePromise, setStripePromise] = useState<any>(null);
   const [clientSecret, setClientSecret] = useState("");
-  const [error, setError] = useState("");
 
   useEffect(() => {
     axios
@@ -71,7 +70,6 @@ const LiveVideoPage: React.FC<Props> = ({ courseId }) => {
         <LiveClass
           stripePromise={stripePromise}
           clientSecret={clientSecret}
-          error={error}
           courseId={courseId}
         />
       )}

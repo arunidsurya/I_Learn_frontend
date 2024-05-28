@@ -4,7 +4,6 @@ import { FaQuestionCircle, FaUsers } from "react-icons/fa";
 import { FaRegCirclePlay } from "react-icons/fa6";
 import { GoGraph } from "react-icons/go";
 import { HiOutlineCog, HiOutlineQuestionMarkCircle } from "react-icons/hi";
-import { LiaFileInvoiceSolid } from "react-icons/lia";
 import {
   MdHomeFilled,
   MdOutlineAutoGraph,

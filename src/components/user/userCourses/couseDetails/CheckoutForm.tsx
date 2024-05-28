@@ -5,8 +5,7 @@ import {
   LinkAuthenticationElement,
   PaymentElement,
 } from "@stripe/react-stripe-js";
-import axios from "axios";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../../redux/features/loginSlice";
 import { handleCreateOrder } from "../../../services/api/userApi";
@@ -20,11 +19,9 @@ type Props = {
 const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [message, setMessage] = useState<any>("");
   const [orderData, setOrderData] = useState<any>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [loadUser, setLoadUser] = useState(false);
-  const [error, setError] = useState("");
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -66,15 +63,11 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
   };
   useEffect(() => {
     if (orderData) {
-      setLoadUser(true);
       setOpen(false);
       // redirect(`/course-access/${course._id}`)
       navigate(`/course-access/${course._id}`);
     }
-    if (error) {
-      console.log(error);
-    }
-  }, [orderData, error]);
+  }, [orderData]);
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
@@ -105,7 +98,7 @@ const CheckoutForm: React.FC<Props> = ({ setOpen, course, socket}) => {
         </button>
       </div>
       {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      {/* {message && <div id="payment-message">{message}</div>} */}
     </form>
   );
 };

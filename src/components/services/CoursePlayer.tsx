@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import ReactPlayer from "react-player";
 
 type Props = {
@@ -9,8 +9,7 @@ type Props = {
   id?:string;
 };
 
-const CoursePlayer: React.FC<Props> = ({ videoUrl, title, width, handleVideoEnd ,id}) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+const CoursePlayer: React.FC<Props> = ({ videoUrl, width, handleVideoEnd ,id}) => {
   const onVideoEnd=()=>{
     if(handleVideoEnd){
       if(id){

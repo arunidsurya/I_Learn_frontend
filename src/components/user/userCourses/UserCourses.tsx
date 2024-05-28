@@ -153,7 +153,7 @@ const UserCourses: React.FC = () => {
       {categories.length > 0 && (
         // <div className="flex justify-between p-4 shadow-lg rounded-lg mb-10 sm:hidden">
         <div className="hidden md:flex items-center justify-between  mt-4  mb-10  p-4 shadow-lg rounded-md">
-          {categories.map((item, index) => (
+          {categories.map((item) => (
             <div key={item._id}>
             <p className="cursor-pointer"  onClick={()=>getCourseByCategory(item.name)}>
               {item.name}

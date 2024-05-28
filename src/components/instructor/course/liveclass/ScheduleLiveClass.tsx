@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as Yup from 'yup'
 import { handleAddSchedule, handleGetOneCourse } from "../../../services/api/tutorApi";
-import { time } from "console";
 import toast from "react-hot-toast";
 
 interface Course {

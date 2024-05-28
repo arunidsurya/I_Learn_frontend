@@ -9,7 +9,7 @@ type Props = {
   isProfile?: boolean;
 };
 
-const CourseCard: React.FC<Props> = ({ course, index, isProfile }) => {
+const CourseCard: React.FC<Props> = ({ course,isProfile }) => {
   //   console.log("Course:", course.courseTitle);
 
   return (

@@ -11,7 +11,7 @@ type Props = {
   setActive: (active: number) => void;
   courseContentData: any;
   setCourseContentData: (courseContentData: any) => void;
-  handleSubmit: any;
+  handleSubmit?: any;
   itemsToRemove: any[];
   setItemsToRemove: Dispatch<SetStateAction<any[]>>;
   newUrls: any[];
@@ -22,7 +22,6 @@ const EditCourseContent: React.FC<Props> = ({
   setActive,
   courseContentData,
   setCourseContentData,
-  handleSubmit: handleCourseSubmit,
   itemsToRemove,
   setItemsToRemove,
   setNewUrls,
@@ -37,9 +36,9 @@ const EditCourseContent: React.FC<Props> = ({
 
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-  };
+  // const handleSubmit = (e: any) => {
+  //   e.preventDefault();
+  // };
 
   const handleCollapseToggle = (index: number) => {
     const updatedCollapsed = [...isCollapsed];
@@ -360,7 +359,7 @@ const EditCourseContent: React.FC<Props> = ({
                   <div>
                     <p
                       className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
-                      onClick={(e: any) => newContentHandler(item)}
+                      onClick={() => newContentHandler(item)}
                     >
                       <AiOutlinePlusCircle className="mr-2" /> Add New Content
                     </p>

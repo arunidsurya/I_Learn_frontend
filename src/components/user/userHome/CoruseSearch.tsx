@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import CourseCard from "./CourseCard";
 import {
   handleGetCourses,
   handleGetSearchResults,
 } from "../../services/api/userApi";
 import debounce from "lodash.debounce";
 import { MdSkipNext, MdSkipPrevious } from "react-icons/md";
+import CourseCard from "../userCourses/CourseCard";
 
 interface Course {
   _id: string;
@@ -40,7 +40,6 @@ interface Course {
 const UserCourses: React.FC = () => {
   const [courses, setCourses] = useState<any[]>([]);
   const [error, setError] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const coursesPerPage = 12;
@@ -113,6 +112,7 @@ const UserCourses: React.FC = () => {
     const response = await handleGetSearchResults(searchKey);
     if (response?.data.success) {
       setFilteredCourses(response.data.result);
+      setCourses(response.data.result);
     }
   };
 

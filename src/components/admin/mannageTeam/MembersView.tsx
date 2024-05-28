@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
@@ -35,12 +35,12 @@ const MembersView: React.FC = () => {
 
   const pages = Math.ceil(membersData.length / rowsPerPage);
 
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+  // const items = React.useMemo(() => {
+  //   const start = (page - 1) * rowsPerPage;
+  //   const end = start + rowsPerPage;
 
-    return membersData.slice(start, end);
-  }, [page, membersData]);
+  //   return membersData.slice(start, end);
+  // }, [page, membersData]);
 
   const paginate = (pageNumber: number) => setPage(pageNumber);
 
@@ -61,7 +61,7 @@ const MembersView: React.FC = () => {
   useEffect(() => {
     console.log("useEffect called");
     getTutors();
-  }, [setForceRender,success]);
+  }, [forceRender,success]);
 
   const handleVerification = async (method: string, _id: string) => {
     try {
@@ -243,8 +243,8 @@ const MembersView: React.FC = () => {
                 </button>
                 <button
                   onClick={() => {
-                    setuserId("");
-                    setMethod("");
+                    setSelectedUserId("");
+                    setSelectedMethod("");
                     setOpen(false);
                   }}
                   className="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-red-600"
@@ -269,7 +269,6 @@ const MembersView: React.FC = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-          const displayPages =
             pages <= pageLimit
               ? pages
               : page + middleIndex >= pages

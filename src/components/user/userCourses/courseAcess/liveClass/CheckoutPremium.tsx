@@ -6,7 +6,6 @@ import {
   PaymentElement,
 } from "@stripe/react-stripe-js";
 import axios from "axios";
-import { redirect, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../../../redux/features/loginSlice";
 
@@ -16,16 +15,13 @@ type Props = {
   courseId:string
 };
 
-const CheckoutPremium: React.FC<Props> = ({ setOpen, courseId }) => {
+const CheckoutPremium: React.FC<Props> = ({ setOpen }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [message, setMessage] = useState<any>("");
   const [orderData, setOrderData] = useState<any>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [loadUser, setLoadUser] = useState(false);
   const [error, setError] = useState("");
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = async (e: any) => {
@@ -66,7 +62,6 @@ const CheckoutPremium: React.FC<Props> = ({ setOpen, courseId }) => {
   };
   useEffect(() => {
     if (orderData) {
-      setLoadUser(true);
       setOpen(false);
       // redirect(`/course-access/${course._id}`)
     //   navigate(`/course-access/${course._id}`);
@@ -105,7 +100,7 @@ const CheckoutPremium: React.FC<Props> = ({ setOpen, courseId }) => {
         </button>
       </div>
       {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      {/* {message && <div id="payment-message">{message}</div>} */}
     </form>
   );
 };

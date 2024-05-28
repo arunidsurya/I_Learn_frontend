@@ -17,13 +17,11 @@ import {
 } from "../../../services/api/userApi";
 import { formatCreatedAt } from "../../../services/formats/FormatDate";
 import { BiMessage } from "react-icons/bi";
-import { Textarea } from "@nextui-org/react";
 import Livechat from "./livechat/Livechat";
 import { Socket } from "socket.io-client";
-import LiveClass from "./liveClass/LiveClass";
 import LiveVideoPage from "./liveClass/LiveVideoPage";
 import Ratings from "../../../instructor/utils/Ratings";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../../redux/features/loginSlice";
 
 interface Course {
@@ -248,7 +246,7 @@ const CourseContentMedia: React.FC<Props> = ({
       )}
       {activeBar === 1 && (
         <div className="mt-4">
-          {data[activeVideo]?.links.map((item: any, index: number) => (
+          {data[activeVideo]?.links.map((item: any) => (
             <div className="mb-5">
               <h2 className="800px:text-[20px] 800px:inline-block">
                 {item.title && item.title + " : "}

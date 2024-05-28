@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import errorImage from "../../assets/error404.jpg";
 
-const Error500 = () => {
+const Error500:React.FC = () => {
   return (
     <div
       className="flex flex-col items-center justify-center h-screen bg-cover bg-center"

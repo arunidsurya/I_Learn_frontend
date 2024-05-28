@@ -1,8 +1,8 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation} from "react-router-dom";
 import { TERipple } from "tw-elements-react";
-import { addCategory, handleAddPremiumPackage } from "../../services/api/adminApi";
+import {handleAddPremiumPackage } from "../../services/api/adminApi";
 import * as Yup from "yup";
 
 const AddPackage: React.FC = () => {
@@ -13,7 +13,7 @@ const AddPackage: React.FC = () => {
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const Navigate = useNavigate();
+
 
   const location = useLocation();
 

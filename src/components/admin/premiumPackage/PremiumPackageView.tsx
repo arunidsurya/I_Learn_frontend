@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteCategory, handleDeletePremiumPackage, handleGetPremiumPackages, viewCategory } from "../../services/api/adminApi";
+import {  handleDeletePremiumPackage, handleGetPremiumPackages} from "../../services/api/adminApi";
 import toast from "react-hot-toast";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { IoCloseOutline } from "react-icons/io5";
@@ -177,7 +177,6 @@ const PremiumPackageView = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-          const displayPages =
             pages <= pageLimit
               ? pages
               : page + middleIndex >= pages
@@ -236,7 +235,6 @@ const PremiumPackageView = () => {
                 </button>
                 <button
                   onClick={() => {
-                    setSelectedCategoryId("");
                     setOpen(false);
                   }}
                   className="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm transition duration-300 hover:bg-red-600"

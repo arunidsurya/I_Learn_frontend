@@ -4,7 +4,6 @@ import { IoCloseOutline } from "react-icons/io5";
 import {
   getNonApprovedCourses,
   handleChangeCourseStatus,
-  handleGetOneCourse,
 } from "../../services/api/adminApi";
 import { useNavigate } from "react-router-dom";
 
@@ -293,7 +292,6 @@ const CourseAction: React.FC = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-          const displayPages =
             pages <= pageLimit
               ? pages
               : page + middleIndex >= pages

@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-import React, { useState } from "react";
+import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { app } from "../../../firebase";
 import axios from "axios";
