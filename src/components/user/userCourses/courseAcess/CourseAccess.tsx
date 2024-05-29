@@ -30,22 +30,13 @@ const CourseAccess:React.FC = () => {
       console.log("Socket connected");
     });
 
-    // Clean up the socket connection when component unmounts
-    // return () => {
-    //   socket.disconnect();
-    // };
   }, []);
 
   useEffect(() => {
     const fetchCourseContent = async () => {
 
       try {
-        // console.log(CookieToken);
-        
-        // if (CookieToken === undefined) {
-        //   navigate("/");
-        //   return;
-        // }
+
         if (user) {
           const courseExists = user?.courses.find((id: any) => id === courseId);
           if (!courseExists) {
