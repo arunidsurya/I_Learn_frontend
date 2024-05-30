@@ -259,7 +259,7 @@ export const handleGetUsers = async () => {
 export const handleUserBlock = async (method: string, _id: string) => {
   try {
     const res = await Api.post(
-      `${adminRoutes.getOnePremiumPackage}/${method}`,{_id}
+      `${adminRoutes.userBlock}/${method}`,{_id}
     );
     return res;
   } catch (error) {

@@ -24,7 +24,7 @@ const adminRoutes = {
   getSearchResult: "/admin/get-search-result",
   getOneCourse: "/admin/get-one-course",
   getUsers: "/admin/getUsers",
-  userBloc:"/admin"
+  userBlock:"/admin"
 };
 
 export default adminRoutes;
