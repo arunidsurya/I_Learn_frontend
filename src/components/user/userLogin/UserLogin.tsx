@@ -44,6 +44,8 @@ const UserLogin: React.FC = () => {
 
       if (response?.data.data.success) {
         const userDetails = response.data.data.user;
+        console.log(userDetails);
+        
         dispatch(SaveUser(userDetails));
         localStorage.setItem("user", JSON.stringify(response.data.data));
         localStorage.setItem("accessToken", response.data.data.access_token);
