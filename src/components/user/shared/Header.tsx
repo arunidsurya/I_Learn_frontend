@@ -40,9 +40,8 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    const CookieToken = Cookies.get("access_token");
 
-    if (!accessToken || CookieToken === undefined) {
+    if (!accessToken) {
       setIsLoggedIn(false);
       localStorage.removeItem("accessToken");
       Cookies.remove("access_token");

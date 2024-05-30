@@ -46,7 +46,16 @@ const AdminHeader: React.FC = () => {
 
 
   const localStorageToken = localStorage.getItem("admin_accessToken");
-  const cookieToken = cookies.get("admin_AccessToken");
+  // const cookieToken = cookies.get("admin_AccessToken");
+
+    useEffect(() => {
+      if (!localStorageToken) {
+        localStorage.removeItem("admin_AccessToken");
+        cookies.remove("admin_AccessToken");
+
+        navigate("/admin_login");
+      }
+    }, []);
 
   const getNotifications = async()=>{
     const response = await handlegetNotifications();
@@ -101,14 +110,7 @@ const AdminHeader: React.FC = () => {
         }, [socket]);
 
 
-  useEffect(() => {
-    if (localStorageToken !== cookieToken) {
-      localStorage.removeItem("admin_AccessToken");
-      cookies.remove("admin_AccessToken");
 
-      navigate("/admin_login");
-    }
-  }, []);
 
   const handleLogout = async() => {
 
