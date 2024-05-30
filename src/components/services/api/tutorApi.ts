@@ -1,6 +1,14 @@
 import Api from "../axios/axiosService";
 import tutorRoutes from "../endpoints/tutorEndpoint";
 
+export const handleTutorLogin = async (email:string, password:string) => {
+  try {
+    const res = await Api.post(tutorRoutes.login, { email, password });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const handleLogout = async()=>{
 try {

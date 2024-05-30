@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import loginImage from "../../../assets/InstLogin.jpg";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { saveTutor } from "../../../redux/features/loginSlice";
+import { handleTutorLogin } from "../../services/api/tutorApi";
 
 const InstLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -22,33 +22,16 @@ const InstLogin: React.FC = () => {
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-    axios
-      .post(
-        "http://localhost:5000/api/v1/tutor/login",
-        { email, password },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        // console.log(response.data);
-        if (response.data.data.success) {
-          // console.log(response.data.data.tutor);
-          localStorage.setItem("tutor", JSON.stringify(response.data.data));
-          localStorage.setItem("tutor_accessToken", response.data.data.token);
-          dispatch(saveTutor(response.data.data.tutor));
-          Navigate("/instructor");
-        } else {
-          // console.log(response.data.data.message);
-          setError(response.data.data.message);
-        }
-      })
-      .catch((error: any) => {
-        console.error(error);
-      });
+    const response = await handleTutorLogin(email, password);
+    if (response?.data.data.success) {
+      localStorage.setItem("tutor", JSON.stringify(response.data.data));
+      localStorage.setItem("tutor_accessToken", response.data.data.token);
+      dispatch(saveTutor(response.data.data.tutor));
+      Navigate("/instructor");
+    }
   };
 
   return (
