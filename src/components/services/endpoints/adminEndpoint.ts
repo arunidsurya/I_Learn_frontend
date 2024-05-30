@@ -23,6 +23,8 @@ const adminRoutes = {
   getPremiumPackages: "/admin/get-premiumOffers",
   getSearchResult: "/admin/get-search-result",
   getOneCourse: "/admin/get-one-course",
+  getUsers: "/admin/getUsers",
+  userBloc:"/admin"
 };
 
 export default adminRoutes;

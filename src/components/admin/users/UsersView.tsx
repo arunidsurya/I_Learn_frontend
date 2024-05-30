@@ -1,8 +1,9 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import { handleGetUsers, handleUserBlock } from "../../services/api/adminApi";
 
 interface UserData {
   _id: string;
@@ -25,9 +26,9 @@ const UsersView: React.FC = () => {
   const [mesage, setMesage] = useState("");
   const [page, setPage] = useState(1);
 
-  const rowsPerPage=8;
+  const rowsPerPage = 8;
 
-  const pages = Math.ceil(usersData.length/rowsPerPage)
+  const pages = Math.ceil(usersData.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -40,41 +41,42 @@ const UsersView: React.FC = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const getUsers = async () => {
     setMesage("");
-    axios
-      .get("http://localhost:5000/api/v1/admin/getUsers", {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          setUsersData(response.data.users);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
+    const response = await handleGetUsers();
+    if (response?.data.success) {
+      setUsersData(response.data.users);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
   }, [mesage]);
 
-  const handleBlock = (method: string, _id: string) => {
-    axios
-      .post(
-        `http://localhost:5000/api/v1/admin/${method}`,
-        { _id },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          setMesage("User status changed");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
+  const handleBlock = async (method: string, _id: string) => {
+    const response = await handleUserBlock(method, _id);
+
+    if (response?.data.success) {
+      setMesage("User status changed");
+    }
+
+    // axios
+    //   .post(
+    //     `http://localhost:5000/api/v1/admin/${method}`,
+    //     { _id },
+    //     {
+    //       withCredentials: true,
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     if (response.data.success) {
+    //       setMesage("User status changed");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching users:", error);
+    //   });
   };
 
   const handleConfirmAction = () => {
@@ -147,7 +149,9 @@ const UsersView: React.FC = () => {
         <tbody className="bg-white divide-y divide-gray-200">
           {items.map((user, index) => (
             <tr key={user._id}>
-             <td className="px-6 py-4 whitespace-nowrap">{(page - 1) * rowsPerPage + index + 1}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {(page - 1) * rowsPerPage + index + 1}
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {user.courses.length}
@@ -250,15 +254,15 @@ const UsersView: React.FC = () => {
           const pageNumber = index + 1;
           const pageLimit = 5;
           const middleIndex = Math.floor(pageLimit / 2);
-            pages <= pageLimit
-              ? pages
-              : page + middleIndex >= pages
-              ? Math.min(pages, pageLimit)
-              : page <= middleIndex
-              ? pageLimit
-              : page + middleIndex >= pages
-              ? pages
-              : page + middleIndex;
+          pages <= pageLimit
+            ? pages
+            : page + middleIndex >= pages
+            ? Math.min(pages, pageLimit)
+            : page <= middleIndex
+            ? pageLimit
+            : page + middleIndex >= pages
+            ? pages
+            : page + middleIndex;
           const firstPage =
             page <= middleIndex
               ? 1

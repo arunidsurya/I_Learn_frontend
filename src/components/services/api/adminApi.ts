@@ -247,3 +247,22 @@ export const handleGetSearchResults = async (searchKey: string) => {
     console.log(error);
   }
 };
+
+export const handleGetUsers = async () => {
+  try {
+    const res = await Api.get(adminRoutes.getUsers);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleUserBlock = async (method: string, _id: string) => {
+  try {
+    const res = await Api.post(
+      `${adminRoutes.getOnePremiumPackage}/${method}`,{_id}
+    );
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
