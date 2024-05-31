@@ -23,10 +23,10 @@ const InstHeader: React.FC = () => {
   const tutor = useSelector((state: RootState) => state.login.tutor);
 
   const localStorageToken = localStorage.getItem("tutor_accessToken");
-  // const cookieToken = cookies.get("tutor_token");
+  const cookieToken = cookies.get("tutor_token");
 
   useEffect(() => {
-    if (!localStorageToken) {
+    if (!localStorageToken || cookieToken === undefined) {
       localStorage.removeItem("tutor_accessToken");
       cookies.remove("tutor_token");
       navigate("/inst_login");

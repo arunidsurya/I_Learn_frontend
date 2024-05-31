@@ -32,8 +32,6 @@ interface Notification extends Document {
   createdAt:Date;
 }
 
-
-
 const AdminHeader: React.FC = () => {
 
   const [notification, setNotification] = useState<Notification[]>([]);
@@ -46,10 +44,10 @@ const AdminHeader: React.FC = () => {
 
 
   const localStorageToken = localStorage.getItem("admin_accessToken");
-  // const cookieToken = cookies.get("admin_AccessToken");
+  const cookieToken = cookies.get("admin_AccessToken");
 
     useEffect(() => {
-      if (!localStorageToken) {
+      if (!localStorageToken || cookieToken === undefined) {
         localStorage.removeItem("admin_AccessToken");
         cookies.remove("admin_AccessToken");
 
