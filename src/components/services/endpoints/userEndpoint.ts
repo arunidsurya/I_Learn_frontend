@@ -22,6 +22,7 @@ const userRoutes = {
   getSearchResult: "/user/get-search-result",
   getCategories: "/user/get-categories",
   getCourseByCategory: "user/get-courses-by_category",
+  createPremiumOrder: "/user/create-premium-order",
 };
 
 export default userRoutes;

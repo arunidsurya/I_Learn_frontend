@@ -215,8 +215,6 @@ export const handleGetStripePublishablekey = async () => {
 };
 
 export const handleCoursePayment = async (amount: number) => {
-  console.log(userRoutes.coursePayment);
-  console.log(amount);
 
   try {
     const res = await Api.post(userRoutes.coursePayment, { amount });
@@ -300,6 +298,15 @@ export const handleGetCategories = async () => {
 export const handleGetCourseByCategory = async (category: string) => {
   try {
     const res = await Api.post(userRoutes.getCourseByCategory, { category });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleCreatePremiumOrder = async (payment_info: any) => {
+  try {
+    const res = await Api.post(userRoutes.createPremiumOrder, { payment_info });
     return res;
   } catch (error) {
     console.log(error);
