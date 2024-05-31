@@ -4,7 +4,6 @@ import CourseOptions from "./CourseOptions";
 import CourseData from "./CourseData";
 import CourseContent from "./CourseContent";
 import CoursePreview from "./CoursePreview";
-import axios from "axios";
 import { UploadS3Bucket } from "../../utils/UploadS3Bucket";
 import LoadingComponent from "../../templates/LoadingComponent";
 import CourseSubmitResult from "./CourseSubmitResult";
