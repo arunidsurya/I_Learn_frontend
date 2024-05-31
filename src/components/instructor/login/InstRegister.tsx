@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import axios from "axios";
+import Header from "../../user/shared/Header";
+import Footer from "../../user/shared/Footer";
 
 const InstRegister: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -54,7 +56,8 @@ const InstRegister: React.FC = () => {
 
   return (
     <section>
-      <div className="h-full mt-10">
+      <Header />
+      <div className="h-full my-10 mx-20">
         {/* <!-- Left column container with background--> */}
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
           <div className="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
@@ -188,7 +191,7 @@ const InstRegister: React.FC = () => {
                     type="submit"
                     className="inline-block rounded bg-blue-500 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                   >
-                    Login
+                    Register
                   </button>
                 </TERipple>
 
@@ -197,7 +200,7 @@ const InstRegister: React.FC = () => {
                   Have an account?{" "}
                   <Link
                     to={"/inst_login"}
-                    className="text-red-500 transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
+                    className="text-red-500 underline underline-offset-1 transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
                   >
                     Login
                   </Link>
@@ -207,6 +210,7 @@ const InstRegister: React.FC = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </section>
   );
 };

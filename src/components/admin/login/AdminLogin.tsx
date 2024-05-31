@@ -5,11 +5,13 @@ import loginImage from "../../../assets/login.jpg";
 import { Cookies } from "react-cookie";
 import { login } from "../../services/api/adminApi";
 import toast from "react-hot-toast";
+import Header from "../../user/shared/Header";
+import Footer from "../../user/shared/Footer";
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("")
+  const [error, setError] = useState<string>("");
   const Navigate = useNavigate();
 
   const cookies = new Cookies();
@@ -24,7 +26,7 @@ const AdminLogin: React.FC = () => {
   }, []);
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("")
+    setError("");
     try {
       const response = await login(email, password);
 
@@ -32,12 +34,10 @@ const AdminLogin: React.FC = () => {
         localStorage.setItem("admin", JSON.stringify(response.data));
         localStorage.setItem("admin_accessToken", response.data.token);
         Navigate("/admin");
-      }else{
+      } else {
         toast.error(" Invalid email or password");
         setError("invalid email or password");
       }
-
-    
     } catch (error: any) {
       toast.error(" Invalid email or password");
       setError("invalid email or password");
@@ -45,7 +45,8 @@ const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="bg-zinc-900 text-white h-screen w-scren">
+    <div className=" text-white h-screen w-scren">
+      <Header />
       <section className=" p-20 ">
         <div className="h-full bg-black p-8 rounded-lg ">
           {/* <!-- Left column container with background--> */}
@@ -135,6 +136,7 @@ const AdminLogin: React.FC = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

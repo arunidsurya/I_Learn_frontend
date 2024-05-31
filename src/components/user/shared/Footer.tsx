@@ -18,14 +18,14 @@ const Footer: React.FC = () => {
       </div>
       <div className="flex flex-col mb-4 sm:mb-0">
         <h4 className="text-lg font-semibold mb-2">Quick links</h4>
-        <Link to="/" className="hover:text-gray-500">
+        <Link to="/user_register" className="hover:text-gray-500">
+          create an Account
+        </Link>
+        <Link to="/techOnILearn" className="hover:text-gray-500">
+          Teach on i-Learn
+        </Link>
+        <Link to="/courses" className="hover:text-gray-500">
           Courses
-        </Link>
-        <Link to="/" className="hover:text-gray-500">
-          My Account
-        </Link>
-        <Link to="/" className="hover:text-gray-500">
-          Course Dashboard
         </Link>
       </div>
       <div className="flex flex-col mb-4 sm:mb-0">

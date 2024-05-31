@@ -5,6 +5,8 @@ import loginImage from "../../../assets/InstLogin.jpg";
 import { useDispatch } from "react-redux";
 import { saveTutor } from "../../../redux/features/loginSlice";
 import { handleTutorLogin } from "../../services/api/tutorApi";
+import Header from "../../user/shared/Header";
+import Footer from "../../user/shared/Footer";
 
 const InstLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -35,7 +37,8 @@ const InstLogin: React.FC = () => {
   };
 
   return (
-    <div className="bg-blue-950 text-white h-screen w-scren">
+    <div className=" text-white h-screen w-scren">
+      <Header />
       <section className=" p-20 ">
         <div className="h-full bg-blue-950 p-8 rounded-lg ">
           {/* <!-- Left column container with background--> */}
@@ -121,6 +124,7 @@ const InstLogin: React.FC = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
