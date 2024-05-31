@@ -157,3 +157,24 @@ export const handleGetcategories = async () => {
     console.log(error);
   }
 };
+
+export const handleCreateCourse = async (data:any) => {
+  try {
+    const res = await Api.post(tutorRoutes.createCourse,{data});
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleEditCourse = async (data: any) => {
+  try {
+    const res = await Api.put(tutorRoutes.editCourse, { data });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+

@@ -1,7 +1,9 @@
-import axios from "axios";
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { DeleteFileFromS3Bucket } from "../../utils/DeletefromS3Bucket";
+import { handleEditCourse } from "../../../services/api/tutorApi";
+
 
 type Props = {
   courseData: any;
@@ -21,35 +23,7 @@ const EditCourseSubmitResult: React.FC<Props> = ({
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  //   useEffect(() => {
-  //     if (Object.keys(courseData).length !== 0) {
-  //       console.log("calling axios");
-
-  //       // Once courseData is available and not empty, make the Axios POST request
-  //       axios
-  //         .post(
-  //           "http://localhost:5000/api/v1/tutor/create_course",
-  //           { data: courseData },
-  //           { withCredentials: true }
-  //         )
-  //         .then((res) => {
-  //           console.log(res.data);
-
-  //           if (res.data.success) {
-  //             setError("");
-  //             setMessage("course added Successfully");
-  //             // Navigate or perform any other action upon success
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //           setError("Internal server error, please try again later!!!");
-  //         })
-  //         .finally(() => {
-  //           setIsLoading(false); // Make sure to handle loading state accordingly
-  //         });
-  //     }
-  //   }, []);.
+  
 
   const handleSubmit = async () => {
     if (!isLoading) {
@@ -61,19 +35,13 @@ const EditCourseSubmitResult: React.FC<Props> = ({
           })
         );
 
-        // Send Axios request
-        const response = await axios.put(
-          "http://localhost:5000/api/v1/tutor/edit_course",
-          { data: courseData },
-          { withCredentials: true }
-        );
+        const data = courseData
 
-        console.log(response.data);
+        const response = await handleEditCourse(data)
 
-        if (response.data.success) {
+        if (response?.data.success) {
           setError("");
           setMessage("Course added successfully");
-          // Navigate or perform any other action upon success
         }
       } catch (error) {
         console.error(error);

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import CourseOptions from "./EditCourseOptions";
-import axios from "axios";
 import LoadingComponent from "../../templates/LoadingComponent";
 import { useLocation,} from "react-router-dom";
 import EditCourseInformation from "./EditCourseInformation";
@@ -8,6 +7,7 @@ import EditCourseData from "./EditCourseData";
 import EditCourseContent from "./EditCourseContent";
 import EditCoursePreview from "./EditCoursePreview";
 import EditCourseSubmitResult from "./EditCourseSubmitResult";
+import { handleGetcategories } from "../../../services/api/tutorApi";
 // import { Upload } from "@aws-sdk/lib-storage";
 // import { S3Client, S3, PutObjectCommand } from "@aws-sdk/client-s3";
 
@@ -86,23 +86,15 @@ const EditCourse: React.FC = () => {
     }
   }, [course]);
 
-  console.log(courseContentData);
+  const getCategories = async () => {
+    const res = await handleGetcategories();
+    if (res?.data.success) {
+      setCategories(res.data.categories);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/tutor/categories", {
-        withCredentials: true,
-      })
-      .then((res: any) => {
-        // console.log(res.data);
-        if (res.data.success) {
-          // console.log(res.data.categories);
-          setCategories(res.data.categories);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    getCategories();
   }, []);
 
   const handleSubmit = async () => {
@@ -135,10 +127,7 @@ const EditCourse: React.FC = () => {
       })
     );
 
-    // const demoVideo = await UploadS3Bucket(courseInfo.demoUrl);
-    // const thumnailImage = await UploadS3Bucket(courseInfo.thumbnail);
 
-    //prepare our data object
     const data = {
       _id: courseInfo._id,
       courseTitle: courseInfo.courseTitle,

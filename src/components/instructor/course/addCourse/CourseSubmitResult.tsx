@@ -1,8 +1,9 @@
-import axios from "axios";
+
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import socketIo from "socket.io-client";
+import { handleCreateCourse } from "../../../services/api/tutorApi";
 
 const baseUrl = import.meta.env.VITE_SOCKET_SERVER_URL;
 const socket = socketIo(baseUrl, { transports: ["websocket"] });
@@ -21,41 +22,33 @@ const CourseSubmitResult: React.FC<Props> = ({
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  const tutor = useSelector((state:any)=>state.login.tutor)
+  const tutor = useSelector((state: any) => state.login.tutor);
 
 
-  const handleSUbmit = () => {
-    if (!isLoading) {
-      axios
-        .post(
-          "http://localhost:5000/api/v1/tutor/create_course",
-          { data: courseData },
-          { withCredentials: true }
-        )
-        .then((res) => {
-
-          if (res.data.success) {
-            setError("");
-            setMessage("course added Successfully");
-                        socket.emit("notification", {
-                          title: "New Order",
-                          message: `New order from ${courseData.courseTitle}`,
-                          userId: tutor._id,
-                          createdAt: Date.now(),
-                        });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          setError("Internal server error, please try again later!!!");
-        })
-        .finally(() => {
-          setIsLoading(false); 
+  const handleSUbmit = async() => {
+  if (!isLoading) {
+    setIsLoading(true);
+    try {
+      const data = courseData;
+      const res = await handleCreateCourse(data);
+      if (res?.data.success) {
+        setError("");
+        setMessage("Course added successfully");
+        socket.emit("notification", {
+          title: "New Order",
+          message: `New order from ${courseData.courseTitle}`,
+          userId: tutor._id,
+          createdAt: Date.now(),
         });
+      }
+    } catch (error) {
+      console.log(error);
+      setError("Internal server error, please try again later!!!");
+    } finally {
+      setIsLoading(false);
     }
+  }
   };
-
-  console.log("calling component");
 
   const handleReload = () => {
     window.location.reload();
@@ -74,8 +67,7 @@ const CourseSubmitResult: React.FC<Props> = ({
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                  </div>
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10"></div>
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                       Upload Course?

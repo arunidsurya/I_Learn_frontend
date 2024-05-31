@@ -14,6 +14,8 @@ const tutorRoutes = {
   getOrderAnalytics: "/tutor/order-analytics",
   getUserAnalytics: "/tutor/user-analytics",
   getCategories: "/tutor/categories",
+  createCourse: "/tutor/create_course",
+  editCourse: "/tutor/edit_course",
 };
 
 export default tutorRoutes;
