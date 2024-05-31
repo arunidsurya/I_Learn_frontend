@@ -13,6 +13,7 @@ const tutorRoutes = {
   getCourseAnalaytics: "/tutor/course-analytics",
   getOrderAnalytics: "/tutor/order-analytics",
   getUserAnalytics: "/tutor/user-analytics",
+  getCategories: "/tutor/categories",
 };
 
 export default tutorRoutes;

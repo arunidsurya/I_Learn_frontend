@@ -8,6 +8,7 @@ import axios from "axios";
 import { UploadS3Bucket } from "../../utils/UploadS3Bucket";
 import LoadingComponent from "../../templates/LoadingComponent";
 import CourseSubmitResult from "./CourseSubmitResult";
+import { handleGetcategories } from "../../../services/api/tutorApi";
 // import { Upload } from "@aws-sdk/lib-storage";
 // import { S3Client, S3, PutObjectCommand } from "@aws-sdk/client-s3";
 
@@ -34,7 +35,7 @@ const AddCourse: React.FC = () => {
       title: "",
       description: "",
       videoSection: "Untitled Chapter",
-      videoLength:0,
+      videoLength: 0,
       links: [
         {
           title: "",
@@ -48,27 +49,19 @@ const AddCourse: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-
   const [categories, setCategories] = useState([]);
 
+  const getCategories = async () => {
+    const res = await handleGetcategories();
+    if (res?.data.success) {
+      // console.log(res.data.categories);
+      setCategories(res.data.categories);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/tutor/categories", {
-        withCredentials: true,
-      })
-      .then((res: any) => {
-        // console.log(res.data);
-        if (res.data.success) {
-          // console.log(res.data.categories);
-          setCategories(res.data.categories);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    getCategories();
   }, []);
-
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -92,7 +85,7 @@ const AddCourse: React.FC = () => {
             title: courseContent.title,
             description: courseContent.description,
             videoSection: courseContent.videoSection,
-            videoLength:courseContent.videoLength,
+            videoLength: courseContent.videoLength,
             links: courseContent.links.map((link) => ({
               title: link.title,
               url: link.url,
@@ -132,7 +125,6 @@ const AddCourse: React.FC = () => {
 
   const handleCourseCreate = async () => {
     console.log("Reached courseCreate");
-
   };
 
   return (

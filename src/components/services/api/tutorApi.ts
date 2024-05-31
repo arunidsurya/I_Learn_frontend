@@ -147,3 +147,13 @@ export const handleGetUserAnalytics = async () => {
     console.log(error);
   }
 };
+
+export const handleGetcategories = async () => {
+  try {
+    const res = await Api.get(tutorRoutes.getCategories);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
