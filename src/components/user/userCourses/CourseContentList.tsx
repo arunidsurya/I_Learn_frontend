@@ -10,6 +10,7 @@ type Props = {
   isDemo?: boolean;
   user?: any;
   courseId: string;
+  isCourseAccess?:boolean;
 };
 
 const CourseContentList: React.FC<Props> = ({
@@ -19,6 +20,7 @@ const CourseContentList: React.FC<Props> = ({
   isDemo,
   user,
   courseId,
+  isCourseAccess
 }) => {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(
     new Set<string>()
@@ -78,7 +80,7 @@ if(user){
     >
       <div className="mb-8">
         <h1 className="text-gray-600 font-bold">Your progress</h1>
-        <ProgressBar progress={progress} />
+        <ProgressBar progress={progress} isCourseAccess={isCourseAccess} />
       </div>
       {videoSections.map((section: string) => {
         const isSectionVisible = visibleSections.has(section);

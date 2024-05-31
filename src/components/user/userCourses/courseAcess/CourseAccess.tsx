@@ -90,6 +90,7 @@ const CourseAccess:React.FC = () => {
           activeVideo={activeVideo}
           user={user}
           courseId={courseId}
+          isCourseAccess={true}
         />
       </div>
     </div>
