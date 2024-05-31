@@ -44,10 +44,10 @@ const AdminHeader: React.FC = () => {
 
 
   const localStorageToken = localStorage.getItem("admin_accessToken");
-  const cookieToken = cookies.get("admin_AccessToken");
+  // const cookieToken = cookies.get("admin_AccessToken");
 
     useEffect(() => {
-      if (!localStorageToken || cookieToken === undefined) {
+      if (!localStorageToken ) {
         localStorage.removeItem("admin_AccessToken");
         cookies.remove("admin_AccessToken");
 
