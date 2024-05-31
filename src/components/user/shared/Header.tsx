@@ -31,18 +31,16 @@ const Header: React.FC = () => {
   const [savedUser, setSavedUser] = useState<User | null | undefined>();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.login.user);
   const location = useLocation();
-  
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const CookieToken = Cookies.get("accessToken");
 
-    if (!accessToken || CookieToken=== undefined) {
+    if (!accessToken || !CookieToken) {
       setIsLoggedIn(false);
       localStorage.removeItem("accessToken");
       Cookies.remove("access_token");
@@ -71,8 +69,6 @@ const Header: React.FC = () => {
   };
 
   const isActive = (path: string) => location.pathname === path;
-
-  
 
   return (
     <header>
