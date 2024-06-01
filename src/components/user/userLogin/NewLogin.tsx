@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import { handleLogin, login } from "../../services/api/userApi";
-import axios from "axios";
+import { handleLogin } from "../../services/api/userApi";
+import { useDispatch } from "react-redux";
+import { SaveUser } from "../../../redux/features/loginSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NewLogin = () => {
+
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [form, setForm] = useState<{ email: string; password: string }>({
     email: "",
     password: "",
@@ -19,7 +26,21 @@ const NewLogin = () => {
     e.preventDefault();
     try {
       const response = await handleLogin(form.email,form.password)
-      console.log(response?.data);
+            if (response?.data.data.success) {
+              const userDetails = response.data.data.user;
+              console.log(userDetails);
+              dispatch(SaveUser(userDetails));
+              localStorage.setItem("user", JSON.stringify(response.data.data));
+              localStorage.setItem(
+                "accessToken",
+                response.data.data.access_token
+              );
+              const { from } = location.state || {
+                from: { pathname: "/" },
+              };
+              navigate(from);
+              window.location.reload();
+            } 
     } catch (error) {
       console.error("Error logging in:", error);
     }

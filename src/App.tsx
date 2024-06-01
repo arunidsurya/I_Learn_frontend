@@ -144,7 +144,7 @@ import AdminLayout from "./components/admin/shared/AdminLayout";
 import ProtectiveRoute from "./components/admin/utils/protectiveRoute";
 import InstLayout from "./components/instructor/shared/InstLayout";
 import UserRegister from "./components/user/userRegister/Register";
-import UserLogin from "./components/user/userLogin/UserLogin";
+// import UserLogin from "./components/user/userLogin/UserLogin";
 import InstAuthRoute from "./components/instructor/utils/InstAuthRoute";
 import VideoCall from "./components/services/VideoCall";
 import Error404 from "./components/errorPages/Error404";
