@@ -20,9 +20,6 @@ const Oauth: React.FC= () => {
 
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
-      // console.log("Gname :", resultsFromGoogle.user.displayName);
-      // console.log("Gemail :", resultsFromGoogle.user.email);
-      // console.log("Gphoto :", resultsFromGoogle.user.photoURL);
 
       if (
         resultsFromGoogle.user.displayName &&
