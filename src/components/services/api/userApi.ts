@@ -1,7 +1,7 @@
 import Api from "../axios/axiosService";
 import userRoutes from "../endpoints/userEndpoint";
 
-export const login = async (email: string, password: string) => {
+export const handleLogin = async (email: string, password: string) => {
   try {
     const res = await Api.post(userRoutes.login, { email, password });
     return res;

@@ -52,7 +52,7 @@ const UserLogin: React.FC = () => {
           from: { pathname: "/" },
         };
         Navigate(from);
-        // window.location.reload();
+        window.location.reload();
       } else {
         setError(response?.data.data.message);
       }
