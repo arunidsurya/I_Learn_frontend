@@ -10,6 +10,15 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const handleGoogleSignIn = async (name:any,email: any, avatar: any) => {
+  try {
+    const res = await Api.post(userRoutes.googleSignIn, { name, email, avatar });
+    return res;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
 export const logout = async () => {
   try {
     const res = await Api.get(userRoutes.logout);
