@@ -1,5 +1,5 @@
 const userRoutes = {
-  login: "/user/new-login",
+  login: "/user/login",
   googleSignIn: "/user/google_signin",
   logout: "/user/logout",
   signup: "/user/registration",
