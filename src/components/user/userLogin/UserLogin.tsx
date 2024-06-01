@@ -7,7 +7,7 @@ import { TERipple } from "tw-elements-react";
 import Modal from "../shared/Modal";
 import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../redux/features/loginSlice";
-import Oauth from "./Oauth";
+// import Oauth from "./Oauth";
 import Cookies from "js-cookie";
 import { login } from "../../services/api/userApi";
 import Header from "../shared/Header";
