@@ -7,11 +7,8 @@ import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../redux/features/loginSlice";
 import { handleGoogleSignIn } from "../../services/api/userApi";
 
-interface OauthProps {
-  setError: React.Dispatch<React.SetStateAction<string>>;
-}
 
-const Oauth: React.FC<OauthProps> = ({ setError }) => {
+const Oauth: React.FC= () => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
 

@@ -174,7 +174,7 @@ const UserLogin: React.FC = () => {
                   >
                     Login
                   </button>
-                  <Oauth setError={setError} />
+                  <Oauth />
                 </TERipple>
               </div>
             </form>
