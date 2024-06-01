@@ -174,7 +174,7 @@ const UserLogin: React.FC = () => {
                   >
                     Login
                   </button>
-                  <Oauth />
+                  {/* <Oauth /> */}
                 </TERipple>
               </div>
             </form>
