@@ -144,14 +144,13 @@ import AdminLayout from "./components/admin/shared/AdminLayout";
 import ProtectiveRoute from "./components/admin/utils/protectiveRoute";
 import InstLayout from "./components/instructor/shared/InstLayout";
 import UserRegister from "./components/user/userRegister/Register";
-// import UserLogin from "./components/user/userLogin/UserLogin";
+import UserLogin from "./components/user/userLogin/UserLogin";
 import InstAuthRoute from "./components/instructor/utils/InstAuthRoute";
 import VideoCall from "./components/services/VideoCall";
 import Error404 from "./components/errorPages/Error404";
 import Error500 from "./components/errorPages/Error500";
 import InstVideoCall from "./components/instructor/course/liveclass/InstVideoCall";
 import TeachOnILearn from "./components/user/shared/TeachOnILearn";
-import NewLogin from "./components/user/userLogin/NewLogin";
 
 const App: React.FC = () => {
   return (
@@ -560,7 +559,7 @@ const App: React.FC = () => {
             }
           />
           <Route path="user_register/" element={<UserRegister />} />
-          <Route path="login/" element={<NewLogin />} />
+          <Route path="login/" element={<UserLogin />} />
           <Route path="/techOnILearn" element={<TeachOnILearn />} />
           <Route path="error404/" element={<Error404 />} />
           <Route path="error500/" element={<Error500 />} />

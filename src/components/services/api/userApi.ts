@@ -3,6 +3,8 @@ import userRoutes from "../endpoints/userEndpoint";
 
 export const handleLogin = async (email: string, password: string) => {
   try {
+    console.log(userRoutes.login);
+    
     const res = await Api.post(userRoutes.login, { email, password });
     return res;
   } catch (error: any) {
