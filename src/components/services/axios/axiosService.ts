@@ -1,5 +1,4 @@
-// Api.js
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig,AxiosResponse } from "axios";
 import toast from "react-hot-toast";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -9,8 +8,36 @@ const Api: AxiosInstance = axios.create({
   withCredentials: true,
 });
 
+Api.interceptors.request.use(
+  (config: any) => {
+    const token = localStorage.getItem("accessToken");
+
+    if (token) {
+      // Create a new config object to prevent mutation
+      const newConfig = {
+        ...config,
+        headers: {
+          ...config.headers?.Authorization,
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      return newConfig as AxiosRequestConfig<any>; // Type assertion (optional)
+    } else {
+      return config;
+    }
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+
+
 Api.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse) => {
+    if (response.data.newAccessToken) {
+      localStorage.setItem("accessToken", response.data.newAccessToken);
+    }
     return response;
   },
   (error) => {
@@ -23,12 +50,10 @@ Api.interceptors.response.use(
         window.location.href = "/login";
         toast.error("Your profile is blocked. Please contact support.");
       } else if (response.status === 404) {
-
         window.location.href = "/error404";
       } else if (response.status === 500) {
         window.location.href = "/error500";
       } else {
-
         toast.error("An error occurred. Please try again later.");
       }
     } else {

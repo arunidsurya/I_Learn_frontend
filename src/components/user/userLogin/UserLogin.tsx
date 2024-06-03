@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { TERipple } from "tw-elements-react";
-import Modal from "../shared/Modal";
-import { useDispatch } from "react-redux";
-import { SaveUser } from "../../../redux/features/loginSlice";
-import Oauth from "./Oauth";
-import Cookies from "js-cookie";
-import Header from "../shared/Header";
-import Footer from "../shared/Footer";
-import { handleLogin } from "../../services/api/userApi";
 
-const UserLogin: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [error, setError] = useState("");
-  const Navigate = useNavigate();
+// import React, { useEffect, useState } from "react";
+// import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
+// import { FcGoogle } from "react-icons/fc";
+// import { Link, useLocation, useNavigate } from "react-router-dom";
+// import { TERipple } from "tw-elements-react";
+// import Modal from "../shared/Modal";
+// import { useDispatch } from "react-redux";
+// import { SaveUser } from "../../../redux/features/loginSlice";
+// import Oauth from "./Oauth";
+// import Cookies from "js-cookie";
+// import Header from "../shared/Header";
+// import Footer from "../shared/Footer";
+
+// const UserLogin: React.FC = () => {
+//   const [email, setEmail] = useState<string>("");
+//   const [password, setPassword] = useState<string>("");
+//   const [showModal, setShowModal] = useState<boolean>(false);
+//   const [error, setError] = useState("");
+//   const Navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -38,25 +38,27 @@ const UserLogin: React.FC = () => {
     e.preventDefault();
     setError("");
 
-    try {
-      const response = await handleLogin(email, password);
+//     try {
+//       const response = await handleLog
 
-      if (response?.data.data.success) {
-        const userDetails = response.data.data.user;
-        dispatch(SaveUser(userDetails));
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        localStorage.setItem("accessToken", response.data.data.access_token);
-        const { from } = location.state || {
-          from: { pathname: "/" },
-        };
-        Navigate(from);
-      } else {
-        setError(response?.data.data.message);
-      }
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+//       if (response?.data.data.success) {
+//         const userDetails = response.data.data.user;
+//         console.log(userDetails);
+//         dispatch(SaveUser(userDetails));
+//         localStorage.setItem("user", JSON.stringify(response.data.data));
+//         localStorage.setItem("accessToken", response.data.data.access_token);
+//         const { from } = location.state || {
+//           from: { pathname: "/" },
+//         };
+//         Navigate(from);
+//         window.location.reload();
+//       } else {
+//         setError(response?.data.data.message);
+//       }
+//     } catch (error:any) {}
+//       console.log(error);
+      
+//   };
 
   return (
     <section>

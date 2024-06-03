@@ -3,9 +3,13 @@ import userRoutes from "../endpoints/userEndpoint";
 
 export const handleLogin = async (email: string, password: string) => {
   try {
+<<<<<<< HEAD
     console.log(userRoutes.login);
     
     const res = await Api.post(userRoutes.login, { email, password });
+=======
+    const res = await Api.post(userRoutes.login, { email, password, });
+>>>>>>> bugfix/login-page-errors
     return res;
   } catch (error: any) {
     console.log(error);
