@@ -1,32 +1,31 @@
 
-// import React, { useEffect, useState } from "react";
-// import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
-// import { FcGoogle } from "react-icons/fc";
-// import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { TERipple } from "tw-elements-react";
-// import Modal from "../shared/Modal";
-// import { useDispatch } from "react-redux";
-// import { SaveUser } from "../../../redux/features/loginSlice";
-// import Oauth from "./Oauth";
-// import Cookies from "js-cookie";
-// import Header from "../shared/Header";
-// import Footer from "../shared/Footer";
+import React, { useEffect, useState } from "react";
+import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { TERipple } from "tw-elements-react";
+import Modal from "../shared/Modal";
+import { useDispatch } from "react-redux";
+import { SaveUser } from "../../../redux/features/loginSlice";
+import Oauth from "./Oauth";
+import Cookies from "js-cookie";
+import Header from "../shared/Header";
+import Footer from "../shared/Footer";
+import { handleLogin } from "../../services/api/userApi";
 
-// const UserLogin: React.FC = () => {
-//   const [email, setEmail] = useState<string>("");
-//   const [password, setPassword] = useState<string>("");
-//   const [showModal, setShowModal] = useState<boolean>(false);
-//   const [error, setError] = useState("");
-//   const Navigate = useNavigate();
+const UserLogin: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [error, setError] = useState("");
+  const Navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const location = useLocation();
 
   useEffect(() => {
-    // Check if user data exists in localStorage
-    // const storedUserData = localStorage.getItem("user");
-    // const accessToken = localStorage.getItem("accessToken");
+
     const CookieToken = Cookies.get("access_token");
 
     if (CookieToken) {
@@ -38,27 +37,27 @@
     e.preventDefault();
     setError("");
 
-//     try {
-//       const response = await handleLog
+    try {
+      const response = await handleLogin(email,password)
 
-//       if (response?.data.data.success) {
-//         const userDetails = response.data.data.user;
-//         console.log(userDetails);
-//         dispatch(SaveUser(userDetails));
-//         localStorage.setItem("user", JSON.stringify(response.data.data));
-//         localStorage.setItem("accessToken", response.data.data.access_token);
-//         const { from } = location.state || {
-//           from: { pathname: "/" },
-//         };
-//         Navigate(from);
-//         window.location.reload();
-//       } else {
-//         setError(response?.data.data.message);
-//       }
-//     } catch (error:any) {}
-//       console.log(error);
+      if (response?.data.data.success) {
+        const userDetails = response.data.data.user;
+        console.log(userDetails);
+        dispatch(SaveUser(userDetails));
+        localStorage.setItem("user", JSON.stringify(response.data.data));
+        localStorage.setItem("accessToken", response.data.data.access_token);
+        const { from } = location.state || {
+          from: { pathname: "/" },
+        };
+        Navigate(from);
+        window.location.reload();
+      } else {
+        setError(response?.data.data.message);
+      }
+    } catch (error:any) {}
+      console.log(error);
       
-//   };
+  };
 
   return (
     <section>
@@ -112,13 +111,7 @@
                 </p>
               </div>
               {error && <p className="text-red-500">{error}</p>}
-              {/* <!-- Email input --> */}
-              {/* <TEInput
-                type="email"
-                label="Email address"
-                size="lg"
-                className="mb-6"
-              ></TEInput> */}
+ 
               <div className="flex flex-col gap-2">
                 <label htmlFor="email">Email</label>
                 <input
@@ -157,12 +150,6 @@
                 </div>
               </div>
               {/* <!--Password input--> */}
-              {/* <TEInput
-                type="password"
-                label="Password"
-                className="mb-6"
-                size="lg"
-              ></TEInput> */}
 
               {/* <!-- Login button --> */}
               <div className="text-center lg:text-left">
