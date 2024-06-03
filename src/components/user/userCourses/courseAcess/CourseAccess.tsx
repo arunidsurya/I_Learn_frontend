@@ -27,7 +27,6 @@ const CourseAccess:React.FC = () => {
 
   useEffect(() => {
     socket.on("connect", () => {
-      console.log("Socket connected");
     });
 
   }, []);

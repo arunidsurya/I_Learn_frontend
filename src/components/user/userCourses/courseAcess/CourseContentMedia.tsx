@@ -118,7 +118,6 @@ const CourseContentMedia: React.FC<Props> = ({
 
   useEffect(() => {
     getCourse();
-    console.log("call");
   }, []);
 
   useEffect(() => {

@@ -10,7 +10,7 @@ type Props = {
   isDemo?: boolean;
   user?: any;
   courseId: string;
-  isCourseAccess?:boolean;
+  isCourseAccess?: boolean;
 };
 
 const CourseContentList: React.FC<Props> = ({
@@ -20,31 +20,26 @@ const CourseContentList: React.FC<Props> = ({
   isDemo,
   user,
   courseId,
-  isCourseAccess
+  isCourseAccess,
 }) => {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(
     new Set<string>()
   );
-const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-useEffect(()=>{
-// console.log(user.courseProgress);
-if(user){
-    const courseProgressObj = user?.courseProgress.find(
-      (progress: any) => progress.courseId === courseId
-    );
+  useEffect(() => {
+    // console.log(user.courseProgress);
+    if (user) {
+      const courseProgressObj = user?.courseProgress.find(
+        (progress: any) => progress.courseId === courseId
+      );
 
-    const currentProgress =
-      ([...courseProgressObj.sectionId].length / [...data].length) * 100;
+      const currentProgress =
+        ([...courseProgressObj.sectionId].length / [...data].length) * 100;
 
-    setProgress(currentProgress);
-    console.log("called");
-}
-
-   
-  
-},[user])
-  // console.log(user.courseProgress);
+      setProgress(currentProgress);
+    }
+  }, [user]);
   const isChecked = (id: string) => {
     const courseProgressObj = user?.courseProgress.find(
       (progress: any) => progress.courseId === courseId
@@ -82,7 +77,7 @@ if(user){
         <h1 className="text-gray-600 font-bold">Your progress</h1>
         <ProgressBar progress={progress} isCourseAccess={isCourseAccess} />
       </div>
-      {videoSections.map((section: string) => {
+      {videoSections.map((section: string,index:number) => {
         const isSectionVisible = visibleSections.has(section);
 
         //Filter videos by section
@@ -104,7 +99,7 @@ if(user){
         return (
           <div
             className={`${isDemo && "border-b border-[#ffffff8e] pb-2"}  `}
-            key={section}
+            key={index}
           >
             <div className="w-full flex">
               {/* Render video section */}
@@ -142,7 +137,7 @@ if(user){
                       className={`w-full ${
                         videoIndex === activeVideo ? "bg-blue-200" : ""
                       } cursor-pointer transition-all p-2`}
-                      key={item.id}
+                      key={item}
                       onClick={() =>
                         isDemo ? null : setActiveVideo(videoIndex)
                       }

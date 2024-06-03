@@ -39,13 +39,15 @@ const UserLogin: React.FC = () => {
 
     try {
       const response = await handleLogin(email,password)
-
-      if (response?.data.data.success) {
-        const userDetails = response.data.data.user;
+   console.log(response?.data);
+      if (response?.data.success) {
+        console.log(response.data);
+        
+        const userDetails = response.data.user;
         console.log(userDetails);
         dispatch(SaveUser(userDetails));
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        localStorage.setItem("accessToken", response.data.data.access_token);
+        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("accessToken", response.data.access_token);
         const { from } = location.state || {
           from: { pathname: "/" },
         };
@@ -54,8 +56,10 @@ const UserLogin: React.FC = () => {
       } else {
         setError(response?.data.data.message);
       }
-    } catch (error:any) {}
-      console.log(error);
+    } catch (error:any) {
+           console.log(error);
+    }
+ 
       
   };
 

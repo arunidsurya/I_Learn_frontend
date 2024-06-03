@@ -21,7 +21,7 @@ Api.interceptors.request.use(
           Authorization: `Bearer ${token}`,
         },
       };
-      return newConfig as AxiosRequestConfig<any>; // Type assertion (optional)
+      return newConfig as AxiosRequestConfig<any>; 
     } else {
       return config;
     }
