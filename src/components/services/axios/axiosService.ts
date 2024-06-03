@@ -1,10 +1,16 @@
 // api.js
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+  AxiosRequestHeaders,
+} from "axios";
 import toast from "react-hot-toast";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   role?: string;
 }
 
@@ -14,9 +20,9 @@ const Api: AxiosInstance = axios.create({
 });
 
 Api.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const customConfig = config as CustomAxiosRequestConfig;
-    const role = config.role || "user";
+    const role = customConfig.role || "user";
 
     let token;
     switch (role) {
@@ -34,13 +40,13 @@ Api.interceptors.request.use(
     }
 
     if (token) {
-      if (!config.headers) {
-        config.headers = {}; // Ensure headers object exists
+      if (!customConfig.headers) {
+        customConfig.headers = {} as AxiosRequestHeaders; // Ensure headers object exists with correct type
       }
-      config.headers.Authorization = `Bearer ${token}`;
+      customConfig.headers["Authorization"] = `Bearer ${token}`;
     }
 
-    return config;
+    return customConfig;
   },
   (error: any) => {
     return Promise.reject(error); // Adjusted to match the expected number of arguments
@@ -50,10 +56,10 @@ Api.interceptors.request.use(
 Api.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.data.newAccessToken) {
-      localStorage.setItem('accessToken', response.data.newAccessToken);
+      localStorage.setItem("accessToken", response.data.newAccessToken);
     }
     return response;
-  }, 
+  },
   (error: any) => {
     const { response } = error;
     if (response) {
@@ -63,7 +69,7 @@ Api.interceptors.response.use(
             window.location.href = "/login";
             toast.error("Your profile is blocked. Please contact support.");
           } else {
-            localStorage.removeItem('accessToken');
+            localStorage.removeItem("accessToken");
           }
           break;
         case 404:
@@ -84,47 +90,3 @@ Api.interceptors.response.use(
 );
 
 export default Api;
-
-
-
-// import axios, { AxiosInstance } from "axios";
-// import toast from "react-hot-toast";
-
-// const baseUrl = import.meta.env.VITE_BASE_URL;
-
-// const Api: AxiosInstance = axios.create({
-//   baseURL: baseUrl,
-//   withCredentials: true,
-// });
-
-// Api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     const { response } = error;
-//     if (response) {
-//       switch (response.status) {
-//         case 401:
-//           if (response.data?.message === "Profile is blocked") {
-//             window.location.href = "/login";
-//             toast.error("Your profile is blocked. Please contact support.");
-//           }
-//           break;
-//         case 404:
-//           window.location.href = "/error404";
-//           break;
-//         case 500:
-//           window.location.href = "/error500";
-//           break;
-//         default:
-//           toast.error("An error occurred. Please try again later.");
-//           break;
-//       }
-//     } else {
-//       // Handle network errors
-//       toast.error("Network error. Please check your internet connection.");
-//     }
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default Api;
