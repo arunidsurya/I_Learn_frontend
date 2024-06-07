@@ -182,7 +182,7 @@ export const updateTutorInfo = async (
   _id: string,
   name: string,
   institute: string,
-  avatar: string
+  avatar: string | null,
 ) => {
   try {
 

@@ -12,7 +12,6 @@ const EnrolledCourses: React.FC = () => {
   const getEnrolledCourses=async()=>{
       try {
         const userId = user?._id || "";
-        console.log(userId);
         
         const res = await enrolledCourses(userId);
         if(res?.data.success){
@@ -20,6 +19,7 @@ const EnrolledCourses: React.FC = () => {
         }
         
       } catch (error) {
+        console.log(error);
         
       }
   }

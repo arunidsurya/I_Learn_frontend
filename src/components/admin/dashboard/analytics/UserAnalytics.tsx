@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   ResponsiveContainer,
   XAxis,
@@ -7,9 +7,8 @@ import {
   Area,
   Tooltip,
 } from "recharts";
-import {
-  handleGetUserAnalytics,
-} from "../../../services/api/adminApi";
+import { handleGetUserAnalytics } from "../../../services/api/adminApi";
+
 
 type Props = {
   isDashboard?: boolean;
@@ -17,8 +16,9 @@ type Props = {
 
 const UserAnalytics: React.FC<Props> = ({ isDashboard }) => {
   const [data, setData] = useState([]);
+  const isMounted = useRef(false);
 
-  const userAanalytics = async () => {
+  const userAnalytics = async () => {
     try {
       const response = await handleGetUserAnalytics();
       if (response?.data.success) {
@@ -30,10 +30,17 @@ const UserAnalytics: React.FC<Props> = ({ isDashboard }) => {
   };
 
   useEffect(() => {
-    userAanalytics();
+    if (!isMounted.current) {
+      userAnalytics();
+      isMounted.current = true;
+      
+    }
   }, []);
 
   const analyticsData: any = [];
+
+  console.log(analyticsData);
+  
 
   data &&
     data.forEach((item: any) => {

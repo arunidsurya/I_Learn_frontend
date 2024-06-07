@@ -63,7 +63,6 @@ const loginSlice = createSlice({
   initialState,
   reducers: {
     SaveUser: (state, action: PayloadAction<User>) => {
-      console.log("Incoming user data:", action.payload);
       state.user = action.payload;
     },
     saveAdmin: (state, action: PayloadAction<Admin>) => {

@@ -3,37 +3,30 @@ import { CiCamera } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import defaultImage from "../../../assets/user.jpeg";
 import * as Yup from "yup";
-import { updateTutorInfo } from "../../services/api/tutorApi";
-import { saveTutor } from "../../../redux/features/loginSlice";
+import { saveAdmin } from "../../../redux/features/loginSlice";
 import toast from "react-hot-toast";
 import ChangePassword from "./ChangePassword";
+import { updateAdminInfo } from "../../services/api/adminApi";
 
-interface Tutor {
+interface Admin {
   _id?: string;
   name: string;
   email: string;
   gender: string;
-  institute: string;
-  qualifiaction: string;
-  experience: string;
   password: string;
   avatar?: {
     url: string;
     public_id: string;
   };
-  isVerified?: boolean;
-  isBolcked?: boolean;
+  isVerified: boolean;
   comparePassword: (password: string) => Promise<boolean>;
-  SignAccessToken: () => string;
-  SignRefreshToken: () => string;
 }
 
-const ManageMyAccount: React.FC = () => {
-  const [tutor, setTutor] = useState<Tutor | null>(null);
+const ManageAccount: React.FC = () => {
+  const [admin, setAdmin] = useState<Admin | null>(null);
   const [_id, set_id] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [institute, setInstitute] = useState<string>("");
   const [avatar, setAvatar] = useState<string | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -42,16 +35,15 @@ const ManageMyAccount: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const storedTutor = useSelector((state: any) => state.login.tutor);
+  const storedAdminData = useSelector((state: any) => state.login.admin);
   useEffect(() => {
-    if (storedTutor) {
-      setTutor(storedTutor);
-      set_id(storedTutor._id);
-      setName(storedTutor.name);
-      setEmail(storedTutor.email);
-      setInstitute(storedTutor.institute);
+    if (storedAdminData) {
+      setAdmin(storedAdminData);
+      set_id(storedAdminData._id);
+      setName(storedAdminData.name);
+      setEmail(storedAdminData.email);
     }
-  }, [storedTutor]);
+  }, [storedAdminData]);
 
   const handleCameraIconClick = () => {
     if (fileInputRef.current) {
@@ -82,24 +74,25 @@ const ManageMyAccount: React.FC = () => {
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
-    institute: Yup.string().required("institute name is required"),
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("called");
+    
 
     try {
       await validationSchema.validate(
-        { name, institute },
+        { name},
         { abortEarly: false }
       );
 
-      const res = await updateTutorInfo(_id, name, institute, avatar);
+      const res = await updateAdminInfo(_id, name, avatar);
 
-      if (res?.data.tutor.success) {
-        localStorage.setItem("tutor", JSON.stringify(res.data.tutor.tutor));
-        dispatch(saveTutor(res.data.tutor.tutor));
-        toast.success(res.data.tutor.message);
+      if (res?.data.admin.success) {
+        localStorage.setItem("tutor", JSON.stringify(res.data.admin.admin));
+        dispatch(saveAdmin(res.data.admin.admin));
+        toast.success(res.data.admin.message);
       }
     } catch (error: any) {
       const newError: { [key: string]: string } = {};
@@ -124,7 +117,7 @@ const ManageMyAccount: React.FC = () => {
                 src={
                   avatarPreview
                     ? avatarPreview
-                    : tutor?.avatar?.url || defaultImage
+                    : admin?.avatar?.url || defaultImage
                 }
                 alt="Profile Pic"
                 className="w-full h-full object-cover rounded-full"
@@ -148,43 +141,29 @@ const ManageMyAccount: React.FC = () => {
               Email Address
             </label>
             <h1 className="text-[1.2rem]">{email}</h1>
-            <label htmlFor="name" className="text-lg font-bold text-left mt-10">
-              Full Name
-            </label>
-            {errors.name && (
-              <div>
-                <p className="text-red-500">*{errors.name}</p>
+            <div className="w-2/6 mt-10">
+              <label htmlFor="name" className="text-lg font-bold text-left">
+                Full Name
+              </label>
+              <div className="flex items-center mt-2">
+                <input
+                  type="text"
+                  value={name}
+                  name="name"
+                  onChange={(e) => setName(e.target.value)}
+                  className="rounded-md border border-gray-400 w-full p-2 h-10 mr-2"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-800 rounded-md text-white border border-gray-400 h-10 p-2"
+                >
+                  Update
+                </button>
               </div>
-            )}
-            <input
-              type="text"
-              value={name}
-              name="name"
-              onChange={(e) => setName(e.target.value)}
-              className="rounded-md border border-gray-400 w-2/6 h-10"
-            />
-            <label htmlFor="name" className="text-lg font-bold text-left mt-10">
-              Institute Name
-            </label>
-            {errors.institute && (
-              <div>
-                <p className="text-red-500">*{errors.institute}</p>
-              </div>
-            )}
-            <input
-              type="text"
-              value={institute}
-              name="name"
-              onChange={(e) => setInstitute(e.target.value)}
-              className="rounded-md border border-gray-400 w-2/6 h-10"
-            />
-
-            <button
-              type="submit"
-              className="bg-blue-800 rounded-md text-white border border-gray-400 w-2/6 h-10 mt-10"
-            >
-              Update
-            </button>
+              {errors.name && (
+                <p className="text-red-500 mt-2">*{errors.name}</p>
+              )}
+            </div>
           </form>
 
           <div className="flex justify-center items-center text-center mt-10">
@@ -198,9 +177,9 @@ const ManageMyAccount: React.FC = () => {
         </>
       )}
 
-      {isOpen && (<ChangePassword setIsOpen={setIsOpen} />)}
+      {isOpen && <ChangePassword setIsOpen={setIsOpen} />}
     </div>
   );
 };
 
-export default ManageMyAccount;
+export default ManageAccount;

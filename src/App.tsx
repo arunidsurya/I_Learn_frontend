@@ -152,6 +152,7 @@ import Error500 from "./components/errorPages/Error500";
 import InstVideoCall from "./components/instructor/course/liveclass/InstVideoCall";
 import TeachOnILearn from "./components/user/shared/TeachOnILearn";
 import ManageMyAccount from "./components/instructor/myAccount/ManageMyAccount";
+import ManageAccount from "./components/admin/myAccount/ManageMyAccount";
 
 const App: React.FC = () => {
   return (
@@ -439,6 +440,14 @@ const App: React.FC = () => {
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <AdminEditPackageLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="manage-account"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ManageAccount />
                 </Suspense>
               }
             />

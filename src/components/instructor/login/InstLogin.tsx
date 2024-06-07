@@ -28,8 +28,7 @@ const InstLogin: React.FC = () => {
     e.preventDefault();
     setError("");
     const response = await handleTutorLogin(email, password);
-    console.log(response?.data.data.message);
-    
+  
     if (response?.data.data.success) {
       localStorage.setItem("tutor", JSON.stringify(response.data.data));
       localStorage.setItem("tutor_accessToken", response.data.data.token);

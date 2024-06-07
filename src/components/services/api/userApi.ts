@@ -205,7 +205,7 @@ export const updateUserInfo = async (
   _id: string,
   name: string,
   email: string,
-  avatar: string
+  avatar: string | null,
 ) => {
   try {
 
