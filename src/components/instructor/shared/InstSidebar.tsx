@@ -4,10 +4,13 @@ import {
   DASHBOARD_SIDEBAR_BOTTOM_LINKS,
   DASHBOARD_SIDEBAR_LINKS,
 } from "../lib/sidebarContent";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { HiOutlineLogout } from "react-icons/hi";
 import { GiTeacher } from "react-icons/gi";
+import { handleLogout } from "../../services/api/tutorApi";
+import { useDispatch } from "react-redux";
+import { resetTutor, setTutorLoggedIn } from "../../../redux/features/loginSlice";
 
 interface SidebarItem {
   key: string;
@@ -19,7 +22,29 @@ interface SidebarItem {
 const linkClasses =
   "flex items-center gap-2 font-light px-3 py-2 hover:bg-neutral-700 hover:no-underline active:bg-neutral-600 rounded-sm text-base";
 
+
 const InstSidebar: React.FC = () => {
+
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+      const handleLogoutFunction = async () => {
+        try {
+          const response = await handleLogout();
+          if (response?.data.success) {
+            dispatch(resetTutor());
+            localStorage.removeItem("tutor");
+            localStorage.removeItem("tutor_accessToken");
+            dispatch(setTutorLoggedIn(false));
+            navigate("/inst_login");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+
   return (
     <div className="flex flex-col bg-blue-950 w-60 p-3 text-white">
       <div className="flex items-center gap-2 px-1 py-3 text-xl">
@@ -43,7 +68,10 @@ const InstSidebar: React.FC = () => {
         {DASHBOARD_SIDEBAR_BOTTOM_LINKS.map((item) => (
           <SidebarLink key={item.key} item={item} />
         ))}
-        <div className={classNames("text-red-500 cursor-pointer", linkClasses)}>
+        <div
+          className={classNames("text-red-500 cursor-pointer", linkClasses)}
+          onClick={() => handleLogoutFunction()}
+        >
           <span>
             <HiOutlineLogout />
           </span>

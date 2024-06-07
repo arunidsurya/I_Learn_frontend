@@ -47,6 +47,7 @@ const Header: React.FC = () => {
       localStorage.removeItem("accessToken");
       Cookies.remove("access_token");
       dispatch(resetUser());
+      dispatch(setLoggedIn(false))
     } else {
       dispatch(setLoggedIn(true));
     }

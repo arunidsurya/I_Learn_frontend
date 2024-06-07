@@ -1,6 +1,6 @@
 import { Menu, Popover, Transition } from "@headlessui/react";
 import classNames from "classnames";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   HiOutlineBell,
   HiOutlineChatAlt,
@@ -10,17 +10,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../redux/store";
 import { Cookies } from "react-cookie";
-import backgroundImage from "../../../assets/profile.png";
-import { resetTutor } from "../../../redux/features/loginSlice";
+import { resetTutor, setTutorLoggedIn } from "../../../redux/features/loginSlice";
 import { handleGetSearchResults, handleLogout } from "../../services/api/tutorApi";
-import debounce from 'lodash.debounce'
+import debounce from 'lodash.debounce';
+
+interface Tutor {
+  _id?: string;
+  name: string;
+  email: string;
+  gender: string;
+  institute: string;
+  qualifiaction: string;
+  experience: string;
+  avatar?: {
+    url: string;
+    public_id: string;
+  };
+  isVerified?: boolean;
+  isBolcked?: boolean;
+}
+
 
 const InstHeader: React.FC = () => {
   const navigate = useNavigate();
   const cookies = new Cookies();
   const dispatch = useDispatch();
+  const [tutor, setTutor] = useState<Tutor | null>(null)
 
-  const tutor = useSelector((state: RootState) => state.login.tutor);
+  const savedTutor = useSelector((state: RootState) => state.login.tutor);
+
 
   const localStorageToken = localStorage.getItem("tutor_accessToken");
   // const cookieToken = cookies.get("tutor_token");
@@ -29,7 +47,11 @@ const InstHeader: React.FC = () => {
     if (!localStorageToken) {
       localStorage.removeItem("tutor_accessToken");
       cookies.remove("tutor_token");
+      dispatch(resetTutor());
+      dispatch(setTutorLoggedIn(false))
       navigate("/inst_login");
+    }else{
+      setTutor(savedTutor)
     }
   }, []);
 
@@ -41,6 +63,7 @@ const InstHeader: React.FC = () => {
             dispatch(resetTutor());
             localStorage.removeItem("tutor");
             localStorage.removeItem("tutor_accessToken");
+            dispatch(setTutorLoggedIn(false))
             navigate("/inst_login");
           }
     } catch (error) {
@@ -51,20 +74,16 @@ const InstHeader: React.FC = () => {
 const handleSearch = async (searchKey:string) => {
   try {
     const response = await handleGetSearchResults(searchKey);
-    console.log(response?.data);
-    
 
     if (response && response.data && response.data.result) {
       const courses = response.data.result;
       navigate("/instructor/courses", { state: { courses } });
     } else {
-      // Handle case when no courses are found
       console.error("No courses found");
       navigate("/instructor/courses", { state: { courses: [] } });
     }
   } catch (error) {
     console.error("Error fetching search results:", error);
-    // Optionally navigate with an empty courses array or handle error accordingly
     navigate("/instructor/courses", { state: { courses: [] } });
   }
 };
@@ -163,10 +182,10 @@ const debounceRequest = debounce((searchKey:string)=>handleSearch(searchKey),500
               <div
                 className="h-8 w-8 rounded-full bg-sky-500 bg-cover bg-no-repeat bg-center"
                 style={{
-                  backgroundImage: `url(${backgroundImage})`,
+                  backgroundImage: `url(${tutor?.avatar?.url})`,
                 }}
               >
-                <span className="sr-only">Arun Surendran</span>
+                <span className="sr-only">{tutor?.name}</span>
               </div>
             </Menu.Button>
           </div>

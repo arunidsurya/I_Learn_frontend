@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
 import loginImage from "../../../assets/InstLogin.jpg";
 import { useDispatch } from "react-redux";
-import { saveTutor } from "../../../redux/features/loginSlice";
+import { saveTutor, setTutorLoggedIn } from "../../../redux/features/loginSlice";
 import { handleTutorLogin } from "../../services/api/tutorApi";
 import Header from "../../user/shared/Header";
 import Footer from "../../user/shared/Footer";
@@ -28,12 +28,15 @@ const InstLogin: React.FC = () => {
     e.preventDefault();
     setError("");
     const response = await handleTutorLogin(email, password);
+    console.log(response?.data.data.message);
+    
     if (response?.data.data.success) {
       localStorage.setItem("tutor", JSON.stringify(response.data.data));
       localStorage.setItem("tutor_accessToken", response.data.data.token);
       dispatch(saveTutor(response.data.data.tutor));
+      dispatch(setTutorLoggedIn(true));
       Navigate("/instructor");
-    }
+    }else{setError(response?.data.data.message);}
   };
 
   return (
@@ -61,7 +64,7 @@ const InstLogin: React.FC = () => {
 
                 <div className="flex flex-col gap-2">
                   {error && (
-                    <p className="text-red-500 font-old text-xl">{error}</p>
+                    <p className="text-red-500 font-old text-xl">{error}!!</p>
                   )}
                   <label htmlFor="email">Email</label>
                   <input

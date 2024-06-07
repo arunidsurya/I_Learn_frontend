@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { updateTutorInfo } from "../../services/api/tutorApi";
 import { saveTutor } from "../../../redux/features/loginSlice";
 import toast from "react-hot-toast";
+import ChangePassword from "./ChangePassword";
 
 interface Tutor {
   _id?: string;
@@ -37,6 +38,7 @@ const ManageMyAccount: React.FC = () => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const dispatch = useDispatch();
 
@@ -87,14 +89,17 @@ const ManageMyAccount: React.FC = () => {
     e.preventDefault();
     const avatarToSend = avatar || "";
     try {
-      await validationSchema.validate({ name, institute }, { abortEarly: false });
+      await validationSchema.validate(
+        { name, institute },
+        { abortEarly: false }
+      );
 
       const res = await updateTutorInfo(_id, name, institute, avatarToSend);
 
       if (res?.data.tutor.success) {
         localStorage.setItem("tutor", JSON.stringify(res.data.tutor.tutor));
-        dispatch(saveTutor(res.data.tutor.tutor)); 
-        toast.success(res.data.tutor.message)
+        dispatch(saveTutor(res.data.tutor.tutor));
+        toast.success(res.data.tutor.message);
       }
     } catch (error: any) {
       const newError: { [key: string]: string } = {};
@@ -108,72 +113,92 @@ const ManageMyAccount: React.FC = () => {
 
   return (
     <div className="relative">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 items-center mt-8 "
-      >
-        <div className="relative w-28 h-28 rounded-full border border-green-500">
-          <img
-            src={
-              avatarPreview ? avatarPreview : tutor?.avatar?.url || defaultImage
-            }
-            alt="Profile Pic"
-            className="w-full h-full object-cover rounded-full"
-          />
-
-          <div
-            className="absolute inset-0 flex justify-center items-end cursor-pointer"
-            onClick={handleCameraIconClick}
+      {!isOpen && (
+        <>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4 items-center mt-8 "
           >
-            <CiCamera size={25} color="blue" fill="blue" />
-          </div>
-        </div>
-        <input
-          type="file"
-          ref={fileInputRef}
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <label htmlFor="email" className="text-lg font-bold">
-          Email Address
-        </label>
-        <h1 className="text-[1.2rem]">{email}</h1>
-        <label htmlFor="name" className="text-lg font-bold text-left mt-10">
-          Full Name
-        </label>
-        {errors.name && (
-          <div>
-            <p className="text-red-500">*{errors.name}</p>
-          </div>
-        )}
-        <input
-          type="text"
-          value={name}
-          name="name"
-          onChange={(e) => setName(e.target.value)}
-          className="rounded-md border border-gray-400 w-2/6 h-10"
-        />
-        <label htmlFor="name" className="text-lg font-bold text-left mt-10">
-          Institute Name
-        </label>
-        {errors.institute && (
-          <div>
-            <p className="text-red-500">*{errors.institute}</p>
-          </div>
-        )}
-        <input
-          type="text"
-          value={institute}
-          name="name"
-          onChange={(e) => setInstitute(e.target.value)}
-          className="rounded-md border border-gray-400 w-2/6 h-10"
-        />
+            <div className="relative w-28 h-28 rounded-full border border-green-500">
+              <img
+                src={
+                  avatarPreview
+                    ? avatarPreview
+                    : tutor?.avatar?.url || defaultImage
+                }
+                alt="Profile Pic"
+                className="w-full h-full object-cover rounded-full"
+              />
 
-        <button type="submit" className="bg-blue-800 rounded-md text-white border border-gray-400 w-2/6 h-10 mt-4">
-          Update
-        </button>
-      </form>
+              <div
+                className="absolute inset-0 flex justify-center items-end cursor-pointer"
+                onClick={handleCameraIconClick}
+              >
+                <CiCamera size={25} color="blue" fill="blue" />
+              </div>
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <label htmlFor="email" className="text-lg font-bold">
+              Email Address
+            </label>
+            <h1 className="text-[1.2rem]">{email}</h1>
+            <label htmlFor="name" className="text-lg font-bold text-left mt-10">
+              Full Name
+            </label>
+            {errors.name && (
+              <div>
+                <p className="text-red-500">*{errors.name}</p>
+              </div>
+            )}
+            <input
+              type="text"
+              value={name}
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+              className="rounded-md border border-gray-400 w-2/6 h-10"
+            />
+            <label htmlFor="name" className="text-lg font-bold text-left mt-10">
+              Institute Name
+            </label>
+            {errors.institute && (
+              <div>
+                <p className="text-red-500">*{errors.institute}</p>
+              </div>
+            )}
+            <input
+              type="text"
+              value={institute}
+              name="name"
+              onChange={(e) => setInstitute(e.target.value)}
+              className="rounded-md border border-gray-400 w-2/6 h-10"
+            />
+
+            <button
+              type="submit"
+              className="bg-blue-800 rounded-md text-white border border-gray-400 w-2/6 h-10 mt-10"
+            >
+              Update
+            </button>
+          </form>
+
+          <div className="flex justify-center items-center text-center mt-10">
+            <button
+              className=" text-red-500 underline underline-offset-1"
+              onClick={() => setIsOpen(true)}
+            >
+              Update Profile Password
+            </button>
+          </div>
+        </>
+      )}
+
+      {isOpen && (<ChangePassword setIsOpen={setIsOpen} />)}
     </div>
   );
 };

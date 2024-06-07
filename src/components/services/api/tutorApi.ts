@@ -199,3 +199,24 @@ export const updateTutorInfo = async (
     console.log(error);
   }
 };
+
+export const changePassword = async (
+  email: string,
+  oldPassword: string,
+  newPassword: string
+) => {
+  try {
+    // console.log(userName, userId, courseId, message);
+
+    const res = await Api.put(tutorRoutes.changePassword, {
+      email,
+      oldPassword,
+      newPassword,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
