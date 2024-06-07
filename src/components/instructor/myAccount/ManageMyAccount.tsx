@@ -97,6 +97,8 @@ const ManageMyAccount: React.FC = () => {
       const res = await updateTutorInfo(_id, name, institute, avatar);
 
       if (res?.data.tutor.success) {
+        console.log(res.data.tutor.tutor);
+        
         localStorage.setItem("tutor", JSON.stringify(res.data.tutor.tutor));
         dispatch(saveTutor(res.data.tutor.tutor));
         toast.success(res.data.tutor.message);

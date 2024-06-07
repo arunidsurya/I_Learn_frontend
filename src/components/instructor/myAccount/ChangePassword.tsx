@@ -22,9 +22,8 @@ const ChangePassword: React.FC<Props> = ({ setIsOpen }) => {
     if (storedTutorData) {
       const parseData = JSON.parse(storedTutorData);
       const currentUser = parseData;
-
-
-      setEmail(currentUser.tutor.email);
+      
+      setEmail(currentUser.email);
       setSuccessMessage("");
       // console.log(currentUser.name, currentUser.email);
     }
@@ -52,7 +51,6 @@ const ChangePassword: React.FC<Props> = ({ setIsOpen }) => {
         { oldPassword, newPassword, confirmPassword },
         { abortEarly: false }
       );
-      console.log("email:",email);
       
       const res = await changePassword(email, oldPassword, newPassword);
       
