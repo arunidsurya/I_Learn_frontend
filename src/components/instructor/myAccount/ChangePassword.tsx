@@ -24,10 +24,7 @@ const ChangePassword: React.FC<Props> = ({ setIsOpen }) => {
       const currentUser = parseData;
       
       setEmail(currentUser.email);
-// console.log("currentUser:",currentUser);
 
-
-      setEmail(currentUser.tutor.email);
       setSuccessMessage("");
       // console.log(currentUser.name, currentUser.email);
     }
