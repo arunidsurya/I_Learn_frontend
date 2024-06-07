@@ -19,7 +19,7 @@ const ChangePassword: React.FC = () => {
       const parseData = JSON.parse(storedUserData);
       const currentUser = parseData;
   
-      setEmail(currentUser.user.email);
+      setEmail(currentUser.email);
       setSuccessMessage("");
       // console.log(currentUser.name, currentUser.email);
     }

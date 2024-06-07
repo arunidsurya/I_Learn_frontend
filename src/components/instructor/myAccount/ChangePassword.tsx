@@ -22,6 +22,7 @@ const ChangePassword: React.FC<Props> = ({ setIsOpen }) => {
     if (storedTutorData) {
       const parseData = JSON.parse(storedTutorData);
       const currentUser = parseData;
+// console.log("currentUser:",currentUser);
 
 
       setEmail(currentUser.tutor.email);
