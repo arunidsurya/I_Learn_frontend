@@ -172,7 +172,6 @@ const debounceRequest = debounce((searchKey:string)=>handleSearch(searchKey),500
           fontSize={20}
           className="text-gray-400 absolute top-1/2 -translate-y-1/2 left-3"
         />
-
       </div>
       <div className="flex items-center gap-2 mr-2">
         <Popover className="relative">
@@ -317,13 +316,13 @@ const debounceRequest = debounce((searchKey:string)=>handleSearch(searchKey),500
                 <Menu.Item>
                   {({ active }) => (
                     <div
-                      onClick={() => navigate("/admin/settings")}
+                      onClick={() => navigate("/admin/manage-account")}
                       className={classNames(
                         active && "bg-gray-100",
                         "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2"
                       )}
                     >
-                      settings
+                      My Account
                     </div>
                   )}
                 </Menu.Item>

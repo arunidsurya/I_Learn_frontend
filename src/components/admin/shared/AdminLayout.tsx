@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import AdminHeader from "./AdminHeader";
+import { Toaster } from "react-hot-toast";
 
 const AdminLayout: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const AdminLayout: React.FC = () => {
           <Outlet />
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

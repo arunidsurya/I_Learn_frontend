@@ -6,15 +6,6 @@ const CourseAnalytics:React.FC = () => {
 
     const [data, setData] = useState([])
 
-    // const analyticsData = [
-    //   { name: "Jun 2023", uv: 3 },
-    //   { name: "July 2023", uv: 2 },
-    //   { name: "August 2023", uv: 5 },
-    //   { name: "Sept 2023", uv: 7 },
-    //   { name: "October 2023", uv: 2 },
-    //   { name: "Nov 2023", uv: 5 },
-    //   { name: "December 2023", uv: 7 },
-    // ];
 
     const courseAanalytics=async()=>{
         try {

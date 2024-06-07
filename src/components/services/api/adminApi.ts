@@ -266,3 +266,43 @@ export const handleUserBlock = async (method: string, _id: string) => {
     console.log(error);
   }
 };
+
+export const updateAdminInfo = async (
+  _id: string,
+  name: string,
+  avatar: string | null
+) => {
+  console.log(adminRoutes.updateProfile);
+  
+  try {
+    const res = await Api.put(adminRoutes.updateProfile, {
+      _id,
+      name,
+      avatar,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleUpdatePassword = async (
+  email: string,
+  oldPassword: string,
+  newPassword: string
+) => {
+  try {
+    // console.log(userName, userId, courseId, message);
+
+    const res = await Api.put(adminRoutes.updatePassword, {
+      email,
+      oldPassword,
+      newPassword,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

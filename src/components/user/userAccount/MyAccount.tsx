@@ -117,16 +117,14 @@ const MyAccount: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const avatarToSend = avatar || "";
     try {
       await validationSchema.validate({ name, email }, { abortEarly: false });
 
-      const res = await updateUserInfo(_id, name, email, avatarToSend);
+      const res = await updateUserInfo(_id, name, email, avatar);
 
       if (res?.data.user.success) {
         
         localStorage.setItem("user", JSON.stringify(res.data.user.user));
-        console.log(res.data.user.user);
         
         dispatch(SaveUser(res.data.user.user));
         toast.success(res.data.user.message)

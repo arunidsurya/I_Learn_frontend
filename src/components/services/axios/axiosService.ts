@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig,AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import toast from "react-hot-toast";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -21,7 +21,7 @@ Api.interceptors.request.use(
           Authorization: `Bearer ${token}`,
         },
       };
-      return newConfig as AxiosRequestConfig<any>; 
+      return newConfig as AxiosRequestConfig<any>;
     } else {
       return config;
     }
@@ -30,8 +30,6 @@ Api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-
 
 Api.interceptors.response.use(
   (response: AxiosResponse) => {

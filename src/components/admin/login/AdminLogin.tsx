@@ -7,6 +7,8 @@ import { login } from "../../services/api/adminApi";
 import toast from "react-hot-toast";
 import Header from "../../user/shared/Header";
 import Footer from "../../user/shared/Footer";
+import { useDispatch } from "react-redux";
+import { saveAdmin } from "../../../redux/features/loginSlice";
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -15,6 +17,7 @@ const AdminLogin: React.FC = () => {
   const Navigate = useNavigate();
 
   const cookies = new Cookies();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const tutorAuth = cookies.get("admin_AccessToken");
@@ -30,13 +33,13 @@ const AdminLogin: React.FC = () => {
     try {
       const response = await login(email, password);
 
-      if (response?.data.success) {
-        localStorage.setItem("admin", JSON.stringify(response.data));
-        localStorage.setItem("admin_accessToken", response.data.token);
+      if (response?.data.data.success) {
+        localStorage.setItem("admin", JSON.stringify(response.data.data));
+        localStorage.setItem("admin_accessToken", response.data.data.token);
+        dispatch(saveAdmin(response.data.data.admin));
         Navigate("/admin");
       } else {
-        toast.error(" Invalid email or password");
-        setError("invalid email or password");
+        setError(response?.data.data.message);
       }
     } catch (error: any) {
       toast.error(" Invalid email or password");
@@ -67,7 +70,7 @@ const AdminLogin: React.FC = () => {
                   </p>
                 </div>
                 {error && <div className="text-red-500">* {error}</div>}
-                <p>{error}</p>
+         
                 {/* <!-- Email input --> */}
                 {/* <TEInput
                 type="email"
