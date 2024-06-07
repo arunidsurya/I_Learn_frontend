@@ -12,6 +12,7 @@ const userRoutes = {
   changePassword: "/user/update_user_password",
   forgotPassWord:"/user/forgot_password_otp",
   forgotPasswordApprove:"/user/forgot_password_approve",
+  forgotPasswordConfirm:"/user/forgot_password_confirm",
   activateUser:"/user/activate-user",
   updateUserInfo: "/user/update_user_info",
   enrolledCourses: "/user/enrolled_courses",

@@ -160,11 +160,25 @@ export const forgotPassword = async (
   }
 };
 export const handleforgotPasswordApprove = async (activation_code: string,activation_token:string) => {
-  console.log(applyActionCode,activation_token);
   
   try {
     const res = await Api.post(userRoutes.forgotPasswordApprove, {
       activation_code,activation_token,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleforgotPasswordConfirm = async (
+  email: string,
+  newPassword: string
+) => {
+  try {
+    const res = await Api.post(userRoutes.forgotPasswordConfirm, {
+      email,
+      newPassword,
     });
 
     return res;

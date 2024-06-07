@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useLocation} from "react-router-dom";
-import { handleforgotPasswordApprove } from "../../services/api/userApi";
+import { handleforgotPasswordApprove, handleforgotPasswordConfirm } from "../../services/api/userApi";
 
 const ConfirmEmail: React.FC = () => {
   const location = useLocation();
@@ -29,35 +29,23 @@ const ConfirmEmail: React.FC = () => {
 
   };
 
-  const handleChangePassword = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChangePassword = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = localStorage.getItem("email");
+    const email = localStorage.getItem("email") || "";
     if (newPassword !== confirmPassword) {
       setPasswordError("Passwords are not matching");
       return;
+    }else if(newPassword.length === 0){
+      setPasswordError("password field is empty!!");
     }
     setPasswordError("");
-    axios
-      .post(
-        "http://localhost:5000/api/v1/user/forgot_password_confirm",
-        {
-          email,
-          newPassword,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.data.success) {
-          console.log(res.data);
-          setSuccess(true);
-          localStorage.removeItem("email");
-        }
-      })
-      .catch((error: any) => {
-        console.error("Error:", error);
-      });
+
+    const res = await handleforgotPasswordConfirm(email,newPassword);
+            if (res?.data.success) {
+              setSuccess(true);
+              localStorage.removeItem("email");
+            }
+
   };
   return (
     <>
