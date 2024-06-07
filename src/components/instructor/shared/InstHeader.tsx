@@ -197,7 +197,7 @@ const debounceRequest = debounce((searchKey:string)=>handleSearch(searchKey),500
                 <Menu.Item>
                   {({ active }) => (
                     <div
-                      onClick={() => navigate("/admin/settings")}
+                      onClick={() => navigate("/instructor/manage-account")}
                       className={classNames(
                         active && "bg-gray-100",
                         "text-gray-700 focus:bg-gray-200 cursor-pointer rounded-sm px-4 py-2"

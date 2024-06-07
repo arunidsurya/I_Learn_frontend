@@ -40,9 +40,7 @@ const UserLogin: React.FC = () => {
     try {
       const response = await handleLogin(email,password)
    console.log(response?.data);
-      if (response?.data.success) {
-        console.log(response.data);
-        
+      if (response?.data.success) {  
         const userDetails = response.data.user;
         console.log(userDetails);
         dispatch(SaveUser(userDetails));
@@ -52,7 +50,7 @@ const UserLogin: React.FC = () => {
           from: { pathname: "/" },
         };
         Navigate(from);
-        window.location.reload();
+        // window.location.reload();
       } else {
         setError(response?.data.data.message);
       }

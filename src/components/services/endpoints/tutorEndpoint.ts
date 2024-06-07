@@ -16,6 +16,8 @@ const tutorRoutes = {
   getCategories: "/tutor/categories",
   createCourse: "/tutor/create_course",
   editCourse: "/tutor/edit_course",
+  changePassword: "/tutor/update_password",
+  updateProfile: "/tutor/update_profile_info",
 };
 
 export default tutorRoutes;

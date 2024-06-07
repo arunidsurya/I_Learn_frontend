@@ -5,23 +5,25 @@ import { MdAccountBalance } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../../services/api/userApi";
+import { useDispatch } from "react-redux";
+import { resetUser, setLoggedIn } from "../../../redux/features/loginSlice";
 
 const AccountSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogout = async () => {
-    try {
+const dispatch = useDispatch();
+
+    const handleLogout = async () => {
       const response = await logout();
       if (response?.data.success) {
+        dispatch(resetUser());
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
+        dispatch(setLoggedIn(false))
         navigate("/");
       }
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
+    };
 
   return (
     <div className="flex flex-col bg-blue-900 w-60 p-3 mx-8 mt-6 text-white min-h-[500px] rounded">

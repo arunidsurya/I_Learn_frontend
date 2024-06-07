@@ -151,6 +151,7 @@ import Error404 from "./components/errorPages/Error404";
 import Error500 from "./components/errorPages/Error500";
 import InstVideoCall from "./components/instructor/course/liveclass/InstVideoCall";
 import TeachOnILearn from "./components/user/shared/TeachOnILearn";
+import ManageMyAccount from "./components/instructor/myAccount/ManageMyAccount";
 
 const App: React.FC = () => {
   return (
@@ -530,6 +531,14 @@ const App: React.FC = () => {
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <InstCourseAccessLazy />
+                </Suspense>
+              }
+            />
+            <Route
+              path="manage-account"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ManageMyAccount />
                 </Suspense>
               }
             />

@@ -5,7 +5,6 @@ interface User {
   name: string;
   email: string;
   gender: string;
-  password: string;
   avatar?: {
     url: string;
     public_id: string;
@@ -21,7 +20,6 @@ interface Admin {
   name: string;
   email: string;
   gender: string;
-  password: string;
   avtar?: string;
   isVerified: boolean;
 }
@@ -33,7 +31,6 @@ interface Tutor {
   institute: string;
   qualifiaction: string;
   experience: string;
-  password: string;
   avtar?: string;
   isVerified?: boolean;
   isBolcked?: boolean;
@@ -43,12 +40,14 @@ interface LoginState {
   user: User | null;
   admin: Admin | null;
   tutor: Tutor | null;
+  isLoggedIn:boolean;
 }
 
 const initialState: LoginState = {
   user: null,
   admin: null,
   tutor: null,
+  isLoggedIn: false,
 };
 
 const loginSlice = createSlice({
@@ -56,6 +55,7 @@ const loginSlice = createSlice({
   initialState,
   reducers: {
     SaveUser: (state, action: PayloadAction<User>) => {
+      console.log("Incoming user data:", action.payload);
       state.user = action.payload;
     },
     saveAdmin: (state, action: PayloadAction<Admin>) => {
@@ -73,8 +73,11 @@ const loginSlice = createSlice({
     resetTutor: (state) => {
       state.tutor = null;
     },
+    setLoggedIn: (state, action: PayloadAction<boolean>) => {
+      state.isLoggedIn = action.payload;
+    },
   },
 });
 
 export default loginSlice.reducer;
-export const { SaveUser, saveAdmin, saveTutor, resetUser,resetAdmin,resetTutor } = loginSlice.actions;
+export const { SaveUser, saveAdmin, saveTutor, resetUser,resetAdmin,resetTutor, setLoggedIn } = loginSlice.actions;

@@ -17,10 +17,9 @@ const ChangePassword: React.FC = () => {
     // console.log("user", storedUserData);
     if (storedUserData) {
       const parseData = JSON.parse(storedUserData);
-      const currentUser = parseData.user;
-      // console.log(currentUser);
-
-      setEmail(currentUser.email);
+      const currentUser = parseData;
+  
+      setEmail(currentUser.user.email);
       setSuccessMessage("");
       // console.log(currentUser.name, currentUser.email);
     }
@@ -32,7 +31,8 @@ const ChangePassword: React.FC = () => {
     oldPassword: Yup.string().required("Field is required"),
     newPassword: Yup.string()
       .required("Field is required")
-      .min(8, "Password must be at least 8 characters"),
+      .min(8, "Password must be at least 8 characters")
+      .notOneOf([Yup.ref('oldPassword')],"New password must be differnet from old password"),
     confirmPassword: Yup.string()
       .required("Field is required")
       .oneOf([Yup.ref("newPassword")], "Passwords must match"),
@@ -40,6 +40,8 @@ const ChangePassword: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+
 
     try {
       await validationSchema.validate(

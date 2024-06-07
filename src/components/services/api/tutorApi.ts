@@ -178,3 +178,24 @@ export const handleEditCourse = async (data: any) => {
   }
 };
 
+export const updateTutorInfo = async (
+  _id: string,
+  name: string,
+  institute: string,
+  avatar: string
+) => {
+  try {
+
+    
+    const res = await Api.put(tutorRoutes.updateProfile, {
+      _id,
+      name,
+      institute,
+      avatar,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

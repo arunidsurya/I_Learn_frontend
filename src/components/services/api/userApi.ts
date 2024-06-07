@@ -153,7 +153,6 @@ export const updateUserInfo = async (
   avatar: string
 ) => {
   try {
-    // console.log(userName, userId, courseId, message);
 
     const res = await Api.put(userRoutes.updateUserInfo, {
       _id,

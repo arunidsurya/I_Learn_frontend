@@ -5,7 +5,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { resetUser } from "../../../redux/features/loginSlice";
+import { resetUser, setLoggedIn } from "../../../redux/features/loginSlice";
 import { logout } from "../../services/api/userApi";
 
 interface User {
@@ -27,13 +27,15 @@ interface User {
 }
 
 const Header: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [savedUser, setSavedUser] = useState<User | null | undefined>();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.login.user);
+
+  const isLoggedIn = useSelector((state:any)=>state.login.isLoggedIn)
   const location = useLocation();
 
   useEffect(() => {
@@ -41,12 +43,12 @@ const Header: React.FC = () => {
     // const CookieToken = Cookies.get("accessToken");
 
     if (!accessToken) {
-      setIsLoggedIn(false);
+      dispatch(setLoggedIn(false));
       localStorage.removeItem("accessToken");
       Cookies.remove("access_token");
       dispatch(resetUser());
     } else {
-      setIsLoggedIn(true);
+      dispatch(setLoggedIn(true));
     }
 
     const storedUserData = localStorage.getItem("user");
@@ -63,12 +65,14 @@ const Header: React.FC = () => {
       dispatch(resetUser());
       localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
-      setIsLoggedIn(false);
+      dispatch(setLoggedIn(false));
       navigate("/");
     }
   };
 
   const isActive = (path: string) => location.pathname === path;
+
+  
 
   return (
     <header>

@@ -8,8 +8,10 @@ import {
   updateUserInfo,
 } from "../../services/api/userApi";
 import PremiumAccountPay from "./premiumAccount/PremiumAccountPay";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { SaveUser } from "../../../redux/features/loginSlice";
+import toast from "react-hot-toast";
 
 interface User {
   _id: string;
@@ -52,9 +54,9 @@ const MyAccount: React.FC = () => {
   const [selectedPrice, setSelectedPrice] = useState<number>();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(storedUserData);
 
     if (storedUserData === null) {
       navigate("/");
@@ -122,7 +124,12 @@ const MyAccount: React.FC = () => {
       const res = await updateUserInfo(_id, name, email, avatarToSend);
 
       if (res?.data.user.success) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+        
+        localStorage.setItem("user", JSON.stringify(res.data.user.user));
+        console.log(res.data.user.user);
+        
+        dispatch(SaveUser(res.data.user.user));
+        toast.success(res.data.user.message)
       }
     } catch (error: any) {
       const newError: { [key: string]: string } = {};
@@ -134,7 +141,6 @@ const MyAccount: React.FC = () => {
     }
   };
 
-  console.log(errors);
 
   return (
     <div className="relative">
