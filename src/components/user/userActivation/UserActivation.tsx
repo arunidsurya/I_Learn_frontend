@@ -1,6 +1,7 @@
-import axios from "axios";
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { handleActivateUser } from "../../services/api/userApi";
 
 const UserActivation: React.FC = () => {
   const location = useLocation();
@@ -10,33 +11,21 @@ const UserActivation: React.FC = () => {
   const [error, setError] = useState("");
   const [isSuccess, setSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setError("");
-    axios
-      .post(
-        "http://localhost:5000/api/v1/user/activate-user",
-        {
-          activation_code: otp,
-          activation_token: activation_token,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        // console.log(res.data);
+    const activation_code = otp;
 
-        if (res.data.user.success) {
-          setSuccess(true);
-        } else {
-          setError(res.data.user.message);
-        }
-      })
-      .catch((error: any) => {
-        console.error("Error:", error);
-      });
+    const res = await handleActivateUser(activation_code,activation_token);
+    console.log(res?.data);
+    
+            if (res?.data.user.success) {
+              setSuccess(true);
+            } else {
+              setError(res?.data.user.message);
+            }
+
   };
 
   return (

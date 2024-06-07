@@ -1,7 +1,8 @@
-import axios from "axios";
+
 import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { forgotPassword } from "../../services/api/userApi";
 
 interface ModalProps {
   onClose: () => void;
@@ -19,27 +20,17 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log("email :", email);
 
-    axios
-      .post(
-        "http://localhost:5000/api/v1/user/forgot_password_otp",
-        { email },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-
-        if (res.data.success) {
+    const res = await forgotPassword(email);
+        if (res?.data.success) {
           localStorage.setItem("email", res.data.email);
           const activationToken = res.data.activationToken;
           navigate("/account_verify", { state: { activationToken } });
         }
-      });
+
   };
 
   return (

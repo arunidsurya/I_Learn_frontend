@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useLocation} from "react-router-dom";
+import { handleforgotPasswordApprove } from "../../services/api/userApi";
 
 const ConfirmEmail: React.FC = () => {
   const location = useLocation();
@@ -14,31 +15,18 @@ const ConfirmEmail: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // console.log(otp);
     setError("");
-    axios
-      .post(
-        "http://localhost:5000/api/v1/user/forgot_password_approve",
-        {
-          activation_code: otp,
-          activation_token: activation_token,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.data.success) {
-          console.log(res.data);
-          setOtpSuccess(true);
-        }
-      })
-      .catch((error: any) => {
-        console.error("Error:", error);
-      });
+
+    const activation_code= otp;
+
+    const res = await handleforgotPasswordApprove(activation_code, activation_token,)
+            if (res?.data.success) {
+              setOtpSuccess(true);
+            }
+
   };
 
   const handleChangePassword = (e: React.FormEvent<HTMLFormElement>) => {

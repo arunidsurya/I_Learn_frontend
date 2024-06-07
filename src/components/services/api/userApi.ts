@@ -1,3 +1,4 @@
+import { applyActionCode } from "firebase/auth";
 import Api from "../axios/axiosService";
 import userRoutes from "../endpoints/userEndpoint";
 
@@ -145,7 +146,47 @@ export const changePassword = async (
     console.log(error);
   }
 };
+export const forgotPassword = async (
+  email: string,
+) => {
+  try {
+    const res = await Api.post(userRoutes.forgotPassWord, {
+      email,
+    });
 
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleforgotPasswordApprove = async (activation_code: string,activation_token:string) => {
+  console.log(applyActionCode,activation_token);
+  
+  try {
+    const res = await Api.post(userRoutes.forgotPasswordApprove, {
+      activation_code,activation_token,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleActivateUser = async (
+  activation_code: string,
+  activation_token: string
+) => {
+  try {
+    const res = await Api.post(userRoutes.activateUser, {
+      activation_code,
+      activation_token,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const updateUserInfo = async (
   _id: string,
   name: string,
