@@ -1,7 +1,7 @@
 import React from "react";
 
 const Policy: React.FC = () => {
-  return <div>Policy</div>;
+  return <div>Policies</div>;
 };
 
 export default Policy;
