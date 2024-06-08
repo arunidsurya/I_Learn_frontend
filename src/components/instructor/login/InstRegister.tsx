@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
-import axios from "axios";
 import Header from "../../user/shared/Header";
 import Footer from "../../user/shared/Footer";
+import { handleRegister } from "../../services/api/tutorApi";
 
 const InstRegister: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -26,7 +26,7 @@ const InstRegister: React.FC = () => {
     }
   }, []);
 
-  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match");
@@ -34,24 +34,13 @@ const InstRegister: React.FC = () => {
     }
     setPasswordError("");
 
-    axios
-      .post(
-        "http://localhost:5000/api/v1/tutor/registration",
-        { name, email, gender, password, institute, qualifiaction, experience },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        // console.log(res.data);
-        if (res.data.success) {
-          // console.log(res.data);
-          setError("");
-          Navigate("/inst_login/");
-        } else {
-          setError(res.data.message);
-        }
-      });
+    const res = await handleRegister(name, email, gender, password, institute, qualifiaction, experience );
+            if (res?.data.success) {
+              setError("");
+              Navigate("/inst_login/");
+            } else {
+              setError(res?.data.message);
+            }
   };
 
   return (

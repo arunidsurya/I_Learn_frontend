@@ -1,6 +1,7 @@
 const tutorRoutes = {
   login: "/tutor/login",
   logout: "/tutor/logout",
+  resgister: "/tutor/registration",
   addSchedule: "/tutor/add-schedule",
   getOneCourse: "/tutor/get-one-course",
   getAllCourses: "/tutor/courses",

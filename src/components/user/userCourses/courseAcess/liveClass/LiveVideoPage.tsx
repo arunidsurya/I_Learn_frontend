@@ -1,7 +1,10 @@
-import { loadStripe } from '@stripe/stripe-js';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import LiveClass from './LiveClass';
+import { loadStripe } from "@stripe/stripe-js";
+import React, { useEffect, useState } from "react";
+import LiveClass from "./LiveClass";
+import {
+  handleCoursePayment,
+  handleGetStripePublishablekey,
+} from "../../../../services/api/userApi";
 
 type Props = {
   courseId: string;
@@ -12,26 +15,18 @@ const LiveVideoPage: React.FC<Props> = ({ courseId }) => {
   const [stripePromise, setStripePromise] = useState<any>(null);
   const [clientSecret, setClientSecret] = useState("");
 
+  const getStripeKey = async () => {
+    const res = await handleGetStripePublishablekey();
+    if (res?.data) {
+      setPublishablekey(res.data.publishablekey);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/user/stripepublishablekey", {
-        withCredentials: true,
-      })
-      .then((res: any) => {
-        // console.log(res.data.result.course);
-
-        if (res.data) {
-          //   console.log(res.data);
-
-          setPublishablekey(res.data.publishablekey);
-        }
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
+    getStripeKey();
   }, []);
 
-  useEffect(() => {
+  const makePayment = async () => {
     if (publishablekey) {
       setStripePromise(loadStripe(publishablekey));
     }
@@ -39,33 +34,18 @@ const LiveVideoPage: React.FC<Props> = ({ courseId }) => {
     const amount = Math.round(500);
     // console.log("amount:", amount);
 
-    axios
-      .post(
-        "http://localhost:5000/api/v1/user/payment",
-        { amount },
-        {
-          withCredentials: true,
-        }
-      )
+    const res = await handleCoursePayment(amount);
+    if (res?.data) {
+      setClientSecret(res.data.client_secret);
+    }
+  };
 
-      .then((res: any) => {
-        //   console.log(res.data);
-
-        if (res.data) {
-          // console.log(res.data);
-
-          setClientSecret(res.data.client_secret);
-        }
-      })
-      .catch((error: any) => {
-        console.log("this is error");
-
-        console.log(error);
-      });
+  useEffect(() => {
+    makePayment();
   }, [publishablekey]);
 
   return (
-    <div className='mt-5'>
+    <div className="mt-5">
       {stripePromise && (
         <LiveClass
           stripePromise={stripePromise}
@@ -77,4 +57,4 @@ const LiveVideoPage: React.FC<Props> = ({ courseId }) => {
   );
 };
 
-export default LiveVideoPage
+export default LiveVideoPage;

@@ -20,7 +20,7 @@ const UserActivationLazy = React.lazy(
 const AboutPageLazy = React.lazy(
   () => import("./components/user/about/AboutPage")
 );
-const PolicyLazy = React.lazy(() => import("./components/user/policy/Policy"));
+const PolicyLazy = React.lazy(() => import("./components/common/Policy"));
 const ConfirmEmailLazy = React.lazy(
   () => import("./components/user/userActivation/ConfimEmail")
 );
@@ -153,6 +153,7 @@ import InstVideoCall from "./components/instructor/course/liveclass/InstVideoCal
 import TeachOnILearn from "./components/user/shared/TeachOnILearn";
 import ManageMyAccount from "./components/instructor/myAccount/ManageMyAccount";
 import ManageAccount from "./components/admin/myAccount/ManageMyAccount";
+
 
 const App: React.FC = () => {
   return (

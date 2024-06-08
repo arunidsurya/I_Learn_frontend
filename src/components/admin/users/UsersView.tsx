@@ -60,23 +60,6 @@ const UsersView: React.FC = () => {
       setMesage("User status changed");
     }
 
-    // axios
-    //   .post(
-    //     `http://localhost:5000/api/v1/admin/${method}`,
-    //     { _id },
-    //     {
-    //       withCredentials: true,
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     if (response.data.success) {
-    //       setMesage("User status changed");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching users:", error);
-    //   });
   };
 
   const handleConfirmAction = () => {

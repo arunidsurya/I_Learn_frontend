@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
-import { handleGetVideoCallCredentials } from "./api/userApi";
+
 
 const VideoCall: React.FC = () => {
   const [appID, setAppID] = useState<number | null>(null);
@@ -11,18 +11,23 @@ const VideoCall: React.FC = () => {
   const zpRef = useRef<any>(null);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const getCredentials = async () => {
-    const response = await handleGetVideoCallCredentials();
+    // const response = await handleGetVideoCallCredentials();
 
-    if (response?.data.success) {
-      const id = Number(response.data.appID);
-      setAppID(id);
-      setServerSecret(response.data.serverSecret);
-    } else {
-      navigate("/");
-    }
+    // if (response?.data.success) {
+    //   const id = Number(response.data.appID);
+    //   setAppID(id);
+    //   setServerSecret(response.data.serverSecret);
+    // } else {
+    //   navigate("/");
+    // }
+    const appId = import.meta.env.VITE_ZEGOCLOUD_APP_ID;
+    const secret = import.meta.env.VITE_ZEGOCLOUD_SERVER_SECRET;
+
+    setAppID(Number(appId))
+    setServerSecret(secret)
   };
 
   useEffect(() => {

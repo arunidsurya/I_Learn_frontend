@@ -20,6 +20,32 @@ try {
 }
 }
 
+export const handleRegister = async (
+  name: string,
+  email: string,
+  gender: string,
+  password: string,
+  institute: string,
+  qualifiaction: string,
+  experience: string
+) => {
+  try {
+    const res = await Api.post(tutorRoutes.resgister, {
+      name,
+      email,
+      gender,
+      password,
+      institute,
+      qualifiaction,
+      experience,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const handleAddSchedule = async (
   courseId: string,
   date:string,

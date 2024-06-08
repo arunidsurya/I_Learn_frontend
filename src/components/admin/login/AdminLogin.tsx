@@ -5,10 +5,10 @@ import loginImage from "../../../assets/login.jpg";
 import { Cookies } from "react-cookie";
 import { login } from "../../services/api/adminApi";
 import toast from "react-hot-toast";
-import Header from "../../user/shared/Header";
 import Footer from "../../user/shared/Footer";
 import { useDispatch } from "react-redux";
 import { saveAdmin } from "../../../redux/features/loginSlice";
+import HeaderCommon from "../../common/HeaderCommon";
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -49,7 +49,7 @@ const AdminLogin: React.FC = () => {
 
   return (
     <div className=" text-white h-screen w-scren">
-      <Header />
+      <HeaderCommon />
       <section className=" p-20 ">
         <div className="h-full bg-black p-8 rounded-lg ">
           {/* <!-- Left column container with background--> */}

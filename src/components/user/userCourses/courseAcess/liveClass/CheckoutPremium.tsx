@@ -5,14 +5,13 @@ import {
   LinkAuthenticationElement,
   PaymentElement,
 } from "@stripe/react-stripe-js";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { SaveUser } from "../../../../../redux/features/loginSlice";
-
+import { handleCreatePremiumOrder } from "../../../../services/api/userApi";
 
 type Props = {
   setOpen: any;
-  courseId:string
+  courseId: string;
 };
 
 const CheckoutPremium: React.FC<Props> = ({ setOpen }) => {
@@ -38,33 +37,25 @@ const CheckoutPremium: React.FC<Props> = ({ setOpen }) => {
       setIsLoading(false);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       setIsLoading(false);
-      axios
-        .post(
-          "http://localhost:5000/api/v1/user/create-premium-order",
-          { payment_info: paymentIntent },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res: any) => {
-          if (res.data.success) {
-            console.log(res.data);
 
-            setOrderData(res.data.result.newOrder);
-            dispatch(SaveUser(res.data.result.user));
-          }
-        })
-        .catch((error: any) => {
-          console.log(error);
-          setError(error);
-        });
+      const payment_info = paymentIntent;
+
+      const res = await handleCreatePremiumOrder(payment_info);
+      if (res?.data.success) {
+        console.log(res.data);
+
+        setOrderData(res.data.result.newOrder);
+        dispatch(SaveUser(res.data.result.user));
+      } else {
+        setError("Internal server error!! please try again later");
+      }
     }
   };
   useEffect(() => {
     if (orderData) {
       setOpen(false);
       // redirect(`/course-access/${course._id}`)
-    //   navigate(`/course-access/${course._id}`);
+      //   navigate(`/course-access/${course._id}`);
     }
     if (error) {
       console.log(error);

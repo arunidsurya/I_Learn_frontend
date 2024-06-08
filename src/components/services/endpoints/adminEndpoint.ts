@@ -1,3 +1,5 @@
+
+
 const adminRoutes = {
   login: "/admin/login",
   logout: "/admin/logout",
@@ -26,7 +28,9 @@ const adminRoutes = {
   getUsers: "/admin/getUsers",
   userBlock: "/admin",
   updateProfile: "/admin/update_profile_info",
-  updatePassword:"/admin/update_password",
+  updatePassword: "/admin/update_password",
+  addUser: "/admin/addUser",
+  EditUser: "/admin/editUser",
 };
 
 export default adminRoutes;

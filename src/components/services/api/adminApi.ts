@@ -306,3 +306,19 @@ export const handleUpdatePassword = async (
     console.log(error);
   }
 };
+export const handleAddUser = async (name:string, email:string, gender:string, password:string) => {
+  try {
+    const res = await Api.post(adminRoutes.addUser, { name,email,gender,password });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const handleEditUser = async (_id:string, name:string, email:string, gender:string) => {
+  try {
+    const res = await Api.put(adminRoutes.EditUser, { _id,name,email,gender });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
-import axios from "axios";
+import { handleAddUser } from "../../services/api/adminApi";
+import toast from "react-hot-toast";
 
 const AddUser: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -13,7 +14,7 @@ const AddUser: React.FC = () => {
   const [error, setError] = useState<string>("");
   const Navigate = useNavigate();
 
-  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match");
@@ -21,22 +22,14 @@ const AddUser: React.FC = () => {
     }
     setPasswordError("");
 
-    axios
-      .post(
-        "http://localhost:5000/api/v1/admin/addUser",
-        { name, email, gender, password },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.data.success) {
-          setError("");
-          Navigate("/admin/users");
-        } else {
-          setError(res.data.message);
-        }
-      });
+    const res = await handleAddUser(name, email, gender, password);
+    if (res?.data.success) {
+      setError("");
+      toast.success("User added successfully");
+      Navigate("/admin/users");
+    } else {
+      setError(res?.data.message);
+    }
   };
 
   return (

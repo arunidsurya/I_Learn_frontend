@@ -59,7 +59,6 @@ const MembersView: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("useEffect called");
     getTutors();
   }, [forceRender,success]);
 

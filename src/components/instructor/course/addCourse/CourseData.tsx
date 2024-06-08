@@ -55,18 +55,6 @@ const CourseData: React.FC<Props> = ({
     setActive(active - 1);
   };
 
-  // const handleOptions = () => {
-  //   if (
-  //     benefits[benefits.length - 1]?.title !== "" &&
-  //     prerequisites[prerequisites.length - 1]?.title !== ""
-  //   ) {
-  //     setActive(active + 1);
-  //     setError("");
-  //   } else {
-  //     setError("Please fill all the fields!!!");
-  //   }
-  // };
-
     const handleOptions = async () => {
       try {
         await validationSchema.validate(

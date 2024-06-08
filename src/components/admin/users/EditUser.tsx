@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TERipple } from "tw-elements-react";
-import axios from "axios";
+import { handleEditUser } from "../../services/api/adminApi";
+import toast from "react-hot-toast";
 
 const EditUser: React.FC = () => {
   const [_id, set_Id] = useState<string>("");
@@ -26,33 +27,25 @@ const EditUser: React.FC = () => {
     }
   }, [userData]);
 
-  const handleEditUser = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    axios
-      .put(
-        "http://localhost:5000/api/v1/admin/editUser",
-        { _id, name, email, gender },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.success) {
-          setError("");
-          Navigate("/admin/users");
-        } else {
-          setError(res.data.user.message);
-        }
-      });
+    const res = await handleEditUser(_id, name, email, gender);
+    if (res?.data.success) {
+      setError("");
+      toast.success("User edited successfully");
+      Navigate("/admin/users");
+    } else {
+      setError(res?.data.user.message);
+    }
+
   };
 
   return (
     <section className="h-full  flex justify-center items-center">
       <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
         <h1 className="text-2xl font-bold mb-10 text-center">EDIT USER</h1>
-        <form onSubmit={handleEditUser}>
+        <form onSubmit={handleEdit}>
           {error && <p className="text-red-500">{error}</p>}
 
           <div className="flex flex-col gap-2">
@@ -90,7 +83,7 @@ const EditUser: React.FC = () => {
             <TERipple rippleColor="light">
               <button
                 type="submit"
-                className="inline-block rounded bg-blue-500 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                className="inline-block rounded bg-blue-500 px-7 mt-10 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
               >
                 submit
               </button>
