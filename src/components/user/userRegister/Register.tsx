@@ -6,6 +6,7 @@ import { TERipple } from "tw-elements-react";
 import { signup } from "../../services/api/userApi";
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
+import Oauth from "../userLogin/Oauth";
 
 const UserRegister: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -173,6 +174,7 @@ const UserRegister: React.FC = () => {
                   >
                     SUBMIT
                   </button>
+                  <Oauth setError={setError} />
                 </TERipple>
 
                 {/* <!-- Register link --> */}

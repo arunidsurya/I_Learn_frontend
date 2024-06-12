@@ -17,7 +17,7 @@ const UserLogin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string>("");
   const Navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -162,7 +162,7 @@ const UserLogin: React.FC = () => {
                   >
                     Login
                   </button>
-                  <Oauth />
+                  <Oauth setError={setError} />
                 </TERipple>
               </div>
             </form>

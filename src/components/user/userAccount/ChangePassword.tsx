@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { changePassword } from "../../services/api/userApi";
@@ -18,21 +17,22 @@ const ChangePassword: React.FC = () => {
     if (storedUserData) {
       const parseData = JSON.parse(storedUserData);
       const currentUser = parseData;
-  
-      setEmail(currentUser.email);
+
+      setEmail(currentUser.user.email);
       setSuccessMessage("");
       // console.log(currentUser.name, currentUser.email);
     }
   }, []);
-
-  
 
   const validationSchema = Yup.object({
     oldPassword: Yup.string().required("Field is required"),
     newPassword: Yup.string()
       .required("Field is required")
       .min(8, "Password must be at least 8 characters")
-      .notOneOf([Yup.ref('oldPassword')],"New password must be differnet from old password"),
+      .notOneOf(
+        [Yup.ref("oldPassword")],
+        "New password must be differnet from old password"
+      ),
     confirmPassword: Yup.string()
       .required("Field is required")
       .oneOf([Yup.ref("newPassword")], "Passwords must match"),
@@ -40,8 +40,6 @@ const ChangePassword: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-
 
     try {
       await validationSchema.validate(
