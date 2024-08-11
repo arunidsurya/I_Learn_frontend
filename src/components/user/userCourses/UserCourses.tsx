@@ -72,8 +72,9 @@ const UserCourses: React.FC = () => {
   };
 
   useEffect(() => {
-    const courses = location.state.courses || [];
-    if (courses.length > 0) {
+    const courses = location.state?.courses || [];
+    if (courses?.length > 0) {
+      console.log(courses)
       setCourses(courses);
     } else {
       fetchCourses();
