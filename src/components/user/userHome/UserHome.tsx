@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import studyImage from "../../../assets/HomePage/learning4.png";
 import { FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { handleGetSearchResults } from "../../services/api/userApi";
 
 const UserHome: React.FC = () => {
+  const [searchKey, setSearchKey] = useState<string>("");
+
+  const navigate = useNavigate();
+
+  const getCourseBySearch = async () => {
+    // console.log("Searchkey :", searchKey)
+    const response = await handleGetSearchResults(searchKey);
+    const fetchedCourses = response?.data.result;
+    navigate("/courses", { state: { courses: fetchedCourses } });
+  };
+
   return (
     <div className="flex flex-col gap-2 mt-4 w-full  ">
       <div className="flex flex-col md:flex-row gap-2 w-full ">
@@ -29,10 +41,12 @@ const UserHome: React.FC = () => {
               type="text"
               placeholder="Search Courses "
               className="border border-gray-200 w-full md:w-4/6 h-12 p-4"
+              onChange={(e) => setSearchKey(e.target.value)}
             />
             <span>
               <FaSearch
                 className="cursor-pointer ml-2 md:ml-0 mt-2 md:mt-0"
+                onClick={getCourseBySearch}
                 style={{
                   width: 47,
                   height: 47,

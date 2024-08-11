@@ -8,6 +8,7 @@ import {
 } from "../../services/api/userApi";
 import debounce from "lodash.debounce";
 import { MdSkipNext, MdSkipPrevious } from "react-icons/md";
+import { useLocation } from "react-router-dom";
 
 interface Course {
   _id: string;
@@ -44,8 +45,11 @@ const UserCourses: React.FC = () => {
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
-  const [categories, setCategories] = useState<{_id:string,name:string}[]>([])
+  const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
+    []
+  );
 
+  const location = useLocation();
 
   const coursesPerPage = 12;
 
@@ -62,17 +66,20 @@ const UserCourses: React.FC = () => {
     }
   };
 
-    const getCategories = async () => {
-      const response = await handleGetCategories();
-      setCategories(response?.data.result)
-    };
+  const getCategories = async () => {
+    const response = await handleGetCategories();
+    setCategories(response?.data.result);
+  };
 
   useEffect(() => {
-    fetchCourses();
-    getCategories()
+    const courses = location.state.courses || [];
+    if (courses.length > 0) {
+      setCourses(courses);
+    } else {
+      fetchCourses();
+    }
+    getCategories();
   }, []);
-
-
 
   let currentCourses;
   const indexOfLastCourse = currentPage * coursesPerPage;
@@ -87,8 +94,8 @@ const UserCourses: React.FC = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-
-  const totalCourses = filteredCourses.length > 0 ? filteredCourses.length : courses.length;
+  const totalCourses =
+    filteredCourses.length > 0 ? filteredCourses.length : courses.length;
   const totalPages = Math.ceil(totalCourses / coursesPerPage);
   const pageNumbers = [];
 
@@ -133,18 +140,13 @@ const UserCourses: React.FC = () => {
     500
   );
 
-
-  const getCourseByCategory=async(category:string)=>{
-
+  const getCourseByCategory = async (category: string) => {
     const response = await handleGetCourseByCategory(category);
 
-    if(response?.data.success){
-      setCourses(response.data.result)
+    if (response?.data.success) {
+      setCourses(response.data.result);
     }
-    
-      
-      
-  }
+  };
 
   return (
     <div className="mx-10 my-2 w-80vw">
@@ -155,11 +157,13 @@ const UserCourses: React.FC = () => {
         <div className="hidden md:flex items-center justify-between  mt-4  mb-10  p-4 shadow-lg rounded-md">
           {categories.map((item) => (
             <div key={item._id}>
-            <p className="cursor-pointer"  onClick={()=>getCourseByCategory(item.name)}>
-              {item.name}
-            </p>
+              <p
+                className="cursor-pointer"
+                onClick={() => getCourseByCategory(item.name)}
+              >
+                {item.name}
+              </p>
             </div>
-
           ))}
         </div>
       )}
